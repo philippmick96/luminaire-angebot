@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer'
-import type { QuoteData, LineItem } from './types'
+import type { QuoteData, LineItem, CardData } from './types'
 import { LuminairePDF } from './components/PDFTemplate'
+import { BusinessCardPDF } from './components/BusinessCardPDF'
 
 // ── Helpers ────────────────────────────────────────────────────
 
@@ -85,8 +86,19 @@ const DEFAULT: QuoteData = {
 
 // ── Component ──────────────────────────────────────────────────
 
+const DEFAULT_CARD: CardData = {
+  name:     '',
+  title:    'KI-Trainer & Berater',
+  email:    'info@luminaire.training',
+  phone:    '+49 179 1327191',
+  website:  'www.luminaire.training',
+  tagline:  'Das Teuerste an KI ist, sie nicht zu nutzen.',
+}
+
 export default function App() {
+  const [tab, setTab]   = useState<'angebot' | 'visitenkarte'>('angebot')
   const [data, setData] = useState<QuoteData>(DEFAULT)
+  const [card, setCard] = useState<CardData>(DEFAULT_CARD)
 
   function set<K extends keyof QuoteData>(key: K, value: QuoteData[K]) {
     setData(prev => ({ ...prev, [key]: value }))
@@ -136,11 +148,117 @@ export default function App() {
       {/* ── HEADER ─────────────────────────────────── */}
       <header className="app-header">
         <div className="logo-text">lumin<span>AI</span>re</div>
-        <h2>Angebotsgenerator</h2>
+        <nav className="tab-nav">
+          <button
+            className={`tab-btn${tab === 'angebot' ? ' active' : ''}`}
+            onClick={() => setTab('angebot')}
+          >
+            Angebot
+          </button>
+          <button
+            className={`tab-btn${tab === 'visitenkarte' ? ' active' : ''}`}
+            onClick={() => setTab('visitenkarte')}
+          >
+            Visitenkarte
+          </button>
+        </nav>
       </header>
 
       <div className="main-content">
 
+        {tab === 'visitenkarte' && (
+          <>
+            {/* ── CARD FORM ────────────────────────────── */}
+            <div className="form-panel">
+              <div className="form-section">
+                <h3>Person</h3>
+                <div className="form-group">
+                  <label>Name</label>
+                  <input
+                    value={card.name}
+                    onChange={e => setCard(c => ({ ...c, name: e.target.value }))}
+                    placeholder="Max Mustermann"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Titel / Position</label>
+                  <input
+                    value={card.title}
+                    onChange={e => setCard(c => ({ ...c, title: e.target.value }))}
+                    placeholder="KI-Trainer & Berater"
+                  />
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Kontakt</h3>
+                <div className="form-group">
+                  <label>Telefon</label>
+                  <input
+                    value={card.phone}
+                    onChange={e => setCard(c => ({ ...c, phone: e.target.value }))}
+                    placeholder="+49 179 1327191"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>E-Mail</label>
+                  <input
+                    type="email"
+                    value={card.email}
+                    onChange={e => setCard(c => ({ ...c, email: e.target.value }))}
+                    placeholder="info@luminaire.training"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Website</label>
+                  <input
+                    value={card.website}
+                    onChange={e => setCard(c => ({ ...c, website: e.target.value }))}
+                    placeholder="www.luminaire.training"
+                  />
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Rückseite</h3>
+                <div className="form-group">
+                  <label>Tagline</label>
+                  <textarea
+                    value={card.tagline}
+                    onChange={e => setCard(c => ({ ...c, tagline: e.target.value }))}
+                    rows={2}
+                  />
+                </div>
+              </div>
+
+              <div className="form-section">
+                <PDFDownloadLink
+                  document={<BusinessCardPDF data={card} />}
+                  fileName={`Visitenkarte_${(card.name || 'Luminaire').replace(/\s+/g, '_')}.pdf`}
+                  className="btn btn-primary download-btn"
+                >
+                  ↓ Visitenkarte herunterladen
+                </PDFDownloadLink>
+              </div>
+            </div>
+
+            {/* ── CARD PREVIEW ─────────────────────────── */}
+            <div className="preview-panel">
+              <div className="preview-toolbar">
+                <span>Visitenkarte – Vorder- & Rückseite (85 × 55 mm)</span>
+                <span className="quote-num">Europäisches Format</span>
+              </div>
+              <div className="pdf-wrapper">
+                <PDFViewer width="100%" height="100%" showToolbar={false}>
+                  <BusinessCardPDF data={card} />
+                </PDFViewer>
+              </div>
+            </div>
+          </>
+        )}
+
+        {tab === 'angebot' && (
+        <>
         {/* ── FORM PANEL ─────────────────────────────── */}
         <div className="form-panel">
 
@@ -404,6 +522,8 @@ export default function App() {
             </PDFViewer>
           </div>
         </div>
+        </>
+        )}
 
       </div>
     </div>

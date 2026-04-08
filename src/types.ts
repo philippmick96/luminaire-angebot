@@ -27,3 +27,12 @@ export interface QuoteData {
   notes: string
   vatRate: number
 }
+
+export interface CardData {
+  name: string
+  title: string
+  email: string
+  phone: string
+  website: string
+  tagline: string
+}
