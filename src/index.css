@@ -30,7 +30,7 @@ body {
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* ── APP SHELL ───────────────────────────────────────────── */
@@ -39,6 +39,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
 }
 
 .app-header {
@@ -73,6 +74,27 @@ body {
 
 .logo-text span {
   color: var(--purple-mid);
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+  margin-right: 4px;
+}
+
+.back-btn:hover {
+  color: var(--text);
+  border-color: var(--purple);
+  background: var(--purple-dim);
 }
 
 .tab-nav {
@@ -408,4 +430,129 @@ input[type="number"] {
   padding: 12px;
   font-size: 14px;
   letter-spacing: 0.5px;
+}
+
+/* ── CARD PREVIEW PANEL ──────────────────────────────────── */
+
+.card-preview-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-large-preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px 16px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-preview-pair {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.card-preview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-preview-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── DESIGN GALLERY ──────────────────────────────────────── */
+
+.design-gallery {
+  border-top: 1px solid var(--border);
+  padding: 16px 20px 18px;
+  background: rgba(10, 10, 20, 0.6);
+  flex-shrink: 0;
+}
+
+.design-gallery-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.design-gallery-group {
+  margin-bottom: 10px;
+}
+
+.design-gallery-group-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--purple-light);
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+
+.design-gallery-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.design-thumb-btn {
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.18s;
+}
+
+.design-thumb-btn:hover {
+  border-color: var(--border-mid);
+  background: rgba(124, 58, 237, 0.06);
+}
+
+.design-thumb-btn.selected {
+  border-color: var(--purple);
+  background: rgba(124, 58, 237, 0.12);
+  box-shadow: 0 0 0 1px var(--purple-mid), 0 4px 18px rgba(124, 58, 237, 0.25);
+}
+
+.design-thumb-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.design-thumb-label {
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--text-dim);
+  white-space: nowrap;
+  margin-top: -3px;
+}
+
+.design-thumb-btn.selected .design-thumb-name {
+  color: var(--purple-light);
+}
+
+.design-thumb-btn.selected .design-thumb-label {
+  color: var(--purple);
 }

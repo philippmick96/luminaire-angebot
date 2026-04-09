@@ -1,307 +1,233 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer'
+import {
+  Document, Page, Text, View, StyleSheet,
+  Svg, Defs, LinearGradient, Stop, Rect,
+} from '@react-pdf/renderer'
 import type { CardData } from '../types'
-import PoppinsRegular from '../fonts/Poppins-Regular.ttf'
-import PoppinsSemiBold from '../fonts/Poppins-SemiBold.ttf'
-import PoppinsBold from '../fonts/Poppins-Bold.ttf'
 
-Font.register({
-  family: 'Poppins',
-  fonts: [
-    { src: PoppinsRegular,  fontWeight: 400 },
-    { src: PoppinsSemiBold, fontWeight: 600 },
-    { src: PoppinsBold,     fontWeight: 700 },
-  ],
-})
-
-// European business card: 85 × 55 mm at 72 dpi = ~241 × 156 pt
+// 85 × 55 mm → 241.89 × 155.91 pt
 const W = 241.89
 const H = 155.91
 
-const C = {
-  bg:          '#0a0a14',
-  card:        '#120b1e',
-  purple:      '#7c3aed',
-  purpleLight: '#a78bfa',
-  purpleDim:   '#1a1035',
-  white:       '#ffffff',
-  muted:       '#94a3b8',
-  light:       '#64748b',
-  border:      '#3b1f7a',
+// ── Sweep (dark) gradients ─────────────────────────────────────
+
+function GradientSweepFront() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gf" x1="0%" y1="0%" x2="100%" y2="100%">
+          <Stop offset="0%"   stopColor="#4c1d95" stopOpacity="1" />
+          <Stop offset="35%"  stopColor="#7c3aed" stopOpacity="1" />
+          <Stop offset="65%"  stopColor="#1a0533" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#0a0814" stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="shadow" x1="0%" y1="100%" x2="60%" y2="30%">
+          <Stop offset="0%"  stopColor="#000000" stopOpacity="0.35" />
+          <Stop offset="100%" stopColor="#000000" stopOpacity="0"   />
+        </LinearGradient>
+      </Defs>
+      <Rect width={W} height={H} fill="url(#gf)" />
+      <Rect width={W} height={H} fill="url(#shadow)" />
+    </Svg>
+  )
 }
 
-const P = 'Poppins'
+function GradientSweepBack() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gb" x1="100%" y1="100%" x2="0%" y2="0%">
+          <Stop offset="0%"   stopColor="#4c1d95" stopOpacity="1" />
+          <Stop offset="35%"  stopColor="#7c3aed" stopOpacity="1" />
+          <Stop offset="65%"  stopColor="#1a0533" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#0a0814" stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="shadowB" x1="100%" y1="0%" x2="40%" y2="70%">
+          <Stop offset="0%"  stopColor="#000000" stopOpacity="0.28" />
+          <Stop offset="100%" stopColor="#000000" stopOpacity="0"   />
+        </LinearGradient>
+      </Defs>
+      <Rect width={W} height={H} fill="url(#gb)" />
+      <Rect width={W} height={H} fill="url(#shadowB)" />
+    </Svg>
+  )
+}
+
+// ── Pearl (white) gradients ────────────────────────────────────
+
+function GradientPearlFront() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gpa" x1="0%" y1="0%" x2="100%" y2="0%">
+          <Stop offset="0%"   stopColor="#7c3aed" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#a78bfa" stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="gpb" x1="100%" y1="100%" x2="60%" y2="40%">
+          <Stop offset="0%"  stopColor="#a78bfa" stopOpacity="0.1" />
+          <Stop offset="100%" stopColor="#a78bfa" stopOpacity="0"  />
+        </LinearGradient>
+      </Defs>
+      {/* White background */}
+      <Rect width={W} height={H} fill="#ffffff" />
+      {/* Top accent bar */}
+      <Rect x={0} y={0} width={W} height={4} fill="url(#gpa)" />
+      {/* Subtle blush */}
+      <Rect width={W} height={H} fill="url(#gpb)" />
+    </Svg>
+  )
+}
+
+function GradientPearlBack() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gpa2" x1="0%" y1="0%" x2="100%" y2="0%">
+          <Stop offset="0%"   stopColor="#7c3aed" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#a78bfa" stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="gpa3" x1="100%" y1="0%" x2="0%" y2="0%">
+          <Stop offset="0%"   stopColor="#7c3aed" stopOpacity="0.4" />
+          <Stop offset="100%" stopColor="#a78bfa" stopOpacity="0.4" />
+        </LinearGradient>
+      </Defs>
+      <Rect width={W} height={H} fill="#ffffff" />
+      <Rect x={0} y={0} width={W} height={4} fill="url(#gpa2)" />
+      <Rect x={0} y={H - 4} width={W} height={4} fill="url(#gpa3)" />
+    </Svg>
+  )
+}
+
+// ── Frost (lavender) gradients ─────────────────────────────────
+
+function GradientFrostFront() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gfrost" x1="0%" y1="0%" x2="100%" y2="100%">
+          <Stop offset="0%"   stopColor="#f5f3ff" stopOpacity="1" />
+          <Stop offset="50%"  stopColor="#ede9fe" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#ddd6fe" stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="gfrostAccent" x1="0%" y1="0%" x2="0%" y2="100%">
+          <Stop offset="0%"   stopColor="#7c3aed" stopOpacity="0" />
+          <Stop offset="50%"  stopColor="#7c3aed" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
+        </LinearGradient>
+      </Defs>
+      <Rect width={W} height={H} fill="url(#gfrost)" />
+      {/* Left accent stripe */}
+      <Rect x={0} y={0} width={2.5} height={H} fill="url(#gfrostAccent)" />
+    </Svg>
+  )
+}
+
+function GradientFrostBack() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gfrost2" x1="100%" y1="100%" x2="0%" y2="0%">
+          <Stop offset="0%"   stopColor="#f5f3ff" stopOpacity="1" />
+          <Stop offset="50%"  stopColor="#ede9fe" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#ddd6fe" stopOpacity="1" />
+        </LinearGradient>
+      </Defs>
+      <Rect width={W} height={H} fill="url(#gfrost2)" />
+    </Svg>
+  )
+}
+
+// ── Styles ─────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
-  page: {
-    width: W,
-    height: H,
-    fontFamily: P,
-    backgroundColor: C.bg,
-  },
+  page: { width: W, height: H, backgroundColor: '#ffffff' },
+  pageDark: { width: W, height: H, backgroundColor: '#0a0814' },
 
-  // ── FRONT ────────────────────────────────────────────────
-  front: {
-    width: W,
-    height: H,
-    backgroundColor: C.bg,
-    padding: 18,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
+  logoRow: { position: 'absolute', top: 12, left: 13, flexDirection: 'row', alignItems: 'flex-end' },
 
-  // top accent bar
-  topBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 2.5,
-    backgroundColor: C.purple,
-  },
+  // sweep
+  logoText:   { fontFamily: 'Helvetica-Bold', fontSize: 9, color: 'rgba(255,255,255,0.6)'  },
+  logoAccent: { fontFamily: 'Helvetica-Bold', fontSize: 9, color: 'rgba(255,255,255,0.25)' },
+  // pearl
+  logoTextP:   { fontFamily: 'Helvetica-Bold', fontSize: 9, color: '#4c1d95' },
+  logoAccentP: { fontFamily: 'Helvetica-Bold', fontSize: 9, color: '#a78bfa' },
+  // frost
+  logoTextF:   { fontFamily: 'Helvetica-Bold', fontSize: 9, color: '#5b21b6' },
+  logoAccentF: { fontFamily: 'Helvetica-Bold', fontSize: 9, color: '#8b5cf6' },
 
-  // logo wordmark
-  logoRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    marginTop: 6,
-  },
-  logoWhite: {
-    fontFamily: P,
-    fontWeight: 700,
-    fontSize: 14,
-    color: C.white,
-    letterSpacing: 0.3,
-  },
-  logoPurple: {
-    fontFamily: P,
-    fontWeight: 700,
-    fontSize: 14,
-    color: C.purpleLight,
-    letterSpacing: 0.3,
-  },
+  // name placeholder (fontSize overridden inline)
+  name: { position: 'absolute', bottom: 28, left: 13, right: 13, fontFamily: 'Helvetica-Bold', letterSpacing: -0.5 },
 
-  // contact block bottom-left
-  contactBlock: {},
-  personName: {
-    fontFamily: P,
-    fontWeight: 700,
-    fontSize: 9.5,
-    color: C.white,
-    marginBottom: 1.5,
-  },
-  personTitle: {
-    fontFamily: P,
-    fontWeight: 400,
-    fontSize: 7,
-    color: C.purpleLight,
-    marginBottom: 6,
-  },
-  contactLine: {
-    fontFamily: P,
-    fontWeight: 400,
-    fontSize: 6.5,
-    color: C.muted,
-    marginBottom: 2,
-  },
+  titleText: { position: 'absolute', bottom: 14, left: 13, fontFamily: 'Helvetica', fontSize: 6.5, letterSpacing: 0.8 },
+  contactsBlock: { position: 'absolute', bottom: 13, right: 13, alignItems: 'flex-end' },
+  contactLine: { fontFamily: 'Helvetica', fontSize: 6, marginBottom: 1.5 },
 
-  // decorative circle
-  circle: {
-    position: 'absolute',
-    right: -20,
-    top: -20,
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderWidth: 1,
-    borderColor: C.border,
-    borderStyle: 'solid',
-  },
-  circleInner: {
-    position: 'absolute',
-    right: 5,
-    top: 5,
-    width: 55,
-    height: 55,
-    borderRadius: 27.5,
-    borderWidth: 1,
-    borderColor: C.border,
-    borderStyle: 'solid',
-  },
-  circleDot: {
-    position: 'absolute',
-    right: 28,
-    top: 28,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: C.purple,
-  },
-
-  // bottom bar
-  bottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 1.5,
-    backgroundColor: C.border,
-  },
-
-  // ── BACK ─────────────────────────────────────────────────
-  back: {
-    width: W,
-    height: H,
-    backgroundColor: C.purpleDim,
-    padding: 18,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  backTopBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 2.5,
-    backgroundColor: C.purple,
-  },
-  backBottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 2.5,
-    backgroundColor: C.purple,
-  },
-
-  backLogoRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    marginBottom: 10,
-  },
-  backLogoWhite: {
-    fontFamily: P,
-    fontWeight: 700,
-    fontSize: 20,
-    color: C.white,
-    letterSpacing: 0.5,
-  },
-  backLogoPurple: {
-    fontFamily: P,
-    fontWeight: 700,
-    fontSize: 20,
-    color: C.purpleLight,
-    letterSpacing: 0.5,
-  },
-
-  dividerLine: {
-    width: 30,
-    height: 1.5,
-    backgroundColor: C.purple,
-    marginBottom: 10,
-  },
-
-  backTagline: {
-    fontFamily: P,
-    fontWeight: 400,
-    fontSize: 7,
-    color: C.muted,
-    textAlign: 'center',
-    fontStyle: 'italic',
-    marginBottom: 10,
-  },
-
-  backWebsite: {
-    fontFamily: P,
-    fontWeight: 600,
-    fontSize: 7,
-    color: C.purpleLight,
-    letterSpacing: 0.5,
-  },
-
-  // decorative circles back
-  backCircle1: {
-    position: 'absolute',
-    left: -25,
-    bottom: -25,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: 'rgba(124,58,237,0.2)',
-    borderStyle: 'solid',
-  },
-  backCircle2: {
-    position: 'absolute',
-    right: -15,
-    top: -15,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    borderWidth: 1,
-    borderColor: 'rgba(124,58,237,0.2)',
-    borderStyle: 'solid',
-  },
+  backCenter: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
+  backLogoRow: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: 11 },
+  backLogoText:    { fontFamily: 'Helvetica-Bold', fontSize: 22, letterSpacing: -0.5 },
+  tagline: { fontFamily: 'Helvetica-Oblique', fontSize: 7, textAlign: 'center', maxWidth: 160, lineHeight: 1.5 },
 })
 
+// ── Component ──────────────────────────────────────────────────
+
 export function BusinessCardPDF({ data }: { data: CardData }) {
+  const theme = data.theme ?? 'sweep'
+  const namePt = (data.nameFontSize ?? 24) * 0.85
+
+  const isDark = theme === 'sweep'
+  const isPearl = theme === 'pearl'
+  const isFrost = theme === 'frost'
+
+  const nameColor   = isDark ? '#ffffff' : '#1e0a3c'
+  const titleColor  = isDark ? 'rgba(255,255,255,0.5)' : (isFrost ? '#6d28d9' : '#7c3aed')
+  const contactColor = isDark ? 'rgba(255,255,255,0.28)' : (isFrost ? 'rgba(109,40,217,0.7)' : '#9ca3af')
+
+  const backNameColor   = isDark ? '#ffffff' : '#2e1065'
+  const backAccentColor = isDark ? 'rgba(255,255,255,0.45)' : '#7c3aed'
+  const taglineColor    = isDark ? 'rgba(255,255,255,0.32)' : (isFrost ? 'rgba(109,40,217,0.7)' : '#9ca3af')
+
   return (
     <Document title="Luminaire Visitenkarte" author="Luminaire">
 
-      {/* ── FRONT ──────────────────────────────────────── */}
-      <Page size={[W, H]} style={s.page}>
-        <View style={s.front}>
-          {/* accent bar */}
-          <View style={s.topBar} />
+      {/* ── FRONT ─────────────────────────────── */}
+      <Page size={[W, H]} style={isDark ? s.pageDark : s.page}>
+        {isDark && <GradientSweepFront />}
+        {isPearl && <GradientPearlFront />}
+        {isFrost && <GradientFrostFront />}
 
-          {/* decorative circles */}
-          <View style={s.circle} />
-          <View style={s.circleInner} />
-          <View style={s.circleDot} />
+        <View style={s.logoRow}>
+          <Text style={isDark ? s.logoText : (isFrost ? s.logoTextF : s.logoTextP)}>lumin</Text>
+          <Text style={isDark ? s.logoAccent : (isFrost ? s.logoAccentF : s.logoAccentP)}>AI</Text>
+          <Text style={isDark ? s.logoText : (isFrost ? s.logoTextF : s.logoTextP)}>re</Text>
+        </View>
 
-          {/* logo */}
-          <View style={s.logoRow}>
-            <Text style={s.logoWhite}>lumin</Text>
-            <Text style={s.logoPurple}>AI</Text>
-            <Text style={s.logoWhite}>re</Text>
-          </View>
+        <Text style={[s.name, { fontSize: namePt, color: nameColor }]}>
+          {data.name || 'Ihr Name'}
+        </Text>
 
-          {/* contact */}
-          <View style={s.contactBlock}>
-            <Text style={s.personName}>{data.name || 'Name'}</Text>
-            <Text style={s.personTitle}>{data.title || 'Titel'}</Text>
-            {data.phone   ? <Text style={s.contactLine}>{data.phone}</Text>   : null}
-            {data.email   ? <Text style={s.contactLine}>{data.email}</Text>   : null}
-            {data.website ? <Text style={s.contactLine}>{data.website}</Text> : null}
-          </View>
+        <Text style={[s.titleText, { color: titleColor }]}>
+          {data.title || ''}
+        </Text>
 
-          <View style={s.bottomBar} />
+        <View style={s.contactsBlock}>
+          {data.email   ? <Text style={[s.contactLine, { color: contactColor }]}>{data.email}</Text>   : null}
+          {data.website ? <Text style={[s.contactLine, { color: contactColor }]}>{data.website}</Text> : null}
         </View>
       </Page>
 
-      {/* ── BACK ───────────────────────────────────────── */}
-      <Page size={[W, H]} style={s.page}>
-        <View style={s.back}>
-          <View style={s.backTopBar} />
-          <View style={s.backBottomBar} />
-          <View style={s.backCircle1} />
-          <View style={s.backCircle2} />
+      {/* ── BACK ──────────────────────────────── */}
+      <Page size={[W, H]} style={isDark ? s.pageDark : s.page}>
+        {isDark && <GradientSweepBack />}
+        {isPearl && <GradientPearlBack />}
+        {isFrost && <GradientFrostBack />}
 
+        <View style={s.backCenter}>
           <View style={s.backLogoRow}>
-            <Text style={s.backLogoWhite}>lumin</Text>
-            <Text style={s.backLogoPurple}>AI</Text>
-            <Text style={s.backLogoWhite}>re</Text>
+            <Text style={[s.backLogoText, { color: backNameColor }]}>lumin</Text>
+            <Text style={[s.backLogoText, { color: backAccentColor }]}>AI</Text>
+            <Text style={[s.backLogoText, { color: backNameColor }]}>re</Text>
           </View>
-
-          <View style={s.dividerLine} />
-
-          <Text style={s.backTagline}>
+          <Text style={[s.tagline, { color: taglineColor }]}>
             {data.tagline || 'Das Teuerste an KI ist, sie nicht zu nutzen.'}
-          </Text>
-
-          <Text style={s.backWebsite}>
-            {data.website || 'www.luminaire.training'}
           </Text>
         </View>
       </Page>

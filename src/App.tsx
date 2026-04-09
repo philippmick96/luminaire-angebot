@@ -3,6 +3,10 @@ import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer'
 import type { QuoteData, LineItem, CardData } from './types'
 import { LuminairePDF } from './components/PDFTemplate'
 import { BusinessCardPDF } from './components/BusinessCardPDF'
+import { BusinessCardFront, BusinessCardBack } from './components/BusinessCardPreview'
+import Landing from './components/Landing'
+
+type View = 'landing' | 'tool'
 
 // ── Helpers ────────────────────────────────────────────────────
 
@@ -87,18 +91,30 @@ const DEFAULT: QuoteData = {
 // ── Component ──────────────────────────────────────────────────
 
 const DEFAULT_CARD: CardData = {
-  name:     '',
-  title:    'KI-Trainer & Berater',
-  email:    'info@luminaire.training',
-  phone:    '+49 179 1327191',
-  website:  'www.luminaire.training',
-  tagline:  'Das Teuerste an KI ist, sie nicht zu nutzen.',
+  name:         '',
+  title:        'KI-Trainer & Berater',
+  email:        'info@luminaire.training',
+  phone:        '+49 179 1327191',
+  website:      'www.luminaire.training',
+  tagline:      'Das Teuerste an KI ist, sie nicht zu nutzen.',
+  theme:        'sweep',
+  nameFontSize: 24,
 }
 
 export default function App() {
+  const [view, setView] = useState<View>('landing')
   const [tab, setTab]   = useState<'angebot' | 'visitenkarte'>('angebot')
   const [data, setData] = useState<QuoteData>(DEFAULT)
   const [card, setCard] = useState<CardData>(DEFAULT_CARD)
+
+  function navigate(target: 'angebot' | 'visitenkarte') {
+    setTab(target)
+    setView('tool')
+  }
+
+  if (view === 'landing') {
+    return <Landing onNavigate={navigate} />
+  }
 
   function set<K extends keyof QuoteData>(key: K, value: QuoteData[K]) {
     setData(prev => ({ ...prev, [key]: value }))
@@ -147,6 +163,7 @@ export default function App() {
 
       {/* ── HEADER ─────────────────────────────────── */}
       <header className="app-header">
+        <button className="back-btn" onClick={() => setView('landing')}>← Start</button>
         <div className="logo-text">lumin<span>AI</span>re</div>
         <nav className="tab-nav">
           <button
@@ -220,6 +237,52 @@ export default function App() {
               </div>
 
               <div className="form-section">
+                <h3>Design</h3>
+                <div className="form-group">
+                  <label>Farbvariante</label>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 2 }}>
+                    {(['sweep', 'pearl', 'frost'] as const).map(t => (
+                      <button
+                        key={t}
+                        onClick={() => setCard(c => ({ ...c, theme: t }))}
+                        style={{
+                          flex: 1, padding: '6px 0', borderRadius: 8, border: '1px solid',
+                          fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+                          transition: 'all 0.15s',
+                          background: card.theme === t
+                            ? (t === 'sweep' ? '#7c3aed' : t === 'pearl' ? '#ffffff' : '#ede9fe')
+                            : 'rgba(20,15,35,0.8)',
+                          color: card.theme === t
+                            ? (t === 'sweep' ? '#ffffff' : '#2e1065')
+                            : '#94a3b8',
+                          borderColor: card.theme === t
+                            ? (t === 'sweep' ? '#7c3aed' : '#a78bfa')
+                            : 'rgba(124,58,237,0.22)',
+                        }}
+                      >
+                        {t === 'sweep' ? 'Dunkel' : t === 'pearl' ? 'Weiß' : 'Lavendel'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Schriftgröße Name</span>
+                    <span style={{ color: '#a78bfa', fontWeight: 600 }}>{card.nameFontSize}px</span>
+                  </label>
+                  <input
+                    type="range"
+                    min={14}
+                    max={38}
+                    step={1}
+                    value={card.nameFontSize}
+                    onChange={e => setCard(c => ({ ...c, nameFontSize: Number(e.target.value) }))}
+                    style={{ width: '100%', accentColor: '#7c3aed', cursor: 'pointer' }}
+                  />
+                </div>
+              </div>
+
+              <div className="form-section">
                 <h3>Rückseite</h3>
                 <div className="form-group">
                   <label>Tagline</label>
@@ -242,17 +305,27 @@ export default function App() {
               </div>
             </div>
 
-            {/* ── CARD PREVIEW ─────────────────────────── */}
-            <div className="preview-panel">
+            {/* ── CARD PREVIEW + DESIGN GALLERY ────────── */}
+            <div className="preview-panel card-preview-panel">
               <div className="preview-toolbar">
                 <span>Visitenkarte – Vorder- & Rückseite (85 × 55 mm)</span>
                 <span className="quote-num">Europäisches Format</span>
               </div>
-              <div className="pdf-wrapper">
-                <PDFViewer width="100%" height="100%" showToolbar={false}>
-                  <BusinessCardPDF data={card} />
-                </PDFViewer>
+
+              {/* Large preview */}
+              <div className="card-large-preview">
+                <div className="card-preview-pair">
+                  <div className="card-preview-item">
+                    <div className="card-preview-label">Vorderseite</div>
+                    <BusinessCardFront data={card} scale={0.95} />
+                  </div>
+                  <div className="card-preview-item">
+                    <div className="card-preview-label">Rückseite</div>
+                    <BusinessCardBack data={card} scale={0.95} />
+                  </div>
+                </div>
               </div>
+
             </div>
           </>
         )}
