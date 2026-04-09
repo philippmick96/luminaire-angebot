@@ -100,6 +100,7 @@ const DEFAULT_CARD: CardData = {
   tagline:      'Das Teuerste an KI ist, sie nicht zu nutzen.',
   theme:        'sweep',
   nameFontSize: 24,
+  infoFontSize: 8,
 }
 
 export default function App() {
@@ -286,6 +287,21 @@ export default function App() {
                     step={1}
                     value={card.nameFontSize}
                     onChange={e => setCard(c => ({ ...c, nameFontSize: Number(e.target.value) }))}
+                    style={{ width: '100%', accentColor: '#7c3aed', cursor: 'pointer' }}
+                  />
+                </div>
+                <div className="form-group">
+                  <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Schriftgröße Infos</span>
+                    <span style={{ color: '#a78bfa', fontWeight: 600 }}>{card.infoFontSize}px</span>
+                  </label>
+                  <input
+                    type="range"
+                    min={6}
+                    max={14}
+                    step={0.5}
+                    value={card.infoFontSize}
+                    onChange={e => setCard(c => ({ ...c, infoFontSize: Number(e.target.value) }))}
                     style={{ width: '100%', accentColor: '#7c3aed', cursor: 'pointer' }}
                   />
                 </div>

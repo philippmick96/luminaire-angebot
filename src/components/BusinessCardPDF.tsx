@@ -172,6 +172,7 @@ const s = StyleSheet.create({
 export function BusinessCardPDF({ data }: { data: CardData }) {
   const theme = data.theme ?? 'sweep'
   const namePt = (data.nameFontSize ?? 24) * 0.85
+  const infoPt = (data.infoFontSize ?? 8) * 0.85
 
   const isDark = theme === 'sweep'
   const isPearl = theme === 'pearl'
@@ -204,14 +205,14 @@ export function BusinessCardPDF({ data }: { data: CardData }) {
           {data.name || 'Ihr Name'}
         </Text>
 
-        <Text style={[s.titleText, { color: titleColor }]}>
+        <Text style={[s.titleText, { color: titleColor, fontSize: infoPt + 0.5 }]}>
           {data.title || ''}
         </Text>
 
         <View style={s.contactsBlock}>
-          {data.email   ? <Text style={[s.contactLine, { color: contactColor }]}>{data.email}</Text>   : null}
-          {data.website ? <Text style={[s.contactLine, { color: contactColor }]}>{data.website}</Text> : null}
-          {data.address ? <Text style={[s.contactLine, { color: contactColor }]}>{data.address}</Text> : null}
+          {data.email   ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.email}</Text>   : null}
+          {data.website ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.website}</Text> : null}
+          {data.address ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.address}</Text> : null}
         </View>
       </Page>
 

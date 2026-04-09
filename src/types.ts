@@ -40,4 +40,5 @@ export interface CardData {
   tagline: string
   theme: CardTheme
   nameFontSize: number
+  infoFontSize: number
 }

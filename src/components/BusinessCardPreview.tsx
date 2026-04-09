@@ -30,6 +30,8 @@ export function BusinessCardFront({ data, scale: s = 1 }: Props) {
   if (data.theme === 'pearl') return <PearlFront data={data} scale={s} />
   if (data.theme === 'frost') return <FrostFront data={data} scale={s} />
 
+  const ifs = data.infoFontSize ?? 8
+
   return (
     <Card scale={s} style={{
       background: 'linear-gradient(135deg, #4c1d95 0%, #7c3aed 35%, #1a0533 65%, #0a0814 100%)',
@@ -58,10 +60,10 @@ export function BusinessCardFront({ data, scale: s = 1 }: Props) {
         position: 'absolute', bottom: 14 * s, left: 16 * s, right: 16 * s,
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
       }}>
-        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 8.5 * s, fontWeight: 400, letterSpacing: 0.8, textTransform: 'uppercase' }}>
+        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: (ifs + 0.5) * s, fontWeight: 400, letterSpacing: 0.8, textTransform: 'uppercase' }}>
           {data.title || 'Position'}
         </div>
-        <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 8 * s, textAlign: 'right', lineHeight: 1.75 }}>
+        <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: ifs * s, textAlign: 'right', lineHeight: 1.75 }}>
           {data.email   && <div>{data.email}</div>}
           {data.website && <div>{data.website}</div>}
           {data.address && <div>{data.address}</div>}
@@ -102,6 +104,7 @@ export function BusinessCardBack({ data, scale: s = 1 }: Props) {
 
 function PearlFront({ data, scale: s = 1 }: Props) {
   const fs = data.nameFontSize ?? 24
+  const ifs = data.infoFontSize ?? 8
   return (
     <Card scale={s} style={{
       background: '#ffffff',
@@ -141,10 +144,10 @@ function PearlFront({ data, scale: s = 1 }: Props) {
         position: 'absolute', bottom: 14 * s, left: 16 * s, right: 16 * s,
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
       }}>
-        <div style={{ color: '#7c3aed', fontSize: 8.5 * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
+        <div style={{ color: '#7c3aed', fontSize: (ifs + 0.5) * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
           {data.title || 'Position'}
         </div>
-        <div style={{ color: '#9ca3af', fontSize: 8 * s, textAlign: 'right', lineHeight: 1.75 }}>
+        <div style={{ color: '#9ca3af', fontSize: ifs * s, textAlign: 'right', lineHeight: 1.75 }}>
           {data.email   && <div>{data.email}</div>}
           {data.website && <div>{data.website}</div>}
           {data.address && <div>{data.address}</div>}
@@ -188,6 +191,7 @@ function PearlBack({ data, scale: s = 1 }: Props) {
 
 function FrostFront({ data, scale: s = 1 }: Props) {
   const fs = data.nameFontSize ?? 24
+  const ifs = data.infoFontSize ?? 8
   return (
     <Card scale={s} style={{
       background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #ddd6fe 100%)',
@@ -229,10 +233,10 @@ function FrostFront({ data, scale: s = 1 }: Props) {
         position: 'absolute', bottom: 14 * s, left: 16 * s, right: 16 * s,
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
       }}>
-        <div style={{ color: '#6d28d9', fontSize: 8.5 * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
+        <div style={{ color: '#6d28d9', fontSize: (ifs + 0.5) * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
           {data.title || 'Position'}
         </div>
-        <div style={{ color: '#7c3aed', fontSize: 8 * s, textAlign: 'right', lineHeight: 1.75, opacity: 0.7 }}>
+        <div style={{ color: '#7c3aed', fontSize: ifs * s, textAlign: 'right', lineHeight: 1.75, opacity: 0.7 }}>
           {data.email   && <div>{data.email}</div>}
           {data.website && <div>{data.website}</div>}
           {data.address && <div>{data.address}</div>}

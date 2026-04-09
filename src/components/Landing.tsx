@@ -5,6 +5,7 @@ const DEFAULT_CARD = {
   name: 'Philipp Mick',
   title: 'KI-Trainer & Berater',
   nameFontSize: 24,
+  infoFontSize: 8,
   email: 'info@luminaire.training',
   phone: '+49 179 1327191',
   website: 'www.luminaire.training',
