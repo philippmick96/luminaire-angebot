@@ -104,10 +104,11 @@ const DEFAULT_CARD: CardData = {
 }
 
 export default function App() {
-  const [view, setView] = useState<View>('landing')
-  const [tab, setTab]   = useState<'angebot' | 'visitenkarte'>('angebot')
-  const [data, setData] = useState<QuoteData>(DEFAULT)
-  const [card, setCard] = useState<CardData>(DEFAULT_CARD)
+  const [view, setView]       = useState<View>('landing')
+  const [tab, setTab]         = useState<'angebot' | 'visitenkarte'>('angebot')
+  const [data, setData]       = useState<QuoteData>(DEFAULT)
+  const [card, setCard]       = useState<CardData>(DEFAULT_CARD)
+  const [lightMode, setLight] = useState(false)
 
   function navigate(target: 'angebot' | 'visitenkarte') {
     setTab(target)
@@ -161,7 +162,7 @@ export default function App() {
   }.pdf`
 
   return (
-    <div className="app">
+    <div className={`app${lightMode ? ' light' : ''}`}>
 
       {/* ── HEADER ─────────────────────────────────── */}
       <header className="app-header">
@@ -181,6 +182,13 @@ export default function App() {
             Visitenkarte
           </button>
         </nav>
+        <button
+          className="mode-toggle"
+          onClick={() => setLight(l => !l)}
+          title={lightMode ? 'Dunkelmodus' : 'Hellmodus'}
+        >
+          {lightMode ? '🌙' : '☀️'}
+        </button>
       </header>
 
       <div className="main-content">
