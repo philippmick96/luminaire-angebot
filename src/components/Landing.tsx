@@ -32,14 +32,13 @@ const C = {
 }
 
 const T: Record<string, CSSProperties> = {
-  h1: { fontSize: 'clamp(40px,6vw,72px)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: C.text },
-  h2: { fontSize: 'clamp(28px,4vw,48px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: C.text },
+  h1: { fontSize: 'clamp(32px,6vw,72px)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: C.text },
+  h2: { fontSize: 'clamp(24px,4vw,48px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: C.text },
   h3: { fontSize: 18, fontWeight: 600, color: C.text },
   body: { fontSize: 16, lineHeight: 1.6, color: C.muted },
   label: { fontSize: 12, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase' as const, color: C.purpleMid },
 }
 
-// Ambient glow blob
 function Glow({ style }: { style: CSSProperties }) {
   return (
     <div style={{
@@ -51,7 +50,6 @@ function Glow({ style }: { style: CSSProperties }) {
   )
 }
 
-// Glassmorphism card
 function Card({ children, style }: { children: React.ReactNode; style?: CSSProperties }) {
   return (
     <div style={{
@@ -66,7 +64,6 @@ function Card({ children, style }: { children: React.ReactNode; style?: CSSPrope
   )
 }
 
-// Mock PDF offer preview (simplified visual)
 function OfferMockup() {
   return (
     <div style={{
@@ -81,14 +78,12 @@ function OfferMockup() {
       width: '100%',
       maxWidth: 480,
     }}>
-      {/* window chrome */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
         <div style={{ marginLeft: 8, color: C.dim, fontSize: 11 }}>Angebot_LUM-2026-409.pdf</div>
       </div>
-      {/* fake PDF rows */}
       {[
         { label: 'luminAIre',       color: C.purpleMid, bold: true, size: 15 },
         { label: 'ANGEBOT',         color: C.text,      bold: true, size: 13 },
@@ -112,7 +107,6 @@ function OfferMockup() {
   )
 }
 
-// Feature chip
 function Chip({ label }: { label: string }) {
   return (
     <span style={{
@@ -136,24 +130,22 @@ export default function Landing({ onNavigate }: Props) {
         position: 'sticky', top: 0, zIndex: 100,
         background: 'rgba(13,17,23,0.85)', backdropFilter: 'blur(16px)',
         borderBottom: `1px solid ${C.border}`,
-        padding: '0 32px', height: 60,
+        padding: '0 20px', height: 60,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          {/* Logo */}
           <div style={{ display: 'flex', alignItems: 'baseline', fontSize: 18, fontWeight: 700, letterSpacing: 0.3 }}>
             <span style={{ color: C.text }}>lumin</span>
             <span style={{ color: C.purpleMid }}>AI</span>
             <span style={{ color: C.text }}>re</span>
           </div>
-          {/* Nav links */}
-          <div style={{ display: 'flex', gap: 4 }}>
+          {/* Nav links — hidden on mobile via CSS */}
+          <div className="landing-nav-links">
             {['Angebot', 'Visitenkarte'].map(item => (
               <button key={item} onClick={() => onNavigate(item.toLowerCase() as 'angebot' | 'visitenkarte')} style={{
                 background: 'transparent', border: 'none', cursor: 'pointer',
                 color: C.muted, fontSize: 14, fontWeight: 500, fontFamily: 'inherit',
-                padding: '6px 14px', borderRadius: 6,
-                transition: 'color 0.15s',
+                padding: '6px 14px', borderRadius: 6, transition: 'color 0.15s',
               }}
                 onMouseEnter={e => (e.currentTarget.style.color = C.text)}
                 onMouseLeave={e => (e.currentTarget.style.color = C.muted)}
@@ -164,34 +156,28 @@ export default function Landing({ onNavigate }: Props) {
           </div>
         </div>
 
-        {/* CTA */}
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <button
-            onClick={() => onNavigate('angebot')}
-            style={{
-              background: C.purple, color: '#fff', border: 'none',
-              borderRadius: 8, padding: '8px 18px', fontSize: 13, fontWeight: 600,
-              cursor: 'pointer', fontFamily: 'inherit',
-              boxShadow: '0 0 20px rgba(124,58,237,0.4)',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#6d28d9'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = C.purple; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            Jetzt starten
-          </button>
-        </div>
+        <button
+          onClick={() => onNavigate('angebot')}
+          style={{
+            background: C.purple, color: '#fff', border: 'none',
+            borderRadius: 8, padding: '8px 18px', fontSize: 13, fontWeight: 600,
+            cursor: 'pointer', fontFamily: 'inherit',
+            boxShadow: '0 0 20px rgba(124,58,237,0.4)', transition: 'all 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#6d28d9'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = C.purple; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          Jetzt starten
+        </button>
       </nav>
 
       {/* ── HERO ────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', padding: '100px 32px 80px', textAlign: 'center', overflow: 'hidden' }}>
-        {/* Ambient glows */}
+      <section style={{ position: 'relative', padding: 'clamp(60px,8vw,100px) 20px 60px', textAlign: 'center', overflow: 'hidden' }}>
         <Glow style={{ width: 600, height: 400, background: 'radial-gradient(circle, #7c3aed, transparent)', top: -100, left: '50%', transform: 'translateX(-50%)' }} />
         <Glow style={{ width: 300, height: 300, background: 'radial-gradient(circle, #4c1d95, transparent)', top: 50, left: '15%' }} />
         <Glow style={{ width: 250, height: 250, background: 'radial-gradient(circle, #6d28d9, transparent)', top: 100, right: '12%' }} />
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 860, margin: '0 auto' }}>
-          {/* Badge */}
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.3)',
@@ -208,12 +194,11 @@ export default function Landing({ onNavigate }: Props) {
             </span>
           </h1>
 
-          <p style={{ ...T.body, fontSize: 18, maxWidth: 560, margin: '0 auto 40px', lineHeight: 1.7 }}>
+          <p style={{ ...T.body, fontSize: 'clamp(15px,2vw,18px)' as any, maxWidth: 560, margin: '0 auto 40px', lineHeight: 1.7 }}>
             Erstelle druckfertige Angebots-PDFs und professionelle Visitenkarten —
             direkt im Browser, ohne Software.
           </p>
 
-          {/* CTA buttons */}
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
               onClick={() => onNavigate('angebot')}
@@ -221,8 +206,7 @@ export default function Landing({ onNavigate }: Props) {
                 background: C.purple, color: '#fff', border: 'none',
                 borderRadius: 8, padding: '13px 28px', fontSize: 15, fontWeight: 600,
                 cursor: 'pointer', fontFamily: 'inherit',
-                boxShadow: '0 0 30px rgba(124,58,237,0.45)',
-                transition: 'all 0.2s',
+                boxShadow: '0 0 30px rgba(124,58,237,0.45)', transition: 'all 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 0 40px rgba(124,58,237,0.6)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(124,58,237,0.45)' }}
@@ -235,8 +219,7 @@ export default function Landing({ onNavigate }: Props) {
                 background: 'transparent', color: C.text,
                 border: `1px solid ${C.border}`,
                 borderRadius: 8, padding: '13px 28px', fontSize: 15, fontWeight: 600,
-                cursor: 'pointer', fontFamily: 'inherit',
-                transition: 'all 0.2s',
+                cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = C.purple; e.currentTarget.style.color = C.purpleMid }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.text }}
@@ -246,13 +229,11 @@ export default function Landing({ onNavigate }: Props) {
           </div>
         </div>
 
-        {/* Hero visual – two mockups floating */}
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 960, margin: '72px auto 0', display: 'flex', gap: 32, justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-          {/* Offer mockup */}
+        {/* Hero visuals — hidden on mobile via CSS */}
+        <div className="landing-hero-visuals" style={{ position: 'relative', zIndex: 1, maxWidth: 960, margin: '72px auto 0', gap: 32, justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap' }}>
           <div style={{ transform: 'rotate(-1.5deg)', filter: 'drop-shadow(0 32px 80px rgba(124,58,237,0.3))', flexShrink: 0 }}>
             <OfferMockup />
           </div>
-          {/* Card stack */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, transform: 'rotate(1deg)', filter: 'drop-shadow(0 32px 80px rgba(124,58,237,0.35))', marginTop: 48, flexShrink: 0 }}>
             <BusinessCardFront data={DEFAULT_CARD} scale={0.78} />
             <BusinessCardBack data={DEFAULT_CARD} scale={0.78} />
@@ -261,12 +242,11 @@ export default function Landing({ onNavigate }: Props) {
       </section>
 
       {/* ── DIVIDER ─────────────────────────────────────────── */}
-      <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.4), transparent)', margin: '0 32px' }} />
+      <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.4), transparent)', margin: '0 20px' }} />
 
       {/* ── FEATURE: ANGEBOT ────────────────────────────────── */}
-      <section style={{ padding: '96px 32px', maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 64, alignItems: 'center' }}>
-          {/* Text */}
+      <section style={{ padding: 'clamp(48px,6vw,96px) 20px', maxWidth: 1100, margin: '0 auto' }}>
+        <div className="landing-feature-grid">
           <div>
             <p style={T.label}>Angebots-Generator</p>
             <h2 style={{ ...T.h2, marginTop: 12, marginBottom: 20 }}>
@@ -287,8 +267,7 @@ export default function Landing({ onNavigate }: Props) {
                 background: 'transparent', color: C.purpleMid,
                 border: `1px solid rgba(124,58,237,0.4)`,
                 borderRadius: 8, padding: '10px 22px', fontSize: 14, fontWeight: 600,
-                cursor: 'pointer', fontFamily: 'inherit',
-                transition: 'all 0.2s',
+                cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = C.purpleDim; e.currentTarget.style.borderColor = C.purple }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)' }}
@@ -296,8 +275,6 @@ export default function Landing({ onNavigate }: Props) {
               Angebot öffnen →
             </button>
           </div>
-
-          {/* Visual */}
           <Card style={{ padding: 28, overflow: 'hidden' }}>
             <OfferMockup />
           </Card>
@@ -305,18 +282,16 @@ export default function Landing({ onNavigate }: Props) {
       </section>
 
       {/* ── DIVIDER ─────────────────────────────────────────── */}
-      <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(48,54,61,0.8), transparent)', margin: '0 32px' }} />
+      <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(48,54,61,0.8), transparent)', margin: '0 20px' }} />
 
       {/* ── FEATURE: VISITENKARTE ───────────────────────────── */}
-      <section style={{ padding: '96px 32px', maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 64, alignItems: 'center' }}>
-          {/* Visual */}
+      <section style={{ padding: 'clamp(48px,6vw,96px) 20px', maxWidth: 1100, margin: '0 auto' }}>
+        {/* landing-feature-grid-reverse: on mobile, visual moves after text */}
+        <div className="landing-feature-grid landing-feature-grid-reverse">
           <Card style={{ padding: 36, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
             <BusinessCardFront data={DEFAULT_CARD} scale={0.85} />
             <BusinessCardBack data={DEFAULT_CARD} scale={0.85} />
           </Card>
-
-          {/* Text */}
           <div>
             <p style={T.label}>Visitenkarten-Generator</p>
             <h2 style={{ ...T.h2, marginTop: 12, marginBottom: 20 }}>
@@ -337,8 +312,7 @@ export default function Landing({ onNavigate }: Props) {
                 background: 'transparent', color: C.purpleMid,
                 border: `1px solid rgba(124,58,237,0.4)`,
                 borderRadius: 8, padding: '10px 22px', fontSize: 14, fontWeight: 600,
-                cursor: 'pointer', fontFamily: 'inherit',
-                transition: 'all 0.2s',
+                cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = C.purpleDim; e.currentTarget.style.borderColor = C.purple }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)' }}
@@ -351,14 +325,14 @@ export default function Landing({ onNavigate }: Props) {
 
       {/* ── STATS STRIP ─────────────────────────────────────── */}
       <section style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 32px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 32, textAlign: 'center' }}>
+        <div className="landing-stats-grid" style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(32px,4vw,48px) 20px' }}>
           {[
             { num: '< 60s', desc: 'Vom Ausfüllen zum fertigen PDF' },
             { num: '85×55', desc: 'Europäisches Druckformat' },
             { num: '100%', desc: 'Im Browser, keine Software nötig' },
           ].map(stat => (
             <div key={stat.num}>
-              <div style={{ fontSize: 36, fontWeight: 700, color: C.text, marginBottom: 8, letterSpacing: -1 }}>{stat.num}</div>
+              <div style={{ fontSize: 'clamp(28px,4vw,36px)', fontWeight: 700, color: C.text, marginBottom: 8, letterSpacing: -1 }}>{stat.num}</div>
               <div style={{ fontSize: 14, color: C.muted }}>{stat.desc}</div>
             </div>
           ))}
@@ -366,12 +340,10 @@ export default function Landing({ onNavigate }: Props) {
       </section>
 
       {/* ── CTA SECTION ─────────────────────────────────────── */}
-      <section style={{ padding: '96px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: 'clamp(60px,6vw,96px) 20px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <Glow style={{ width: 500, height: 300, background: 'radial-gradient(circle, #4c1d95, transparent)', top: -50, left: '50%', transform: 'translateX(-50%)' }} />
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, margin: '0 auto' }}>
-          <h2 style={{ ...T.h2, marginBottom: 20 }}>
-            Bereit loszulegen?
-          </h2>
+          <h2 style={{ ...T.h2, marginBottom: 20 }}>Bereit loszulegen?</h2>
           <p style={{ ...T.body, marginBottom: 40, fontSize: 17 }}>
             Erstelle dein erstes professionelles Angebot oder deine Visitenkarte — kostenlos, sofort, ohne Anmeldung.
           </p>
@@ -382,8 +354,7 @@ export default function Landing({ onNavigate }: Props) {
                 background: C.purple, color: '#fff', border: 'none',
                 borderRadius: 8, padding: '14px 32px', fontSize: 15, fontWeight: 600,
                 cursor: 'pointer', fontFamily: 'inherit',
-                boxShadow: '0 0 30px rgba(124,58,237,0.5)',
-                transition: 'all 0.2s',
+                boxShadow: '0 0 30px rgba(124,58,237,0.5)', transition: 'all 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
@@ -396,8 +367,7 @@ export default function Landing({ onNavigate }: Props) {
                 background: 'transparent', color: C.text,
                 border: `1px solid ${C.border}`,
                 borderRadius: 8, padding: '14px 32px', fontSize: 15, fontWeight: 600,
-                cursor: 'pointer', fontFamily: 'inherit',
-                transition: 'all 0.2s',
+                cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = C.purple; e.currentTarget.style.color = C.purpleMid }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.text }}
@@ -409,7 +379,7 @@ export default function Landing({ onNavigate }: Props) {
       </section>
 
       {/* ── FOOTER ──────────────────────────────────────────── */}
-      <footer style={{ borderTop: `1px solid ${C.border}`, padding: '32px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+      <footer style={{ borderTop: `1px solid ${C.border}`, padding: '28px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', fontSize: 15, fontWeight: 700 }}>
           <span style={{ color: C.text }}>lumin</span>
           <span style={{ color: C.purpleMid }}>AI</span>
@@ -422,8 +392,7 @@ export default function Landing({ onNavigate }: Props) {
           {['Angebot', 'Visitenkarte'].map(item => (
             <button key={item} onClick={() => onNavigate(item.toLowerCase() as 'angebot' | 'visitenkarte')} style={{
               background: 'transparent', border: 'none', cursor: 'pointer',
-              color: C.muted, fontSize: 13, fontFamily: 'inherit',
-              transition: 'color 0.15s',
+              color: C.muted, fontSize: 13, fontFamily: 'inherit', transition: 'color 0.15s',
             }}
               onMouseEnter={e => (e.currentTarget.style.color = C.text)}
               onMouseLeave={e => (e.currentTarget.style.color = C.muted)}

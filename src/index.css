@@ -556,3 +556,107 @@ input[type="number"] {
 .design-thumb-btn.selected .design-thumb-label {
   color: var(--purple);
 }
+
+/* ── LANDING PAGE LAYOUT CLASSES ─────────────────────────── */
+
+.landing-nav-links {
+  display: flex;
+  gap: 4px;
+}
+
+.landing-hero-visuals {
+  display: flex;
+}
+
+.landing-feature-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 64px;
+  align-items: center;
+}
+
+.landing-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  text-align: center;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+
+  /* ── Tool header ── */
+  .app-header {
+    padding: 0 12px;
+    gap: 8px;
+    height: 48px;
+  }
+  .logo-text { font-size: 15px; }
+  .back-btn  { padding: 3px 8px; font-size: 11px; margin-right: 0; }
+  .tab-btn   { padding: 4px 10px; font-size: 11px; }
+  .tab-nav   { margin-left: 2px; }
+
+  /* ── Tool main layout: stack vertically ── */
+  .main-content {
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .form-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow-y: visible;
+    max-height: none;
+    padding: 16px 14px;
+  }
+
+  /* Angebot: hide live-preview on mobile (not readable) */
+  .preview-panel:not(.card-preview-panel) {
+    display: none;
+  }
+
+  /* Card preview: compact */
+  .card-preview-panel {
+    height: auto;
+    flex: none;
+  }
+
+  .card-large-preview {
+    padding: 20px 12px;
+    overflow-x: auto;
+  }
+
+  .card-preview-pair {
+    gap: 12px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Landing: nav links ── */
+  .landing-nav-links {
+    display: none;
+  }
+
+  /* ── Landing: hero visuals ── */
+  .landing-hero-visuals {
+    display: none;
+  }
+
+  /* ── Landing: feature sections ── */
+  .landing-feature-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .landing-feature-grid-reverse > *:first-child { order: 2; }
+  .landing-feature-grid-reverse > *:last-child  { order: 1; }
+
+  /* ── Landing: stats ── */
+  .landing-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
