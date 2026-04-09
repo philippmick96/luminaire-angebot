@@ -606,7 +606,7 @@ export default function App() {
           {/* Download */}
           <div className="form-section">
             <PDFDownloadLink
-              document={<LuminairePDF data={data} />}
+              document={<LuminairePDF data={data} lightMode={lightMode} />}
               fileName={fileName}
               className="btn btn-primary download-btn"
             >
@@ -624,7 +624,7 @@ export default function App() {
           </div>
           <div className="pdf-wrapper">
             <PDFViewer width="100%" height="100%" showToolbar={false}>
-              <LuminairePDF data={data} />
+              <LuminairePDF data={data} lightMode={lightMode} />
             </PDFViewer>
           </div>
         </div>
