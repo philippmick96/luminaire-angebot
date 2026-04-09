@@ -36,6 +36,7 @@ export interface CardData {
   email: string
   phone: string
   website: string
+  address: string
   tagline: string
   theme: CardTheme
   nameFontSize: number

@@ -96,6 +96,7 @@ const DEFAULT_CARD: CardData = {
   email:        'info@luminaire.training',
   phone:        '+49 179 1327191',
   website:      'www.luminaire.training',
+  address:      'Kaiserstraße 26a, 66111 Saarbrücken',
   tagline:      'Das Teuerste an KI ist, sie nicht zu nutzen.',
   theme:        'sweep',
   nameFontSize: 24,
@@ -232,6 +233,14 @@ export default function App() {
                     value={card.website}
                     onChange={e => setCard(c => ({ ...c, website: e.target.value }))}
                     placeholder="www.luminaire.training"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Adresse</label>
+                  <input
+                    value={card.address}
+                    onChange={e => setCard(c => ({ ...c, address: e.target.value }))}
+                    placeholder="Kaiserstraße 26a, 66111 Saarbrücken"
                   />
                 </div>
               </div>

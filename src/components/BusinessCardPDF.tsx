@@ -157,9 +157,9 @@ const s = StyleSheet.create({
   // name placeholder (fontSize overridden inline)
   name: { position: 'absolute', bottom: 28, left: 13, right: 13, fontFamily: 'Helvetica-Bold', letterSpacing: -0.5 },
 
-  titleText: { position: 'absolute', bottom: 14, left: 13, fontFamily: 'Helvetica', fontSize: 6.5, letterSpacing: 0.8 },
+  titleText: { position: 'absolute', bottom: 14, left: 13, fontFamily: 'Helvetica', fontSize: 7.5, letterSpacing: 0.8 },
   contactsBlock: { position: 'absolute', bottom: 13, right: 13, alignItems: 'flex-end' },
-  contactLine: { fontFamily: 'Helvetica', fontSize: 6, marginBottom: 1.5 },
+  contactLine: { fontFamily: 'Helvetica', fontSize: 7, marginBottom: 1.5 },
 
   backCenter: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
   backLogoRow: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: 11 },
@@ -211,6 +211,7 @@ export function BusinessCardPDF({ data }: { data: CardData }) {
         <View style={s.contactsBlock}>
           {data.email   ? <Text style={[s.contactLine, { color: contactColor }]}>{data.email}</Text>   : null}
           {data.website ? <Text style={[s.contactLine, { color: contactColor }]}>{data.website}</Text> : null}
+          {data.address ? <Text style={[s.contactLine, { color: contactColor }]}>{data.address}</Text> : null}
         </View>
       </Page>
 

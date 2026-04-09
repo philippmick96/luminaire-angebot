@@ -8,6 +8,7 @@ const DEFAULT_CARD = {
   email: 'info@luminaire.training',
   phone: '+49 179 1327191',
   website: 'www.luminaire.training',
+  address: 'Kaiserstraße 26a, 66111 Saarbrücken',
   tagline: 'Das Teuerste an KI ist, sie nicht zu nutzen.',
   theme: 'sweep' as const,
 }

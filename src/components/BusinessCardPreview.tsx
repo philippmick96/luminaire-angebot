@@ -58,12 +58,13 @@ export function BusinessCardFront({ data, scale: s = 1 }: Props) {
         position: 'absolute', bottom: 14 * s, left: 16 * s, right: 16 * s,
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
       }}>
-        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 7.5 * s, fontWeight: 400, letterSpacing: 0.8, textTransform: 'uppercase' }}>
+        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 8.5 * s, fontWeight: 400, letterSpacing: 0.8, textTransform: 'uppercase' }}>
           {data.title || 'Position'}
         </div>
-        <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 7 * s, textAlign: 'right', lineHeight: 1.7 }}>
+        <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 8 * s, textAlign: 'right', lineHeight: 1.75 }}>
           {data.email   && <div>{data.email}</div>}
           {data.website && <div>{data.website}</div>}
+          {data.address && <div>{data.address}</div>}
         </div>
       </div>
 
@@ -140,12 +141,13 @@ function PearlFront({ data, scale: s = 1 }: Props) {
         position: 'absolute', bottom: 14 * s, left: 16 * s, right: 16 * s,
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
       }}>
-        <div style={{ color: '#7c3aed', fontSize: 7.5 * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
+        <div style={{ color: '#7c3aed', fontSize: 8.5 * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
           {data.title || 'Position'}
         </div>
-        <div style={{ color: '#9ca3af', fontSize: 7 * s, textAlign: 'right', lineHeight: 1.7 }}>
+        <div style={{ color: '#9ca3af', fontSize: 8 * s, textAlign: 'right', lineHeight: 1.75 }}>
           {data.email   && <div>{data.email}</div>}
           {data.website && <div>{data.website}</div>}
+          {data.address && <div>{data.address}</div>}
         </div>
       </div>
     </Card>
@@ -227,12 +229,13 @@ function FrostFront({ data, scale: s = 1 }: Props) {
         position: 'absolute', bottom: 14 * s, left: 16 * s, right: 16 * s,
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
       }}>
-        <div style={{ color: '#6d28d9', fontSize: 7.5 * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
+        <div style={{ color: '#6d28d9', fontSize: 8.5 * s, fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase' }}>
           {data.title || 'Position'}
         </div>
-        <div style={{ color: '#7c3aed', fontSize: 7 * s, textAlign: 'right', lineHeight: 1.7, opacity: 0.7 }}>
+        <div style={{ color: '#7c3aed', fontSize: 8 * s, textAlign: 'right', lineHeight: 1.75, opacity: 0.7 }}>
           {data.email   && <div>{data.email}</div>}
           {data.website && <div>{data.website}</div>}
+          {data.address && <div>{data.address}</div>}
         </div>
       </div>
     </Card>
