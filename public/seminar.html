@@ -258,6 +258,79 @@
     .fi { opacity: 0; transition: opacity 0.9s ease; transition-delay: var(--fd, 0ms); }
     .fi.in { opacity: 1; }
 
+    /* ── SCROLL TUNNEL (Apple-style) ────────────────── */
+    .scroll-tunnel { position: relative; }
+    .sticky-scene {
+      position: sticky;
+      top: 52px;
+      height: calc(100vh - 52px);
+      overflow: hidden;
+      background: #000;
+    }
+    .sticky-scene > video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; z-index: 0;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    .sticky-scene > video.loaded { opacity: 1; }
+    .tunnel-fallback {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; z-index: 1;
+      opacity: 0.85;
+      transition: opacity 1.2s ease;
+      transform: scale(1.02);
+    }
+    /* Subtle edge vignette — doesn't cover center */
+    .scene-vignette {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 85% at 50% 50%, transparent 45%, rgba(0,0,0,0.7) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 18%, transparent 78%, rgba(0,0,0,0.55) 100%);
+    }
+    /* Text steps */
+    .scene-step {
+      position: absolute; inset: 0; z-index: 3;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 80px 24px;
+      opacity: 0; transform: translateY(44px);
+      transition: opacity 0.75s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.75s cubic-bezier(0.25,0.46,0.45,0.94);
+      pointer-events: none;
+    }
+    .scene-step.visible {
+      opacity: 1; transform: translateY(0);
+      pointer-events: auto;
+    }
+    .scene-step.past {
+      opacity: 0; transform: translateY(-44px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    /* Side progress dots */
+    .tunnel-progress {
+      position: absolute; right: 28px; top: 50%; transform: translateY(-50%);
+      z-index: 4; display: flex; flex-direction: column; gap: 9px;
+    }
+    .tunnel-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.22);
+      transition: background 0.3s, transform 0.3s;
+    }
+    .tunnel-dot.active {
+      background: #a78bfa; transform: scale(1.6);
+    }
+    /* Scene scroll hint */
+    .scene-scroll-hint {
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 10px;
+      color: rgba(255,255,255,0.35); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      transition: opacity 0.4s;
+    }
+    .scene-scroll-hint.hidden { opacity: 0; pointer-events: none; }
+
     /* ── CUSTOM CURSOR ───────────────────────────────── */
     body { cursor: none; }
     a, button, .card, .rule-card, .model-card, .legal-item, .eu-card, .action-card, .ht-item, .nav-btn, .nav-back { cursor: none; }
@@ -340,44 +413,63 @@
 </nav>
 
 
-<!-- ══ HERO ════════════════════════════════════════════════ -->
-<section id="s-hero" class="bg0">
-  <!-- Video background (scroll-scrubbed) -->
-  <div class="section-bg">
-    <video class="bg-video" id="hero-video" muted playsinline preload="auto"
-      data-scroll-video="true"
-      src="https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4"><!-- video-url-hero --></video>
-    <img class="bg-img" id="hero-img"
-      src="https://tempfile.aiquickdraw.com/h/7c5e4cf5f3c75b36e9be5e95c5f730c3_1776605854.png"
-      alt="" />
-  </div>
-  <div class="section-overlay"></div>
-  <div class="section-glow">
-    <div class="atmo atmo-hero"></div>
-    <div class="atmo atmo-hero2"></div>
-  </div>
+<!-- ══ HERO SCROLL TUNNEL ════════════════════════════════ -->
+<div id="s-hero" class="scroll-tunnel" style="height:360vh">
+  <div class="sticky-scene">
+    <video id="hero-video" muted playsinline preload="auto"
+      src="https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4"></video>
+    <img class="tunnel-fallback" id="hero-img"
+      src="https://tempfile.aiquickdraw.com/h/7c5e4cf5f3c75b36e9be5e95c5f730c3_1776605854.png" alt="" />
+    <div class="scene-vignette"></div>
 
-  <div class="s-inner">
-    <div class="time-badge fu" style="--fd:100ms">KI-Führerschein Seminar · luminAIre</div>
-    <h1 class="hero-title split-words">
-      KI als echter<br>
-      <span class="gradient-text">Denk- und<br>Arbeitspartner.</span>
-    </h1>
-    <p class="body-text fu" style="--fd:500ms">
-      3 Stunden · 9 Blöcke · <strong>Ihr Job. Morgen anders.</strong>
-    </p>
-    <div class="pill-row fu" style="--fd:700ms">
-      <span class="pill">KI-Führerschein</span>
-      <span class="pill">EU AI Act konform</span>
-      <span class="pill">Sofort einsetzbar</span>
-      <span class="pill">Praxisnah</span>
+    <div class="tunnel-progress" id="hero-dots">
+      <div class="tunnel-dot active"></div>
+      <div class="tunnel-dot"></div>
+      <div class="tunnel-dot"></div>
+    </div>
+
+    <!-- Step 0: Main headline (0–38%) -->
+    <div class="scene-step visible" data-from="0" data-to="0.38">
+      <div class="time-badge" style="margin-bottom:24px">KI-Führerschein Seminar · luminAIre</div>
+      <h1 class="hero-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
+        KI als echter<br>
+        <span class="gradient-text">Denk- und<br>Arbeitspartner.</span>
+      </h1>
+    </div>
+
+    <!-- Step 1: Stats (38–72%) -->
+    <div class="scene-step" data-from="0.38" data-to="0.72">
+      <p class="eyebrow" style="margin-bottom:20px">Ihr Seminar auf einen Blick</p>
+      <h2 class="section-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
+        3 Stunden.<br><span class="gradient-text">Ihr Job. Morgen anders.</span>
+      </h2>
+      <div class="stats-row" style="margin-top:48px;max-width:600px">
+        <div class="stat"><span class="stat-val">9</span><span class="stat-lbl">Blöcke</span></div>
+        <div class="stat"><span class="stat-val">3h</span><span class="stat-lbl">Praxis</span></div>
+        <div class="stat"><span class="stat-val">100%</span><span class="stat-lbl">Direkt einsetzbar</span></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Pills (72–100%) -->
+    <div class="scene-step" data-from="0.72" data-to="1.01">
+      <p class="eyebrow" style="margin-bottom:20px">Was Sie mitnehmen</p>
+      <h2 class="medium-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
+        <span class="gradient-text">Praxiswissen,</span><br>das morgen wirkt.
+      </h2>
+      <div class="pill-row" style="margin-top:32px">
+        <span class="pill">KI-Führerschein</span>
+        <span class="pill">EU AI Act konform</span>
+        <span class="pill">Sofort einsetzbar</span>
+        <span class="pill">Praxisnah</span>
+      </div>
+    </div>
+
+    <div class="scene-scroll-hint" id="hero-scroll-hint">
+      Scroll
+      <div class="scroll-chevron"><span></span><span></span></div>
     </div>
   </div>
-  <div class="scroll-hint">
-    Scroll
-    <div class="scroll-chevron"><span></span><span></span></div>
-  </div>
-</section>
+</div>
 
 
 <!-- ══ OPENING QUOTE ════════════════════════════════════════ -->
@@ -549,39 +641,53 @@
 </section>
 
 
-<!-- ══ BLOCK 6 — WORKSHOP ═══════════════════════════════════ -->
-<section id="s-b6" class="bg3">
-  <div class="block-bg-num">06</div>
-  <!-- Scroll-driven background video -->
-  <div class="section-bg">
-    <video class="bg-video" id="workshop-video" muted playsinline preload="auto"
-      data-scroll-video="true"
-      src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"><!-- video-url-workshop --></video>
-    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/bd75ff8b33a7766d87493fc3e84bf306_1776605847.png" alt="" />
-  </div>
-  <div class="section-overlay"></div>
-  <div class="atmo atmo-right" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">10:40 – 11:15 · 35 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 6 · Der wichtigste Block</p>
-    <h2 class="section-title split-words">
-      Deine Aufgabe.<br><span class="gradient-text">Deine Lösung.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">Jeder arbeitet an einer <strong>echten Aufgabe aus seinem Arbeitsalltag</strong> — und geht mit einem fertigen Ergebnis nach Hause.</p>
-    <div class="cards c4">
-      <div class="card si" style="--fd:100ms"><span class="card-icon">✉️</span><h3>Kommunikation &amp; Texte</h3><p>E-Mails, Berichte, Protokolle, Zusammenfassungen</p></div>
-      <div class="card si" style="--fd:200ms"><span class="card-icon">💡</span><h3>Kreativität &amp; Ideen</h3><p>Kampagnen, Brainstorming, Präsentationen, Konzepte</p></div>
-      <div class="card si" style="--fd:300ms"><span class="card-icon">🔍</span><h3>Analyse &amp; Recherche</h3><p>Daten verstehen, Vergleiche, Marktanalysen</p></div>
-      <div class="card si hi" style="--fd:400ms"><span class="card-icon">⚡</span><h3>Routine &amp; Zeitfresser</h3><p>Alles, was täglich Zeit kostet und nervt</p></div>
+<!-- ══ BLOCK 6 — WORKSHOP SCROLL TUNNEL ═════════════════ -->
+<div id="s-b6" class="scroll-tunnel" style="height:360vh">
+  <div class="sticky-scene">
+    <video id="workshop-video" muted playsinline preload="auto"
+      src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"></video>
+    <img class="tunnel-fallback"
+      src="https://tempfile.aiquickdraw.com/h/bd75ff8b33a7766d87493fc3e84bf306_1776605847.png" alt="" />
+    <div class="scene-vignette"></div>
+
+    <div class="tunnel-progress" id="ws-dots">
+      <div class="tunnel-dot active"></div>
+      <div class="tunnel-dot"></div>
+      <div class="tunnel-dot"></div>
     </div>
-    <div class="s-divider fu" style="--fd:500ms; margin-top:48px"></div>
-    <div class="cards c3" style="margin-top:0">
-      <div class="card si" style="--fd:600ms"><span class="card-icon">📝</span><h3>Schritt 1</h3><p>Eigene Aufgabe in eigenen Worten beschreiben</p></div>
-      <div class="card si hi" style="--fd:700ms"><span class="card-icon">🧪</span><h3>Schritt 2 (25 Min)</h3><p>4-Regel-Prompt schreiben · KI ausführen · Ergebnis bewerten · Verbessern</p></div>
-      <div class="card si" style="--fd:800ms"><span class="card-icon">🎤</span><h3>Schritt 3 (5 Min)</h3><p>3–4 Freiwillige zeigen ihr Ergebnis · „Was war überraschend?"</p></div>
+
+    <!-- Step 0: Headline (0–35%) -->
+    <div class="scene-step visible" data-from="0" data-to="0.35">
+      <div class="time-badge" style="margin-bottom:20px">10:40 – 11:15 · 35 Min</div>
+      <p class="eyebrow" style="margin-bottom:16px">Block 6 · Der wichtigste Block</p>
+      <h2 class="section-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
+        Deine Aufgabe.<br><span class="gradient-text">Deine Lösung.</span>
+      </h2>
+      <p class="body-text" style="margin-top:24px">Jeder arbeitet an einer <strong>echten Aufgabe aus seinem Arbeitsalltag</strong> — und geht mit einem fertigen Ergebnis nach Hause.</p>
+    </div>
+
+    <!-- Step 1: Use-case cards (35–68%) -->
+    <div class="scene-step" data-from="0.35" data-to="0.68">
+      <p class="eyebrow" style="margin-bottom:24px">Mögliche Themen</p>
+      <div class="cards c4" style="max-width:880px">
+        <div class="card"><span class="card-icon">✉️</span><h3>Kommunikation &amp; Texte</h3><p>E-Mails, Berichte, Protokolle, Zusammenfassungen</p></div>
+        <div class="card"><span class="card-icon">💡</span><h3>Kreativität &amp; Ideen</h3><p>Kampagnen, Brainstorming, Präsentationen</p></div>
+        <div class="card"><span class="card-icon">🔍</span><h3>Analyse &amp; Recherche</h3><p>Daten verstehen, Vergleiche, Marktanalysen</p></div>
+        <div class="card hi"><span class="card-icon">⚡</span><h3>Routine &amp; Zeitfresser</h3><p>Alles, was täglich Zeit kostet und nervt</p></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Process (68–100%) -->
+    <div class="scene-step" data-from="0.68" data-to="1.01">
+      <p class="eyebrow" style="margin-bottom:24px">Der Workshop-Ablauf</p>
+      <div class="cards c3" style="max-width:780px">
+        <div class="card"><span class="card-icon">📝</span><h3>Schritt 1</h3><p>Eigene Aufgabe in eigenen Worten beschreiben</p></div>
+        <div class="card hi"><span class="card-icon">🧪</span><h3>Schritt 2 · 25 Min</h3><p>4-Regel-Prompt schreiben · KI ausführen · Ergebnis verbessern</p></div>
+        <div class="card"><span class="card-icon">🎤</span><h3>Schritt 3 · 5 Min</h3><p>3–4 Freiwillige zeigen ihr Ergebnis · „Was war überraschend?"</p></div>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 
 <!-- ══ BLOCK 7 — MODELLE & TOOLS ════════════════════════════ -->
@@ -699,7 +805,7 @@ function onScroll() {
   const total = document.body.scrollHeight - window.innerHeight;
   fill.style.width = (y / total * 100) + '%';
   nav.classList.toggle('solid', y > 60);
-  tickVideos();
+  tickTunnels();
   tickParallax();
 }
 
@@ -767,40 +873,67 @@ const cio = new IntersectionObserver(entries => {
 }, { threshold: 0.5 });
 document.querySelectorAll('[data-count-to]').forEach(el => cio.observe(el));
 
-/* ── SCROLL-SCRUBBED VIDEOS ───────────────────────── */
-// Maps section element → its video element
-const videoSections = [];
-document.querySelectorAll('[data-scroll-video]').forEach(vid => {
-  if (!vid.src || vid.src === window.location.href) return; // skip empty
-  const section = vid.closest('section');
-  if (section) videoSections.push({ section, vid });
-  vid.pause();
+/* ── SCROLL TUNNELS (Apple-style) ────────────────── */
+const tunnels = [];
+
+document.querySelectorAll('.scroll-tunnel').forEach(tunnel => {
+  const scene  = tunnel.querySelector('.sticky-scene');
+  const video  = tunnel.querySelector('video');
+  const steps  = [...tunnel.querySelectorAll('.scene-step')];
+  const dots   = [...(tunnel.querySelector('.tunnel-progress')?.children || [])];
+  const hint   = tunnel.querySelector('.scene-scroll-hint');
+
+  // Load video: show it once ready, fade out fallback
+  if (video) {
+    video.pause();
+    const fallback = tunnel.querySelector('.tunnel-fallback');
+    video.addEventListener('loadeddata', () => {
+      video.classList.add('loaded');
+      if (fallback) { fallback.style.opacity = '0'; }
+    });
+  }
+
+  tunnels.push({ tunnel, video, steps, dots, hint });
 });
 
-function tickVideos() {
-  videoSections.forEach(({ section, vid }) => {
-    if (!vid.duration) return;
-    const rect     = section.getBoundingClientRect();
-    const progress = 1 - (rect.bottom / (window.innerHeight + rect.height));
-    const clamped  = Math.max(0, Math.min(1, progress));
-    vid.currentTime = clamped * vid.duration;
+function tickTunnels() {
+  tunnels.forEach(({ tunnel, video, steps, dots, hint }) => {
+    const rect     = tunnel.getBoundingClientRect();
+    const scrolled = -rect.top;
+    const total    = tunnel.offsetHeight - window.innerHeight;
+    const progress = total > 0 ? Math.max(0, Math.min(1, scrolled / total)) : 0;
+
+    // Scrub video
+    if (video && video.duration && video.readyState >= 1) {
+      video.currentTime = progress * video.duration;
+    }
+
+    // Show/hide text steps
+    let activeStep = 0;
+    steps.forEach((step, i) => {
+      const from = parseFloat(step.dataset.from);
+      const to   = parseFloat(step.dataset.to);
+      if (progress >= from && progress < to) {
+        step.classList.add('visible');
+        step.classList.remove('past');
+        activeStep = i;
+      } else if (progress >= to) {
+        step.classList.remove('visible');
+        step.classList.add('past');
+      } else {
+        step.classList.remove('visible', 'past');
+      }
+    });
+
+    // Update progress dots
+    dots.forEach((d, i) => d.classList.toggle('active', i === activeStep));
+
+    // Hide scroll hint once user has scrolled into tunnel
+    if (hint) hint.classList.toggle('hidden', progress > 0.05);
   });
 }
 
-// Register scroll-scrubbed videos and fade out fallback images on load
-document.querySelectorAll('[data-scroll-video]').forEach(vid => {
-  vid.addEventListener('loadedmetadata', () => {
-    const section = vid.closest('section');
-    if (section && !videoSections.find(v => v.vid === vid)) {
-      videoSections.push({ section, vid });
-    }
-  });
-  vid.addEventListener('loadeddata', () => {
-    // Fade out the sibling fallback image
-    const img = vid.closest('.section-bg') && vid.closest('.section-bg').querySelector('.bg-img');
-    if (img) { img.style.transition = 'opacity 1s ease'; img.style.opacity = '0'; }
-  });
-});
+tickTunnels(); // init state on load
 
 /* ── PARALLAX IMAGE BACKGROUNDS ──────────────────── */
 let ticking = false;
@@ -809,32 +942,15 @@ function tickParallax() {
   ticking = true;
   requestAnimationFrame(() => {
     document.querySelectorAll('.bg-img').forEach(img => {
-      const rect  = img.closest('section').getBoundingClientRect();
+      const sec = img.closest('section');
+      if (!sec) return;
+      const rect  = sec.getBoundingClientRect();
       const rel   = (window.innerHeight / 2 - rect.top - rect.height / 2);
-      const shift = rel * 0.06;
-      img.style.transform = `scale(1.08) translateY(${shift}px)`;
+      img.style.transform = `scale(1.08) translateY(${rel * 0.06}px)`;
     });
     ticking = false;
   });
 }
-
-/* ── FUNCTION TO INJECT VIDEO SRCS LATER ─────────── */
-// Call this when Kling videos are ready:
-// Videos already embedded:
-// Hero:     https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4
-// Workshop: https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4
-window.setVideoSrc = function(videoId, url) {
-  const vid = document.getElementById(videoId);
-  if (!vid) return;
-  vid.src = url;
-  vid.load();
-  // hide the fallback img once video loads
-  vid.addEventListener('loadeddata', () => {
-    const img = vid.nextElementSibling;
-    if (img && img.tagName === 'IMG') img.style.opacity = '0';
-    vid.style.opacity = '0.50';
-  });
-};
 
 /* ── CUSTOM CURSOR ─────────────────────────────────────── */
 (function() {
