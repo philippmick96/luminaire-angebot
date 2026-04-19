@@ -259,7 +259,7 @@ export default function App() {
                 <div className="form-group">
                   <label>Farbvariante</label>
                   <div style={{ display: 'flex', gap: 8, marginTop: 2 }}>
-                    {(['sweep', 'pearl', 'frost'] as const).map(t => (
+                    {(['sweep', 'pearl', 'frost', 'aurora'] as const).map(t => (
                       <button
                         key={t}
                         onClick={() => setCard(c => ({ ...c, theme: t }))}
@@ -268,17 +268,17 @@ export default function App() {
                           fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                           transition: 'all 0.15s',
                           background: card.theme === t
-                            ? (t === 'sweep' ? '#7c3aed' : t === 'pearl' ? '#ffffff' : '#ede9fe')
+                            ? (t === 'sweep' ? '#7c3aed' : t === 'pearl' ? '#ffffff' : t === 'frost' ? '#ede9fe' : 'linear-gradient(135deg,#ec4899,#a855f7,#f97316)')
                             : 'rgba(20,15,35,0.8)',
                           color: card.theme === t
-                            ? (t === 'sweep' ? '#ffffff' : '#2e1065')
+                            ? (t === 'sweep' || t === 'aurora' ? '#ffffff' : '#2e1065')
                             : '#94a3b8',
                           borderColor: card.theme === t
-                            ? (t === 'sweep' ? '#7c3aed' : '#a78bfa')
+                            ? (t === 'sweep' ? '#7c3aed' : t === 'aurora' ? '#a855f7' : '#a78bfa')
                             : 'rgba(124,58,237,0.22)',
                         }}
                       >
-                        {t === 'sweep' ? 'Dunkel' : t === 'pearl' ? 'Weiß' : 'Lavendel'}
+                        {t === 'sweep' ? 'Dunkel' : t === 'pearl' ? 'Weiß' : t === 'frost' ? 'Lavendel' : 'Aurora'}
                       </button>
                     ))}
                   </div>

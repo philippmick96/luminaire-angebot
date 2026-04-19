@@ -136,6 +136,40 @@ function GradientFrostBack() {
   )
 }
 
+// ── Aurora (dark noir + vibrant gradient left panel) ──────────
+
+const AURORA_PANEL_W = 97  // ~40 % of card width
+
+function GradientAuroraFront() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gaF" x1="20%" y1="0%" x2="80%" y2="100%">
+          <Stop offset="0%"   stopColor="#ec4899" stopOpacity="1" />
+          <Stop offset="48%"  stopColor="#a855f7" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#f97316" stopOpacity="1" />
+        </LinearGradient>
+      </Defs>
+      <Rect x={0} y={0} width={AURORA_PANEL_W} height={H} fill="url(#gaF)" />
+    </Svg>
+  )
+}
+
+function GradientAuroraBack() {
+  return (
+    <Svg width={W} height={H} style={{ position: 'absolute', top: 0, left: 0 }}>
+      <Defs>
+        <LinearGradient id="gaB" x1="0%" y1="0%" x2="100%" y2="0%">
+          <Stop offset="0%"   stopColor="#ec4899" stopOpacity="1" />
+          <Stop offset="50%"  stopColor="#a855f7" stopOpacity="1" />
+          <Stop offset="100%" stopColor="#f97316" stopOpacity="1" />
+        </LinearGradient>
+      </Defs>
+      <Rect x={0} y={H - 2.5} width={W} height={2.5} fill="url(#gaB)" />
+    </Svg>
+  )
+}
+
 // ── Styles ─────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
@@ -174,9 +208,10 @@ export function BusinessCardPDF({ data }: { data: CardData }) {
   const namePt = (data.nameFontSize ?? 24) * 0.85
   const infoPt = (data.infoFontSize ?? 8) * 0.85
 
-  const isDark = theme === 'sweep'
-  const isPearl = theme === 'pearl'
-  const isFrost = theme === 'frost'
+  const isDark   = theme === 'sweep'
+  const isPearl  = theme === 'pearl'
+  const isFrost  = theme === 'frost'
+  const isAurora = theme === 'aurora'
 
   const nameColor   = isDark ? '#ffffff' : '#1e0a3c'
   const titleColor  = isDark ? 'rgba(255,255,255,0.5)' : (isFrost ? '#6d28d9' : '#7c3aed')
@@ -190,45 +225,72 @@ export function BusinessCardPDF({ data }: { data: CardData }) {
     <Document title="Luminaire Visitenkarte" author="Luminaire">
 
       {/* ── FRONT ─────────────────────────────── */}
-      <Page size={[W, H]} style={isDark ? s.pageDark : s.page}>
-        {isDark && <GradientSweepFront />}
+      <Page size={[W, H]} style={(isDark || isAurora) ? s.pageDark : s.page}>
+        {isDark  && <GradientSweepFront />}
         {isPearl && <GradientPearlFront />}
         {isFrost && <GradientFrostFront />}
+        {isAurora && <GradientAuroraFront />}
 
-        <View style={s.logoRow}>
-          <Text style={isDark ? s.logoText : (isFrost ? s.logoTextF : s.logoTextP)}>lumin</Text>
-          <Text style={isDark ? s.logoAccent : (isFrost ? s.logoAccentF : s.logoAccentP)}>AI</Text>
-          <Text style={isDark ? s.logoText : (isFrost ? s.logoTextF : s.logoTextP)}>re</Text>
-        </View>
+        {!isAurora && (
+          <>
+            <View style={s.logoRow}>
+              <Text style={isDark ? s.logoText : (isFrost ? s.logoTextF : s.logoTextP)}>lumin</Text>
+              <Text style={isDark ? s.logoAccent : (isFrost ? s.logoAccentF : s.logoAccentP)}>AI</Text>
+              <Text style={isDark ? s.logoText : (isFrost ? s.logoTextF : s.logoTextP)}>re</Text>
+            </View>
+            <Text style={[s.name, { fontSize: namePt, color: nameColor }]}>
+              {data.name || 'Ihr Name'}
+            </Text>
+            <Text style={[s.titleText, { color: titleColor, fontSize: infoPt + 0.5 }]}>
+              {data.title || ''}
+            </Text>
+            <View style={s.contactsBlock}>
+              {data.email   ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.email}</Text>   : null}
+              {data.website ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.website}</Text> : null}
+              {data.address ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.address}</Text> : null}
+            </View>
+          </>
+        )}
 
-        <Text style={[s.name, { fontSize: namePt, color: nameColor }]}>
-          {data.name || 'Ihr Name'}
-        </Text>
-
-        <Text style={[s.titleText, { color: titleColor, fontSize: infoPt + 0.5 }]}>
-          {data.title || ''}
-        </Text>
-
-        <View style={s.contactsBlock}>
-          {data.email   ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.email}</Text>   : null}
-          {data.website ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.website}</Text> : null}
-          {data.address ? <Text style={[s.contactLine, { color: contactColor, fontSize: infoPt }]}>{data.address}</Text> : null}
-        </View>
+        {isAurora && (
+          <>
+            {/* Logo – top right */}
+            <View style={{ position: 'absolute', top: 12, right: 13, flexDirection: 'row', alignItems: 'flex-end' }}>
+              <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 7, color: 'rgba(255,255,255,0.5)' }}>lumin</Text>
+              <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 7, color: 'rgba(255,255,255,0.2)' }}>AI</Text>
+              <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 7, color: 'rgba(255,255,255,0.5)' }}>re</Text>
+            </View>
+            {/* Name centred in gradient panel */}
+            <View style={{ position: 'absolute', left: 0, top: 0, width: AURORA_PANEL_W, bottom: 0, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: namePt, color: '#ffffff', letterSpacing: 1.5, textAlign: 'center' }}>
+                {data.name || 'Ihr Name'}
+              </Text>
+            </View>
+            {/* Title + contacts in right dark panel */}
+            <View style={{ position: 'absolute', left: AURORA_PANEL_W + 10, right: 12, top: 0, bottom: 0, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end' }}>
+              {data.title ? <Text style={{ fontFamily: 'Helvetica', fontSize: infoPt + 0.5, color: 'rgba(255,255,255,0.55)', letterSpacing: 0.5, marginBottom: 8, textAlign: 'right' }}>{data.title}</Text> : null}
+              {data.email   ? <Text style={{ fontFamily: 'Helvetica', fontSize: infoPt, color: 'rgba(255,255,255,0.28)', marginBottom: 2, textAlign: 'right' }}>{data.email}</Text>   : null}
+              {data.website ? <Text style={{ fontFamily: 'Helvetica', fontSize: infoPt, color: 'rgba(255,255,255,0.28)', marginBottom: 2, textAlign: 'right' }}>{data.website}</Text> : null}
+              {data.address ? <Text style={{ fontFamily: 'Helvetica', fontSize: infoPt, color: 'rgba(255,255,255,0.28)', textAlign: 'right' }}>{data.address}</Text>                 : null}
+            </View>
+          </>
+        )}
       </Page>
 
       {/* ── BACK ──────────────────────────────── */}
-      <Page size={[W, H]} style={isDark ? s.pageDark : s.page}>
-        {isDark && <GradientSweepBack />}
+      <Page size={[W, H]} style={(isDark || isAurora) ? s.pageDark : s.page}>
+        {isDark  && <GradientSweepBack />}
         {isPearl && <GradientPearlBack />}
         {isFrost && <GradientFrostBack />}
+        {isAurora && <GradientAuroraBack />}
 
         <View style={s.backCenter}>
           <View style={s.backLogoRow}>
-            <Text style={[s.backLogoText, { color: backNameColor }]}>lumin</Text>
-            <Text style={[s.backLogoText, { color: backAccentColor }]}>AI</Text>
-            <Text style={[s.backLogoText, { color: backNameColor }]}>re</Text>
+            <Text style={[s.backLogoText, { color: isAurora ? '#ffffff' : backNameColor }]}>lumin</Text>
+            <Text style={[s.backLogoText, { color: isAurora ? 'rgba(255,255,255,0.32)' : backAccentColor }]}>AI</Text>
+            <Text style={[s.backLogoText, { color: isAurora ? '#ffffff' : backNameColor }]}>re</Text>
           </View>
-          <Text style={[s.tagline, { color: taglineColor }]}>
+          <Text style={[s.tagline, { color: isAurora ? 'rgba(255,255,255,0.32)' : taglineColor }]}>
             {data.tagline || 'Das Teuerste an KI ist, sie nicht zu nutzen.'}
           </Text>
         </View>

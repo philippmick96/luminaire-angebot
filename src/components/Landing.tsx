@@ -153,6 +153,17 @@ export default function Landing({ onNavigate }: Props) {
                 {item}
               </button>
             ))}
+            <a href="/seminar.html" style={{
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              color: C.muted, fontSize: 14, fontWeight: 500, fontFamily: 'inherit',
+              padding: '6px 14px', borderRadius: 6, transition: 'color 0.15s',
+              textDecoration: 'none', display: 'inline-block',
+            }}
+              onMouseEnter={e => (e.currentTarget.style.color = C.text)}
+              onMouseLeave={e => (e.currentTarget.style.color = C.muted)}
+            >
+              Seminar
+            </a>
           </div>
         </div>
 
@@ -323,6 +334,67 @@ export default function Landing({ onNavigate }: Props) {
         </div>
       </section>
 
+      {/* ── DIVIDER ─────────────────────────────────────────── */}
+      <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.4), transparent)', margin: '0 20px' }} />
+
+      {/* ── FEATURE: SEMINAR ────────────────────────────────── */}
+      <section style={{ padding: 'clamp(48px,6vw,96px) 20px', maxWidth: 1100, margin: '0 auto' }}>
+        <div className="landing-feature-grid">
+          <div>
+            <p style={T.label}>KI-Führerschein Seminar</p>
+            <h2 style={{ ...T.h2, marginTop: 12, marginBottom: 20 }}>
+              Vom Einsteiger zum<br />
+              <span style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                KI-Profi in 3 Stunden.
+              </span>
+            </h2>
+            <p style={{ ...T.body, marginBottom: 28 }}>
+              Der vollständige Seminarplan für den KI-Führerschein — 9 Blöcke, praxisnah
+              strukturiert. Präsentiere ihn direkt im Browser, Slide für Slide.
+            </p>
+            <div style={{ marginBottom: 32 }}>
+              {['9 Blöcke', 'Prompt Engineering', 'Hands-on Übungen', 'EU-AI Act', 'Action-Plan'].map(f => (
+                <Chip key={f} label={f} />
+              ))}
+            </div>
+            <a
+              href="/seminar.html"
+              style={{
+                display: 'inline-block',
+                background: 'transparent', color: C.purpleMid,
+                border: `1px solid rgba(124,58,237,0.4)`,
+                borderRadius: 8, padding: '10px 22px', fontSize: 14, fontWeight: 600,
+                cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
+                textDecoration: 'none',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.purpleDim; (e.currentTarget as HTMLElement).style.borderColor = C.purple }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(124,58,237,0.4)' }}
+            >
+              Präsentation öffnen →
+            </a>
+          </div>
+          <Card style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { time: '09:00', label: 'Begrüßung & Icebreaker', min: '15 Min' },
+              { time: '09:15', label: 'Wow-Demo', min: '20 Min' },
+              { time: '09:35', label: 'Prompt Engineering', min: '30 Min' },
+              { time: '10:05', label: 'Hands-on: App, Voice, Bilder', min: '20 Min' },
+              { time: '10:25', label: 'Pause', min: '15 Min' },
+              { time: '10:40', label: 'Use-Cases & Workshop', min: '35 Min' },
+              { time: '11:15', label: 'Modelle, Tools & Agentic AI', min: '25 Min' },
+              { time: '11:40', label: 'EU-AI Act & Rechtliches', min: '15 Min' },
+              { time: '11:55', label: 'Action-Plan & Abschluss', min: '5 Min' },
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: i < 8 ? `1px solid rgba(48,54,61,0.6)` : 'none' }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: C.purpleMid, minWidth: 40, letterSpacing: 0.3 }}>{item.time}</span>
+                <span style={{ fontSize: 13, color: C.text, flex: 1 }}>{item.label}</span>
+                <span style={{ fontSize: 11, color: C.dim }}>{item.min}</span>
+              </div>
+            ))}
+          </Card>
+        </div>
+      </section>
+
       {/* ── STATS STRIP ─────────────────────────────────────── */}
       <section style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
         <div className="landing-stats-grid" style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(32px,4vw,48px) 20px' }}>
@@ -400,6 +472,16 @@ export default function Landing({ onNavigate }: Props) {
               {item}
             </button>
           ))}
+          <a href="/seminar.html" style={{
+            background: 'transparent', border: 'none', cursor: 'pointer',
+            color: C.muted, fontSize: 13, fontFamily: 'inherit', transition: 'color 0.15s',
+            textDecoration: 'none',
+          }}
+            onMouseEnter={e => (e.currentTarget.style.color = C.text)}
+            onMouseLeave={e => (e.currentTarget.style.color = C.muted)}
+          >
+            Seminar
+          </a>
         </div>
       </footer>
     </div>

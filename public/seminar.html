@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KI-Führerschein Seminar · luminAIre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0a0a14;
+      --surface:    rgba(18, 11, 30, 0.85);
+      --purple:     #7c3aed;
+      --purple-mid: #8b5cf6;
+      --purple-lt:  #a78bfa;
+      --purple-dim: rgba(124, 58, 237, 0.12);
+      --border:     rgba(124, 58, 237, 0.22);
+      --text:       #ffffff;
+      --muted:      #94a3b8;
+      --dim:        #475569;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── Background glow ─────────────────────── */
+    .bg-glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .bg-glow::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
+      top: -200px; left: -200px;
+      filter: blur(40px);
+    }
+    .bg-glow::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+      bottom: -100px; right: -100px;
+      filter: blur(60px);
+    }
+
+    /* ── Deck ─────────────────────────────────── */
+    .deck {
+      position: relative; z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ──────────────────────────────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 52px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,20,0.9);
+      backdrop-filter: blur(12px);
+      flex-shrink: 0;
+      position: relative;
+    }
+    .topbar::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--purple), var(--purple-lt), transparent);
+    }
+    .logo {
+      font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
+      color: #fff;
+    }
+    .logo span { color: var(--purple-mid); }
+
+    .nav-info {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .slide-counter {
+      font-size: 11px; font-weight: 500; color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+    .slide-counter strong { color: var(--purple-lt); }
+
+    .btn-home {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px; font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-home:hover {
+      color: var(--text); border-color: var(--purple);
+      background: var(--purple-dim);
+    }
+
+    /* ── Progress bar ─────────────────────────── */
+    .progress-bar {
+      height: 2px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--purple-lt));
+      transition: width 0.4s ease;
+    }
+
+    /* ── Slides container ─────────────────────── */
+    .slides {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 80px;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
+    }
+    .slide.prev {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    .slide-inner {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* ── Typography ───────────────────────────── */
+    .label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--purple-mid);
+      margin-bottom: 12px;
+    }
+    .title {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .title-accent {
+      background: linear-gradient(135deg, var(--purple-lt), var(--purple-mid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--purple-dim);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px; font-weight: 600;
+      color: var(--purple-lt);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Cards grid ───────────────────────────── */
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+    .cards.two { grid-template-columns: 1fr 1fr; }
+    .cards.three { grid-template-columns: 1fr 1fr 1fr; }
+    .cards.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      backdrop-filter: blur(8px);
+    }
+    .card-icon {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .card h4 {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      margin-bottom: 4px; line-height: 1.3;
+    }
+    .card p {
+      font-size: 12px; color: var(--muted); line-height: 1.5;
+    }
+    .card.highlight {
+      border-color: rgba(124,58,237,0.45);
+      background: rgba(124,58,237,0.08);
+    }
+
+    /* ── List ─────────────────────────────────── */
+    .list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .list li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--purple-mid);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+    .list li strong { color: var(--text); }
+
+    /* ── Quote box ────────────────────────────── */
+    .quote {
+      background: var(--purple-dim);
+      border-left: 3px solid var(--purple-mid);
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .quote em { color: var(--purple-lt); font-style: normal; font-weight: 600; }
+
+    /* ── Divider ──────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* ── Takeaway bar ─────────────────────────── */
+    .takeaway {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(124,58,237,0.08);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-top: 20px;
+    }
+    .takeaway-icon { font-size: 18px; flex-shrink: 0; }
+    .takeaway p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .takeaway p strong { color: var(--purple-lt); }
+
+    /* ── Timeline ─────────────────────────────── */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .tl-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .tl-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 24px;
+    }
+    .tl-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--purple-mid);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--purple);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .tl-connector {
+      width: 2px; flex: 1; min-height: 16px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+    .tl-content {
+      padding-bottom: 16px;
+    }
+    .tl-content h4 {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      margin-bottom: 2px;
+    }
+    .tl-content p {
+      font-size: 12px; color: var(--muted); line-height: 1.5;
+    }
+
+    /* ── Cover slide extras ───────────────────── */
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .cover-stat {
+      text-align: center;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .cover-stat .val {
+      font-size: 28px; font-weight: 700;
+      background: linear-gradient(135deg, var(--purple-lt), var(--purple-mid));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      display: block; margin-bottom: 4px;
+    }
+    .cover-stat .lbl {
+      font-size: 11px; color: var(--muted); letter-spacing: 0.5px;
+    }
+
+    /* ── Pause slide ──────────────────────────── */
+    .pause-center {
+      text-align: center;
+    }
+    .pause-big {
+      font-size: 80px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Pill tags ────────────────────────────── */
+    .pills {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 16px;
+    }
+    .pill {
+      background: var(--purple-dim);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px; font-weight: 500;
+      color: var(--purple-lt);
+      letter-spacing: 0.2px;
+    }
+
+    /* ── Rule list ────────────────────────────── */
+    .rule-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .rule-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .rule-num {
+      font-size: 20px; font-weight: 700;
+      color: var(--purple-mid);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .rule-text h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .rule-text p  { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── Bottom controls ──────────────────────── */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 14px 40px;
+      border-top: 1px solid var(--border);
+      background: rgba(10,10,20,0.8);
+      flex-shrink: 0;
+    }
+    .ctrl-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .ctrl-btn:hover:not(:disabled) {
+      color: var(--text); border-color: var(--purple);
+      background: var(--purple-dim);
+    }
+    .ctrl-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+    .dot-nav {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--dim);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      padding: 0;
+    }
+    .dot.active {
+      background: var(--purple-mid);
+      width: 20px;
+      border-radius: 3px;
+    }
+    .dot:hover:not(.active) { background: var(--muted); }
+
+    .hint {
+      font-size: 10px; color: var(--dim);
+      letter-spacing: 0.5px;
+      position: absolute; right: 40px;
+    }
+
+    /* ── Responsive ───────────────────────────── */
+    @media (max-width: 768px) {
+      .slide { padding: 24px 20px; }
+      .topbar { padding: 0 16px; }
+      .controls { padding: 10px 16px; }
+      .hint { display: none; }
+      .cards.two, .cards.three, .cards.four { grid-template-columns: 1fr; }
+      .rule-list { grid-template-columns: 1fr; }
+      .cover-grid { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="deck">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="logo">lumin<span>AI</span>re</div>
+    <div class="nav-info">
+      <span class="slide-counter"><strong id="cur">1</strong> / <span id="tot">10</span></span>
+      <a href="/" class="btn-home">← Zurück</a>
+    </div>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+  <!-- Slides -->
+  <div class="slides" id="slides">
+
+    <!-- ── 0: Cover ─────────────────────────────────────── -->
+    <div class="slide active" data-index="0">
+      <div class="slide-inner">
+        <div class="label">KI-Training · luminAIre</div>
+        <h1 class="title">
+          KI-<span class="title-accent">Führerschein</span><br>Seminar
+        </h1>
+        <p class="subtitle">
+          3 Stunden · Praxisnah · Sofort einsetzbar<br>
+          Ihr Weg vom KI-Einsteiger zum produktiven KI-Nutzer
+        </p>
+        <div class="cover-grid">
+          <div class="cover-stat">
+            <span class="val">09:00</span>
+            <span class="lbl">Seminarbeginn</span>
+          </div>
+          <div class="cover-stat">
+            <span class="val">9</span>
+            <span class="lbl">Blöcke</span>
+          </div>
+          <div class="cover-stat">
+            <span class="val">12:00</span>
+            <span class="lbl">Seminarende</span>
+          </div>
+        </div>
+        <div class="quote" style="margin-top:24px">
+          <em>„Das Teuerste an KI ist, sie nicht zu nutzen."</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 1: Block 1 – Begrüßung ───────────────────────── -->
+    <div class="slide" data-index="1">
+      <div class="slide-inner">
+        <div class="time-badge">09:00 – 09:15 · 15 Min</div>
+        <div class="label">Block 1</div>
+        <h2 class="title">Begrüßung, Ziel &amp; <span class="title-accent">Icebreaker</span></h2>
+
+        <div class="quote">
+          „Heute verlassen Sie den Raum mit mindestens <em>2–3 konkreten KI-Anwendungen</em>, die Sie morgen direkt in Ihrem Job einsetzen können."
+        </div>
+
+        <div class="cards two">
+          <div class="card">
+            <div class="card-icon">👋</div>
+            <h4>Begrüßung &amp; Vorstellung</h4>
+            <p>Trainer-Vorstellung · Überblick über den Tagesablauf · Erste Erwartungen abholen</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🎯</div>
+            <h4>Icebreaker (8–10 Min)</h4>
+            <p>Name + Bereich · Bisherige KI-Erfahrung · Welche Aufgabe kostet am meisten Zeit?</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-icon">💡</span>
+          <p><strong>Takeaway:</strong> „Ich weiß genau, warum ich hier bin und was ich heute mitnehmen werde."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2: Block 2 – Wow-Demo ─────────────────────────── -->
+    <div class="slide" data-index="2">
+      <div class="slide-inner">
+        <div class="time-badge">09:15 – 09:35 · 20 Min</div>
+        <div class="label">Block 2</div>
+        <h2 class="title">Wow-Demo – Was ist <span class="title-accent">heute möglich?</span></h2>
+
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+            <div class="tl-content">
+              <h4>Einleitung (2 Min)</h4>
+              <p>„In 8 Minuten zeige ich Ihnen, was Sie mit KI heute machen können – ganz ohne Programmierkenntnisse."</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+            <div class="tl-content">
+              <h4>Live-Demo: PowerPoint mit Claude erstellen</h4>
+              <p>Guten Prompt eingeben → Gliederung + Inhalte → Folien-Struktur → Export als PPTX</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+            <div class="tl-content">
+              <h4>Reflexion &amp; Überleitung</h4>
+              <p>„Das hätte früher 2–3 Stunden gedauert." → Überleitung zu Prompt Engineering</p>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-line"><div class="tl-dot"></div></div>
+            <div class="tl-content" style="padding-bottom:0">
+              <h4>Materialien</h4>
+              <p>Laptop mit Claude · Beamer · Backup-Präsentation</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-icon">💡</span>
+          <p><strong>Takeaway:</strong> „KI kann mir richtig viel Arbeit abnehmen – und zwar in meinem Job."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 3: Block 3 – Prompt Engineering ──────────────── -->
+    <div class="slide" data-index="3">
+      <div class="slide-inner">
+        <div class="time-badge">09:35 – 10:05 · 30 Min</div>
+        <div class="label">Block 3</div>
+        <h2 class="title">Prompt Engineering – <span class="title-accent">Die Formel</span></h2>
+
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-num">1</div>
+            <div class="rule-text">
+              <h4>Rolle</h4>
+              <p>„Du bist ein erfahrener Vertriebsleiter…"</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-num">2</div>
+            <div class="rule-text">
+              <h4>Aufgabe</h4>
+              <p>„Erstelle mir eine…"</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-num">3</div>
+            <div class="rule-text">
+              <h4>Kontext</h4>
+              <p>„Das Unternehmen ist…, das Ziel ist…"</p>
+            </div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-num">4</div>
+            <div class="rule-text">
+              <h4>Format</h4>
+              <p>„Gib mir das als Tabelle / E-Mail / 5 Bullet Points…"</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="cards two">
+          <div class="card">
+            <div class="card-icon">📊</div>
+            <h4>Live-Vergleich</h4>
+            <p>Schlechter Prompt → mittelmäßiges Ergebnis<br>Guter Prompt → deutlich besseres Ergebnis</p>
+          </div>
+          <div class="card highlight">
+            <div class="card-icon">✍️</div>
+            <h4>Interaktive Übung (12–15 Min)</h4>
+            <p>Eigener Prompt schreiben · 2–3 Freiwillige zeigen Ergebnis · Trainer verbessert live</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-icon">💡</span>
+          <p><strong>Takeaway:</strong> „Ich kann ab sofort deutlich bessere Ergebnisse aus KI holen – mit einer einfachen Formel."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 4: Block 4 – Hands-on ─────────────────────────── -->
+    <div class="slide" data-index="4">
+      <div class="slide-inner">
+        <div class="time-badge">10:05 – 10:25 · 20 Min</div>
+        <div class="label">Block 4</div>
+        <h2 class="title">Hands-on – <span class="title-accent">App, Voice &amp; Bilder</span></h2>
+
+        <div class="cards three">
+          <div class="card">
+            <div class="card-icon">📱</div>
+            <h4>App installieren</h4>
+            <p>ChatGPT / Gemini / Claude App auf dem Handy · Login mit bestehendem Account · 3–4 Min</p>
+          </div>
+          <div class="card highlight">
+            <div class="card-icon">🎙️</div>
+            <h4>Voice-Modus</h4>
+            <p>Natürliches Sprechen · Übung: „Stell mir 3 Fragen zu meinem Job und gib mir Tipps" · 6–7 Min</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🎨</div>
+            <h4>Bildgenerierung</h4>
+            <p>DALL-E / Flux · Jeder generiert ein eigenes Bild (Logo-Idee, LinkedIn-Post, Visualisierung) · 8–9 Min</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <p style="font-size:13px; color:var(--muted); line-height:1.6">
+          Kurze Reflexion: <strong style="color:var(--text)">„Wofür könnte das in Ihrem Job nützlich sein?"</strong>
+        </p>
+
+        <div class="takeaway">
+          <span class="takeaway-icon">💡</span>
+          <p><strong>Takeaway:</strong> „Ich habe KI jetzt auch auf dem Handy – sprechen und Bilder machen lassen."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 5: Block 5 – Pause ─────────────────────────────── -->
+    <div class="slide" data-index="5">
+      <div class="slide-inner pause-center">
+        <div class="time-badge" style="margin:0 auto 24px">10:25 – 10:40 · 15 Min</div>
+        <div class="pause-big">☕</div>
+        <div class="label" style="text-align:center; margin-bottom:12px">Block 5</div>
+        <h2 class="title" style="text-align:center">Pause</h2>
+        <p class="subtitle" style="text-align:center">Kurze Erholung vor dem intensivsten Block des Tages</p>
+        <div style="display:flex; justify-content:center; margin-top:8px">
+          <div class="time-badge">Weiter um 10:40 Uhr</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 6: Block 6 – Use-Cases Workshop ──────────────── -->
+    <div class="slide" data-index="6">
+      <div class="slide-inner">
+        <div class="time-badge">10:40 – 11:15 · 35 Min</div>
+        <div class="label">Block 6 · Kernstück des Seminars</div>
+        <h2 class="title">Use-Cases &amp; <span class="title-accent">Workshop</span></h2>
+
+        <div class="cards four">
+          <div class="card">
+            <div class="card-icon">✉️</div>
+            <h4>Kommunikation &amp; Texte</h4>
+            <p>E-Mails, Berichte, Protokolle</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">💡</div>
+            <h4>Kreativität &amp; Ideen</h4>
+            <p>Kampagnen, Brainstorming, Konzepte</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔍</div>
+            <h4>Analyse &amp; Recherche</h4>
+            <p>Daten verstehen, Zusammenfassungen</p>
+          </div>
+          <div class="card highlight">
+            <div class="card-icon">⚡</div>
+            <h4>Routine &amp; Zeitfresser</h4>
+            <p>Automatisierung alltäglicher Aufgaben</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="cards two" style="gap:10px">
+          <div class="card">
+            <div class="card-icon">🛠️</div>
+            <h4>Workshop-Phase (25 Min)</h4>
+            <p>Echte Aufgabe wählen · Prompt mit 4-Regel-Formel schreiben · Ergebnis bewerten · Prompt verbessern · Trainer hilft individuell</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🎤</div>
+            <h4>Präsentation (5 Min)</h4>
+            <p>3–4 Freiwillige zeigen ihr Ergebnis · „Was hat am besten funktioniert? Was war überraschend?"</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-icon">💡</span>
+          <p><strong>Takeaway:</strong> „Ich habe heute eine echte Aufgabe aus meinem Job mit KI gelöst."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 7: Block 7 – Modelle & Tools ──────────────────── -->
+    <div class="slide" data-index="7">
+      <div class="slide-inner">
+        <div class="time-badge">11:15 – 11:40 · 25 Min</div>
+        <div class="label">Block 7</div>
+        <h2 class="title">Modelle, Tools &amp; <span class="title-accent">Agentic AI</span></h2>
+
+        <div class="cards two">
+          <div class="card">
+            <h4>Praxisnaher Modell-Vergleich</h4>
+            <div class="pills" style="margin-top:10px">
+              <span class="pill">GPT-4o · Texte</span>
+              <span class="pill">Claude 4 · Analyse</span>
+              <span class="pill">Gemini 2.0 · Recherche</span>
+              <span class="pill">DALL-E · Bilder</span>
+              <span class="pill">Grok · Code</span>
+            </div>
+          </div>
+          <div class="card highlight">
+            <div class="card-icon">🤖</div>
+            <h4>Agentic AI (5 Min)</h4>
+            <p>KI die selbstständig mehrere Schritte macht · AutoGPT, CrewAI, Copilot Agents, Claude Projects · „Wann lohnt sich das wirklich?"</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="cards three">
+          <div class="card">
+            <div class="card-icon">🪟</div>
+            <h4>Microsoft 365</h4>
+            <p>Copilot Integration in Word, Excel, Teams</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔵</div>
+            <h4>Google Workspace</h4>
+            <p>Gemini in Docs, Sheets, Gmail</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">✨</div>
+            <h4>Weitere Tools</h4>
+            <p>Notion AI, Canva AI, und mehr</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-icon">💡</span>
+          <p><strong>Takeaway:</strong> „Ich weiß, welches Tool ich für welche Aufgabe nutzen sollte."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 8: Block 8 – EU-AI Act & Recht ────────────────── -->
+    <div class="slide" data-index="8">
+      <div class="slide-inner">
+        <div class="time-badge">11:40 – 11:55 · 15 Min</div>
+        <div class="label">Block 8</div>
+        <h2 class="title">EU-AI Act &amp; <span class="title-accent">Verantwortungsvoller Umgang</span></h2>
+
+        <div class="cards two">
+          <div class="card">
+            <div class="card-icon">🇪🇺</div>
+            <h4>EU-AI Act – 3 Kernpunkte</h4>
+            <ul class="list" style="margin-top:8px">
+              <li><strong>Verbotene Anwendungen</strong> (z. B. Social Scoring)</li>
+              <li><strong>Hochrisiko-Systeme</strong> – was das für Unternehmen bedeutet</li>
+              <li><strong>Transparenzpflichten</strong> bei KI-generierten Inhalten</li>
+            </ul>
+          </div>
+          <div class="card highlight">
+            <div class="card-icon">✅</div>
+            <h4>Die 5 goldenen Regeln</h4>
+            <ul class="list" style="margin-top:8px">
+              <li>Keine sensiblen Firmendaten in öffentliche KI</li>
+              <li>Ergebnisse immer prüfen</li>
+              <li>KI-generiert kennzeichnen (bei Kunden)</li>
+              <li>DSGVO beachten</li>
+              <li>Mensch bleibt verantwortlich</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cards" style="margin-top:12px">
+          <div class="card">
+            <div class="card-icon">📋</div>
+            <h4>Checkliste: „Darf ich das in ChatGPT eingeben?"</h4>
+            <p>Praktische 1-seitige Checkliste für den Alltag · Kurze Q&amp;A zu rechtlichen Fragen</p>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <span class="takeaway-icon">💡</span>
+          <p><strong>Takeaway:</strong> „Ich weiß, wo die Grenzen sind und wie ich KI sicher und legal nutze."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 9: Block 9 – Action-Plan & Abschluss ──────────── -->
+    <div class="slide" data-index="9">
+      <div class="slide-inner">
+        <div class="time-badge">11:55 – 12:00 · 5 Min</div>
+        <div class="label">Block 9 · Abschluss</div>
+        <h2 class="title">Persönlicher <span class="title-accent">Action-Plan</span></h2>
+
+        <div class="cards four">
+          <div class="card highlight">
+            <div class="card-icon">1️⃣</div>
+            <h4>Meine 3 KI-Anwendungen</h4>
+            <p>Was setze ich ab morgen ein?</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">2️⃣</div>
+            <h4>Zeitersparnis</h4>
+            <p>Erwartete Zeitersparnis / Qualitätsgewinn</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">3️⃣</div>
+            <h4>Erster Termin</h4>
+            <p>Wann genau werde ich es ausprobieren?</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">4️⃣</div>
+            <h4>Nächste Schritte</h4>
+            <p>Was möchte ich noch ausprobieren?</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quote">
+          „Sie haben heute den Grundstein gelegt. Der Rest liegt bei Ihnen – aber Sie haben jetzt <em>alles, was Sie brauchen</em>."
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; flex-wrap:wrap; gap:12px">
+          <div>
+            <p style="font-size:12px; color:var(--muted)">Fragen &amp; Kontakt</p>
+            <p style="font-size:14px; font-weight:600; color:var(--purple-lt)">info@luminaire.training</p>
+          </div>
+          <div style="text-align:right">
+            <p style="font-size:12px; color:var(--muted)">luminAIre · Philipp Mick</p>
+            <p style="font-size:12px; color:var(--dim)">Kaiserstraße 26a · 66111 Saarbrücken</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slides -->
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="ctrl-btn" id="prev" disabled aria-label="Zurück">&#8592;</button>
+    <div class="dot-nav" id="dots"></div>
+    <button class="ctrl-btn" id="next" aria-label="Weiter">&#8594;</button>
+    <span class="hint">← → Pfeiltasten · Leertaste</span>
+  </div>
+
+</div><!-- /deck -->
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl  = document.getElementById('dots');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const curEl   = document.getElementById('cur');
+  const totEl   = document.getElementById('tot');
+  const prog    = document.getElementById('progress');
+
+  const total = slides.length;
+  let cur = 0;
+
+  totEl.textContent = total;
+
+  // Build dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Folie ' + (i + 1));
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('prev');
+    setTimeout(() => slides[cur < n ? cur : n + 1]?.classList.remove('prev'), 450);
+    cur = n;
+    slides[cur].classList.add('active');
+    if (cur > 0) slides[cur - 1]?.classList.remove('prev');
+
+    // Update UI
+    curEl.textContent  = cur + 1;
+    prog.style.width   = ((cur / (total - 1)) * 100) + '%';
+    prevBtn.disabled   = cur === 0;
+    nextBtn.disabled   = cur === total - 1;
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === cur);
+    });
+  }
+
+  // Cleaner navigation
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    const prev = cur;
+    slides[prev].classList.remove('active');
+    if (n > prev) slides[prev].classList.add('prev');
+    cur = n;
+    slides[cur].classList.remove('prev');
+    slides[cur].classList.add('active');
+
+    setTimeout(() => {
+      slides[prev].classList.remove('prev');
+    }, 450);
+
+    curEl.textContent  = cur + 1;
+    prog.style.width   = ((cur / (total - 1)) * 100) + '%';
+    prevBtn.disabled   = cur === 0;
+    nextBtn.disabled   = cur === total - 1;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  }
+
+  prevBtn.addEventListener('click', () => goTo(cur - 1));
+  nextBtn.addEventListener('click', () => goTo(cur + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(cur + 1); }
+    if (e.key === 'ArrowLeft')                   { e.preventDefault(); goTo(cur - 1); }
+  });
+
+  // Touch/swipe
+  let tx = 0;
+  document.getElementById('slides').addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.getElementById('slides').addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) dx < 0 ? goTo(cur + 1) : goTo(cur - 1);
+  });
+
+  // Init progress
+  prog.style.width = '0%';
+</script>
+</body>
+</html>

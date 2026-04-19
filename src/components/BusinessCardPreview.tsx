@@ -29,6 +29,7 @@ export function BusinessCardFront({ data, scale: s = 1 }: Props) {
 
   if (data.theme === 'pearl') return <PearlFront data={data} scale={s} />
   if (data.theme === 'frost') return <FrostFront data={data} scale={s} />
+  if (data.theme === 'aurora') return <AuroraFront data={data} scale={s} />
 
   const ifs = data.infoFontSize ?? 8
 
@@ -78,6 +79,7 @@ export function BusinessCardFront({ data, scale: s = 1 }: Props) {
 export function BusinessCardBack({ data, scale: s = 1 }: Props) {
   if (data.theme === 'pearl') return <PearlBack data={data} scale={s} />
   if (data.theme === 'frost') return <FrostBack data={data} scale={s} />
+  if (data.theme === 'aurora') return <AuroraBack data={data} scale={s} />
 
   return (
     <Card scale={s} style={{
@@ -266,6 +268,107 @@ function FrostBack({ data, scale: s = 1 }: Props) {
           <span style={{ color: '#2e1065', fontWeight: 700, fontSize: 26 * s, letterSpacing: -0.5 }}>re</span>
         </div>
         <div style={{ color: '#6d28d9', fontSize: 8 * s, fontStyle: 'italic', textAlign: 'center', maxWidth: 200 * s, lineHeight: 1.55, opacity: 0.7 }}>
+          {data.tagline || 'Das Teuerste an KI ist, sie nicht zu nutzen.'}
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+// ── AURORA (dark noir + vibrant gradient panel) ───────────────
+
+const AURORA_PANEL_RATIO = 0.40  // 40 % of card width
+
+function AuroraFront({ data, scale: s = 1 }: Props) {
+  const fs = data.nameFontSize ?? 24
+  const ifs = data.infoFontSize ?? 8
+  const panel = AURORA_PANEL_RATIO * W * s
+
+  return (
+    <Card scale={s} style={{
+      background: '#0a0a0a',
+      boxShadow: '0 8px 36px rgba(0,0,0,.75), 0 0 0 1px rgba(236,72,153,.18)',
+    }}>
+      {/* Left gradient panel */}
+      <div style={{
+        position: 'absolute', left: 0, top: 0, width: panel, bottom: 0,
+        background: 'linear-gradient(160deg, #ec4899 0%, #a855f7 48%, #f97316 100%)',
+      }} />
+
+      {/* Subtle separator */}
+      <div style={{
+        position: 'absolute', left: panel, top: 20 * s, bottom: 20 * s, width: 1,
+        background: 'rgba(255,255,255,0.06)',
+      }} />
+
+      {/* Name centred in gradient panel */}
+      <div style={{
+        position: 'absolute', left: 0, top: 0, width: panel, bottom: 0,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+        padding: `0 ${10 * s}px`,
+      }}>
+        <div style={{
+          color: '#ffffff', fontWeight: 700, fontSize: fs * s,
+          letterSpacing: 2 * s, textAlign: 'center', lineHeight: 1.1,
+          textTransform: 'uppercase',
+        }}>
+          {data.name || 'Ihr Name'}
+        </div>
+      </div>
+
+      {/* Logo – top right */}
+      <div style={{
+        position: 'absolute', top: 14 * s, right: 14 * s,
+        display: 'flex', alignItems: 'baseline', opacity: 0.45,
+      }}>
+        <span style={{ color: '#fff', fontWeight: 700, fontSize: 9 * s }}>lumin</span>
+        <span style={{ color: 'rgba(255,255,255,0.4)', fontWeight: 700, fontSize: 9 * s }}>AI</span>
+        <span style={{ color: '#fff', fontWeight: 700, fontSize: 9 * s }}>re</span>
+      </div>
+
+      {/* Title + contacts – right panel, centred vertically */}
+      <div style={{
+        position: 'absolute', left: panel + 12 * s, right: 14 * s, top: 0, bottom: 0,
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end',
+      }}>
+        {data.title && (
+          <div style={{
+            color: 'rgba(255,255,255,0.55)', fontSize: (ifs + 0.5) * s,
+            fontWeight: 500, letterSpacing: 0.8, textTransform: 'uppercase',
+            textAlign: 'right', marginBottom: 10 * s,
+          }}>
+            {data.title}
+          </div>
+        )}
+        <div style={{ color: 'rgba(255,255,255,0.28)', fontSize: ifs * s, textAlign: 'right', lineHeight: 1.75 }}>
+          {data.email   && <div>{data.email}</div>}
+          {data.website && <div>{data.website}</div>}
+          {data.address && <div>{data.address}</div>}
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+function AuroraBack({ data, scale: s = 1 }: Props) {
+  return (
+    <Card scale={s} style={{
+      background: '#0a0a0a',
+      boxShadow: '0 8px 36px rgba(0,0,0,.75), 0 0 0 1px rgba(236,72,153,.18)',
+    }}>
+      {/* Thin gradient accent line at bottom */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5 * s,
+        background: 'linear-gradient(90deg, #ec4899, #a855f7, #f97316)',
+      }} />
+
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 11 * s }}>
+        <div style={{ display: 'flex', alignItems: 'baseline' }}>
+          <span style={{ color: '#fff', fontWeight: 700, fontSize: 26 * s, letterSpacing: -0.5 }}>lumin</span>
+          <span style={{ color: 'rgba(255,255,255,0.32)', fontWeight: 700, fontSize: 26 * s, letterSpacing: -0.5 }}>AI</span>
+          <span style={{ color: '#fff', fontWeight: 700, fontSize: 26 * s, letterSpacing: -0.5 }}>re</span>
+        </div>
+        <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 8 * s, fontStyle: 'italic', textAlign: 'center', maxWidth: 200 * s, lineHeight: 1.55 }}>
           {data.tagline || 'Das Teuerste an KI ist, sie nicht zu nutzen.'}
         </div>
       </div>

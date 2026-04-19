@@ -28,7 +28,7 @@ export interface QuoteData {
   vatRate: number
 }
 
-export type CardTheme = 'sweep' | 'pearl' | 'frost'
+export type CardTheme = 'sweep' | 'pearl' | 'frost' | 'aurora'
 
 export interface CardData {
   name: string
