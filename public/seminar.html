@@ -63,7 +63,7 @@
     .bg-img {
       width: 100%; height: 100%;
       object-fit: cover;
-      opacity: 0.18;
+      opacity: 0.45;
       transform: scale(1.05);
       transition: transform 0.1s linear;
       will-change: transform;
@@ -71,7 +71,7 @@
     .bg-video {
       width: 100%; height: 100%;
       object-fit: cover;
-      opacity: 0.22;
+      opacity: 0.50;
       will-change: transform;
     }
     /* Dark gradient overlay so text stays readable */
@@ -79,10 +79,10 @@
       position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(
         to bottom,
-        rgba(0,0,0,0.75) 0%,
-        rgba(0,0,0,0.55) 40%,
-        rgba(0,0,0,0.55) 60%,
-        rgba(0,0,0,0.75) 100%
+        rgba(0,0,0,0.55) 0%,
+        rgba(0,0,0,0.30) 30%,
+        rgba(0,0,0,0.30) 70%,
+        rgba(0,0,0,0.55) 100%
       );
     }
     /* Atmospheric glow layer (z-index 2) */
@@ -832,7 +832,7 @@ window.setVideoSrc = function(videoId, url) {
   vid.addEventListener('loadeddata', () => {
     const img = vid.nextElementSibling;
     if (img && img.tagName === 'IMG') img.style.opacity = '0';
-    vid.style.opacity = '0.22';
+    vid.style.opacity = '0.50';
   });
 };
 
