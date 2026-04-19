@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
   <style>
-    /* ── RESET ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
@@ -16,511 +15,257 @@
       color: #f5f5f7;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ── SCROLL PROGRESS ────────────────────────────────────── */
-    #scroll-progress {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 3px; z-index: 2000;
-      background: rgba(255,255,255,0.05);
-    }
+    /* ── SCROLL PROGRESS ─────────────────────────────── */
+    #scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 2000; background: rgba(255,255,255,0.05); }
     #scroll-fill {
-      height: 100%;
-      width: 0%;
+      height: 100%; width: 0%;
       background: linear-gradient(90deg, #7c3aed, #a78bfa, #c4b5fd, #a78bfa, #7c3aed);
       background-size: 200% 100%;
       animation: shimmer 3s linear infinite;
       transition: width 0.1s linear;
     }
-    @keyframes shimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-    /* ── NAV ────────────────────────────────────────────────── */
+    /* ── NAV ─────────────────────────────────────────── */
     #nav {
-      position: fixed; top: 3px; left: 0; right: 0;
-      height: 52px;
+      position: fixed; top: 3px; left: 0; right: 0; height: 52px;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px;
-      z-index: 1000;
+      padding: 0 40px; z-index: 1000;
       transition: background 0.4s, backdrop-filter 0.4s;
     }
-    #nav.solid {
-      background: rgba(0,0,0,0.82);
-      backdrop-filter: blur(24px) saturate(180%);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .nav-logo {
-      font-size: 17px; font-weight: 700; letter-spacing: 0.3px;
-      color: #f5f5f7; text-decoration: none;
-    }
+    #nav.solid { background: rgba(0,0,0,0.85); backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .nav-logo { font-size: 17px; font-weight: 700; color: #f5f5f7; text-decoration: none; }
     .nav-logo span { color: #a78bfa; }
-    .nav-center {
-      display: flex; gap: 2px; align-items: center;
-    }
-    .nav-btn {
-      background: none; border: none;
-      color: rgba(255,255,255,0.55);
-      font-size: 12px; font-weight: 500; font-family: inherit;
-      padding: 5px 14px; border-radius: 20px; cursor: pointer;
-      transition: color 0.2s, background 0.2s; letter-spacing: 0.2px;
-    }
+    .nav-center { display: flex; gap: 2px; }
+    .nav-btn { background: none; border: none; color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 500; font-family: inherit; padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: color 0.2s, background 0.2s; }
     .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
-    .nav-back {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(124,58,237,0.15);
-      border: 1px solid rgba(124,58,237,0.4);
-      color: #a78bfa; font-size: 12px; font-weight: 600;
-      padding: 6px 16px; border-radius: 20px; text-decoration: none;
-      transition: all 0.2s;
-    }
+    .nav-back { display: inline-flex; align-items: center; gap: 5px; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4); color: #a78bfa; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; text-decoration: none; transition: all 0.2s; }
     .nav-back:hover { background: rgba(124,58,237,0.3); color: #c4b5fd; }
 
-    /* ── SECTION BASE ───────────────────────────────────────── */
+    /* ── SECTION BASE ────────────────────────────────── */
     section {
       position: relative; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      min-height: 100vh;
-      padding: 100px 24px;
+      min-height: 100vh; padding: 110px 24px;
       text-align: center;
     }
-    section.short { min-height: 70vh; }
-    section.auto-height { min-height: auto; padding: 80px 24px; }
-    .s-inner {
-      position: relative; z-index: 2;
-      width: 100%; max-width: 980px;
-      margin: 0 auto;
-    }
+    section.short { min-height: 60vh; }
+    section.interstitial { min-height: 65vh; }
+    .s-inner { position: relative; z-index: 3; width: 100%; max-width: 980px; margin: 0 auto; }
 
-    /* ── ATMOSPHERIC GLOWS ──────────────────────────────────── */
+    /* ── BACKGROUND MEDIA SYSTEM ─────────────────────── */
+    .section-bg {
+      position: absolute; inset: 0; z-index: 0;
+      overflow: hidden;
+    }
+    .bg-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.18;
+      transform: scale(1.05);
+      transition: transform 0.1s linear;
+      will-change: transform;
+    }
+    .bg-video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.22;
+      will-change: transform;
+    }
+    /* Dark gradient overlay so text stays readable */
+    .section-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.75) 0%,
+        rgba(0,0,0,0.55) 40%,
+        rgba(0,0,0,0.55) 60%,
+        rgba(0,0,0,0.75) 100%
+      );
+    }
+    /* Atmospheric glow layer (z-index 2) */
+    .section-glow { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+    /* ── ATMOSPHERIC GLOWS ───────────────────────────── */
     .atmo {
       position: absolute; border-radius: 50%;
-      pointer-events: none; z-index: 0;
+      pointer-events: none;
+      will-change: transform;
     }
-    .atmo-hero-1 {
-      width: 900px; height: 700px;
-      background: radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 65%);
-      top: -250px; left: 50%; transform: translateX(-50%);
-      filter: blur(60px);
-    }
-    .atmo-hero-2 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%);
-      bottom: -100px; right: 5%;
-      filter: blur(80px);
-    }
-    .atmo-center {
-      width: 600px; height: 400px;
-      background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%);
-      top: 50%; left: 50%; transform: translate(-50%,-50%);
-      filter: blur(70px);
-    }
-    .atmo-left {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
-      top: 20%; left: -10%;
-      filter: blur(80px);
-    }
-    .atmo-right {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(167,139,250,0.1) 0%, transparent 70%);
-      bottom: 10%; right: -5%;
-      filter: blur(80px);
-    }
+    .atmo-hero { width: 900px; height: 700px; background: radial-gradient(circle, rgba(124,58,237,0.28) 0%, transparent 65%); top: -250px; left: 50%; transform: translateX(-50%); filter: blur(60px); }
+    .atmo-hero2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%); bottom: -100px; right: 5%; filter: blur(80px); }
+    .atmo-center { width: 600px; height: 400px; background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%,-50%); filter: blur(70px); }
+    .atmo-left { width: 400px; height: 400px; background: radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%); top: 20%; left: -10%; filter: blur(80px); }
+    .atmo-right { width: 400px; height: 400px; background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%); bottom: 10%; right: -5%; filter: blur(80px); }
 
-    /* ── TYPOGRAPHY ─────────────────────────────────────────── */
-    .eyebrow {
-      font-size: 12px; font-weight: 600;
-      letter-spacing: 2.5px; text-transform: uppercase;
-      color: #a78bfa; margin-bottom: 20px;
-    }
-    .hero-title {
-      font-size: clamp(56px, 9vw, 120px);
-      font-weight: 800; line-height: 0.95;
-      letter-spacing: -0.04em; color: #f5f5f7;
-      margin-bottom: 32px;
-    }
-    .section-title {
-      font-size: clamp(44px, 6.5vw, 88px);
-      font-weight: 800; line-height: 1.0;
-      letter-spacing: -0.035em; color: #f5f5f7;
-      margin-bottom: 24px;
-    }
-    .medium-title {
-      font-size: clamp(32px, 4.5vw, 64px);
-      font-weight: 700; line-height: 1.05;
-      letter-spacing: -0.025em; color: #f5f5f7;
-      margin-bottom: 20px;
-    }
-    .gradient-text {
-      background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #7c3aed 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .body-text {
-      font-size: clamp(16px, 2vw, 21px); font-weight: 400;
-      color: rgba(255,255,255,0.55); line-height: 1.65;
-      max-width: 680px; margin: 0 auto 40px;
-    }
-    .body-text strong { color: rgba(255,255,255,0.85); font-weight: 500; }
-
-    /* ── TIME BADGE ─────────────────────────────────────────── */
-    .time-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(124,58,237,0.12);
-      border: 1px solid rgba(124,58,237,0.35);
-      border-radius: 30px; padding: 6px 20px;
-      font-size: 12px; font-weight: 600; color: #a78bfa;
-      margin-bottom: 24px; letter-spacing: 0.5px;
-    }
-    .time-badge::before {
-      content: ''; width: 7px; height: 7px;
-      border-radius: 50%; background: #a78bfa;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { opacity:1; transform:scale(1); }
-      50%      { opacity:0.4; transform:scale(0.7); }
-    }
-
-    /* ── BIG QUOTE ──────────────────────────────────────────── */
-    .big-quote {
-      font-size: clamp(22px, 3.2vw, 44px);
-      font-weight: 400; line-height: 1.4;
-      color: rgba(255,255,255,0.8);
-      max-width: 860px; margin: 0 auto;
-      font-style: italic;
-    }
-    .big-quote em {
-      font-style: normal;
-      background: linear-gradient(135deg, #c4b5fd, #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent; background-clip: text;
-      font-weight: 600;
-    }
-
-    /* ── SCROLL INDICATOR ───────────────────────────────────── */
-    .scroll-hint {
-      position: absolute; bottom: 36px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
-      color: rgba(255,255,255,0.25);
-      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-    }
-    .scroll-chevron {
-      display: flex; flex-direction: column; gap: 4px; align-items: center;
-    }
-    .scroll-chevron span {
-      display: block; width: 12px; height: 12px;
-      border-right: 2px solid rgba(255,255,255,0.2);
-      border-bottom: 2px solid rgba(255,255,255,0.2);
-      transform: rotate(45deg);
-    }
-    .scroll-chevron span:nth-child(1) { animation: chevron 1.8s ease-in-out infinite 0s; }
-    .scroll-chevron span:nth-child(2) { animation: chevron 1.8s ease-in-out infinite 0.2s; }
-    @keyframes chevron {
-      0%,100% { opacity:0.15; transform:rotate(45deg) translateY(0); }
-      50%      { opacity:0.6;  transform:rotate(45deg) translateY(4px); }
-    }
-
-    /* ── CARDS ──────────────────────────────────────────────── */
-    .cards {
-      display: grid; gap: 16px;
-      width: 100%; max-width: 940px; margin: 40px auto 0;
-      text-align: left;
-    }
-    .cards.c2 { grid-template-columns: 1fr 1fr; }
-    .cards.c3 { grid-template-columns: 1fr 1fr 1fr; }
-    .cards.c4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-
-    .card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px; padding: 28px;
-      transition: border-color 0.3s, background 0.3s, transform 0.3s;
-    }
-    .card:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(167,139,250,0.3);
-      transform: translateY(-2px);
-    }
-    .card.hi {
-      background: rgba(124,58,237,0.1);
-      border-color: rgba(124,58,237,0.35);
-    }
-    .card-icon { font-size: 30px; margin-bottom: 14px; display: block; }
-    .card h3 {
-      font-size: 16px; font-weight: 700; color: #f5f5f7;
-      margin-bottom: 8px; line-height: 1.3;
-    }
-    .card p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; }
-
-    /* ── STATS ROW ──────────────────────────────────────────── */
-    .stats-row {
-      display: flex; justify-content: center;
-      max-width: 700px; margin: 52px auto 0;
-    }
-    .stat {
-      flex: 1; padding: 0 32px; text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.08);
-    }
-    .stat:last-child { border-right: none; }
-    .stat-val {
-      font-size: clamp(36px, 4.5vw, 54px); font-weight: 800;
-      letter-spacing: -0.04em; display: block; margin-bottom: 6px;
-      background: linear-gradient(135deg, #c4b5fd, #a78bfa);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .stat-lbl { font-size: 13px; color: rgba(255,255,255,0.4); }
-
-    /* ── RULE CARDS (Prompt formula) ────────────────────────── */
-    .rules {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 14px; width: 100%; max-width: 840px;
-      margin: 40px auto 0; text-align: left;
-    }
-    .rule-card {
-      display: flex; gap: 18px; align-items: flex-start;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px; padding: 24px 26px;
-      transition: border-color 0.3s, transform 0.3s;
-    }
-    .rule-card:hover {
-      border-color: rgba(167,139,250,0.3);
-      transform: translateY(-2px);
-    }
-    .rule-n {
-      font-size: 38px; font-weight: 800; line-height: 1;
-      background: linear-gradient(135deg, #c4b5fd, #7c3aed);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; flex-shrink: 0;
-    }
-    .rule-body h4 {
-      font-size: 16px; font-weight: 700; color: #f5f5f7;
-      margin-bottom: 5px;
-    }
-    .rule-body p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.55; }
-
-    /* ── AGENDA LIST ────────────────────────────────────────── */
-    .agenda {
-      width: 100%; max-width: 720px; margin: 44px auto 0;
-    }
-    .ag-row {
-      display: flex; align-items: center; gap: 20px;
-      padding: 17px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      text-align: left;
-    }
-    .ag-row:last-child { border-bottom: none; }
-    .ag-time {
-      font-size: 11px; font-weight: 700; color: #a78bfa;
-      min-width: 44px; letter-spacing: 0.3px; flex-shrink: 0;
-    }
-    .ag-num {
-      font-size: 10px; font-weight: 700;
-      color: rgba(124,58,237,0.55);
-      min-width: 44px; text-transform: uppercase; letter-spacing: 0.8px;
-      flex-shrink: 0;
-    }
-    .ag-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.8); flex: 1; }
-    .ag-dur  { font-size: 11px; color: rgba(255,255,255,0.25); flex-shrink: 0; }
-
-    /* ── MODEL GRID ─────────────────────────────────────────── */
-    .models {
-      display: grid; grid-template-columns: repeat(5,1fr);
-      gap: 12px; width: 100%; max-width: 940px;
-      margin: 40px auto 0;
-    }
-    .model-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px; padding: 20px 14px;
-      text-align: center; transition: border-color 0.3s, transform 0.3s;
-    }
-    .model-card:hover { border-color: rgba(167,139,250,0.3); transform: translateY(-3px); }
-    .model-card.hi { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.4); }
-    .model-name { font-size: 13px; font-weight: 700; color: #f5f5f7; margin-bottom: 6px; }
-    .model-tag { font-size: 9px; color: #a78bfa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
-    .model-uses { font-size: 10px; color: rgba(255,255,255,0.35); line-height: 1.7; }
-
-    /* ── LEGAL RULES ────────────────────────────────────────── */
-    .legal-list {
-      display: flex; flex-direction: column; gap: 12px;
-      width: 100%; max-width: 700px; margin: 40px auto 0; text-align: left;
-    }
-    .legal-item {
-      display: flex; align-items: center; gap: 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px; padding: 16px 22px;
-      transition: border-color 0.3s;
-    }
-    .legal-item:hover { border-color: rgba(167,139,250,0.25); }
-    .legal-check {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: rgba(124,58,237,0.18);
-      border: 1px solid rgba(124,58,237,0.5);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; flex-shrink: 0;
-    }
-    .legal-item p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.4; }
-    .legal-item p strong { color: #f5f5f7; }
-
-    /* ── EU ACT CARDS ───────────────────────────────────────── */
-    .eu-cards {
-      display: grid; grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px; width: 100%; max-width: 840px;
-      margin: 40px auto 0; text-align: left;
-    }
-    .eu-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px; padding: 24px;
-    }
-    .eu-tag {
-      font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: #a78bfa; margin-bottom: 10px;
-    }
-    .eu-card h4 { font-size: 15px; font-weight: 700; color: #f5f5f7; margin-bottom: 6px; }
-    .eu-card p { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.6; }
-
-    /* ── ACTION PLAN ────────────────────────────────────────── */
-    .action-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 14px; width: 100%; max-width: 760px;
-      margin: 40px auto 0; text-align: left;
-    }
-    .action-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px; padding: 24px;
-      transition: border-color 0.3s;
-    }
-    .action-card:hover { border-color: rgba(167,139,250,0.25); }
-    .action-num {
-      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: #a78bfa; margin-bottom: 10px;
-    }
-    .action-card h4 { font-size: 16px; font-weight: 700; color: #f5f5f7; margin-bottom: 6px; }
-    .action-card p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.55; }
-
-    /* ── SECTION DIVIDER ────────────────────────────────────── */
-    .s-divider {
-      width: 1px; height: 80px;
-      background: linear-gradient(to bottom, transparent, rgba(124,58,237,0.5), transparent);
-      margin: 0 auto;
-    }
-
-    /* ── CLOSING ────────────────────────────────────────────── */
-    .closing-contacts {
-      display: flex; gap: 56px; justify-content: center;
-      margin-top: 52px; flex-wrap: wrap;
-    }
-    .c-contact { text-align: center; }
-    .c-lbl {
-      font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.3); margin-bottom: 5px;
-    }
-    .c-val { font-size: 15px; font-weight: 500; color: #c4b5fd; }
-
-    /* ── ANIMATION SYSTEM ───────────────────────────────────── */
-    /* Words inside .split-words get individual spans */
-    .split-words .w {
-      display: inline-block;
-      opacity: 0; transform: translateY(28px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
-      transition-delay: calc(var(--wi, 0) * 55ms + 150ms);
-    }
-    .split-words.in .w { opacity: 1; transform: translateY(0); }
-
-    /* Generic fade-up for blocks */
-    .fu {
-      opacity: 0; transform: translateY(36px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-      transition-delay: var(--fd, 0ms);
-    }
-    .fu.in { opacity: 1; transform: translateY(0); }
-
-    /* Scale-in for cards */
-    .si {
-      opacity: 0; transform: scale(0.92) translateY(16px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      transition-delay: var(--fd, 0ms);
-    }
-    .si.in { opacity: 1; transform: scale(1) translateY(0); }
-
-    /* Fade only */
-    .fi { opacity: 0; transition: opacity 0.9s ease; transition-delay: var(--fd, 0ms); }
-    .fi.in { opacity: 1; }
-
-    /* ── INTERSTITIAL (pure quote section) ──────────────────── */
-    section.interstitial { min-height: 65vh; background: #040408; }
-
-    /* ── SECTION BACKGROUNDS ────────────────────────────────── */
+    /* ── SECTION BACKGROUNDS ─────────────────────────── */
     section.bg0 { background: #000000; }
     section.bg1 { background: #050508; }
     section.bg2 { background: #08080e; }
     section.bg3 { background: #0a0a14; }
 
-    /* ── PILLS ──────────────────────────────────────────────── */
-    .pill-row {
-      display: flex; gap: 10px; flex-wrap: wrap;
-      justify-content: center; margin-top: 28px;
-    }
-    .pill {
-      background: rgba(124,58,237,0.1);
-      border: 1px solid rgba(124,58,237,0.28);
-      border-radius: 30px; padding: 6px 18px;
-      font-size: 13px; font-weight: 500; color: #c4b5fd;
-    }
+    /* ── TYPOGRAPHY — ALL FORCED WHITE ───────────────── */
+    .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #a78bfa !important; margin-bottom: 20px; }
+    .hero-title { font-size: clamp(56px, 9vw, 118px); font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; color: #f5f5f7 !important; margin-bottom: 32px; }
+    .section-title { font-size: clamp(44px, 6.5vw, 86px); font-weight: 800; line-height: 1.0; letter-spacing: -0.035em; color: #f5f5f7 !important; margin-bottom: 24px; }
+    .medium-title { font-size: clamp(32px, 4.5vw, 62px); font-weight: 700; line-height: 1.05; letter-spacing: -0.025em; color: #f5f5f7 !important; margin-bottom: 20px; }
 
-    /* ── HORIZONTAL TIMELINE (overview) ────────────────────── */
-    .h-timeline {
-      display: flex; width: 100%; max-width: 960px;
-      margin: 48px auto 0; border-radius: 18px; overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.07);
+    /* ── GRADIENT TEXT — FIXED for word-split spans ──── */
+    .gradient-text {
+      background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #7c3aed 80%) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
     }
-    .ht-item {
-      flex: 1; padding: 14px 8px;
-      background: rgba(255,255,255,0.025);
-      border-right: 1px solid rgba(255,255,255,0.05);
-      text-align: center; cursor: default;
-      transition: background 0.2s;
+    /* KEY FIX: word spans inside gradient-text must carry gradient themselves */
+    .gradient-text .w {
+      background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #7c3aed 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+    .big-quote em .w {
+      background: linear-gradient(135deg, #c4b5fd, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* Fallback: any .w NOT inside gradient should be white */
+    .w { color: #f5f5f7; }
+
+    .body-text { font-size: clamp(16px, 2vw, 21px); font-weight: 400; color: rgba(255,255,255,0.6) !important; line-height: 1.65; max-width: 680px; margin: 0 auto 40px; }
+    .body-text strong { color: rgba(255,255,255,0.9) !important; font-weight: 600; }
+
+    /* ── TIME BADGE ──────────────────────────────────── */
+    .time-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(124,58,237,0.14); border: 1px solid rgba(124,58,237,0.4); border-radius: 30px; padding: 6px 20px; font-size: 12px; font-weight: 600; color: #a78bfa !important; margin-bottom: 24px; letter-spacing: 0.5px; }
+    .time-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; animation: pdot 2s ease-in-out infinite; }
+    @keyframes pdot { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(0.7); } }
+
+    /* ── BIG QUOTE ───────────────────────────────────── */
+    .big-quote { font-size: clamp(22px, 3.2vw, 44px); font-weight: 400; line-height: 1.4; color: rgba(255,255,255,0.82) !important; max-width: 860px; margin: 0 auto; font-style: italic; }
+    .big-quote .w { color: rgba(255,255,255,0.82); }
+    .big-quote em { font-style: normal; font-weight: 600; }
+
+    /* ── SCROLL CHEVRON ──────────────────────────────── */
+    .scroll-hint { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; color: rgba(255,255,255,0.28); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
+    .scroll-chevron span { display: block; width: 12px; height: 12px; border-right: 2px solid rgba(255,255,255,0.22); border-bottom: 2px solid rgba(255,255,255,0.22); transform: rotate(45deg); margin-bottom: 2px; }
+    .scroll-chevron span:nth-child(1) { animation: chv 1.8s ease-in-out infinite 0s; }
+    .scroll-chevron span:nth-child(2) { animation: chv 1.8s ease-in-out infinite 0.2s; }
+    @keyframes chv { 0%,100% { opacity:0.18; transform:rotate(45deg) translateY(0); } 50% { opacity:0.65; transform:rotate(45deg) translateY(4px); } }
+
+    /* ── CARDS ───────────────────────────────────────── */
+    .cards { display: grid; gap: 16px; width: 100%; max-width: 940px; margin: 40px auto 0; text-align: left; }
+    .cards.c2 { grid-template-columns: 1fr 1fr; }
+    .cards.c3 { grid-template-columns: 1fr 1fr 1fr; }
+    .cards.c4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 28px; transition: border-color 0.3s, background 0.3s, transform 0.3s; }
+    .card:hover { background: rgba(255,255,255,0.08); border-color: rgba(167,139,250,0.35); transform: translateY(-3px); }
+    .card.hi { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.38); }
+    .card-icon { font-size: 30px; margin-bottom: 14px; display: block; }
+    .card h3 { font-size: 16px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 8px; line-height: 1.3; }
+    .card p { font-size: 13px; color: rgba(255,255,255,0.5) !important; line-height: 1.65; }
+
+    /* ── STATS ROW ───────────────────────────────────── */
+    .stats-row { display: flex; justify-content: center; max-width: 700px; margin: 52px auto 0; }
+    .stat { flex: 1; padding: 0 32px; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
+    .stat:last-child { border-right: none; }
+    .stat-val { font-size: clamp(36px, 4.5vw, 54px); font-weight: 800; letter-spacing: -0.04em; display: block; margin-bottom: 6px; background: linear-gradient(135deg, #c4b5fd, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-lbl { font-size: 13px; color: rgba(255,255,255,0.45) !important; }
+
+    /* ── RULE CARDS ──────────────────────────────────── */
+    .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 840px; margin: 40px auto 0; text-align: left; }
+    .rule-card { display: flex; gap: 18px; align-items: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 22px; padding: 24px 26px; transition: border-color 0.3s, transform 0.3s; }
+    .rule-card:hover { border-color: rgba(167,139,250,0.35); transform: translateY(-2px); }
+    .rule-n { font-size: 38px; font-weight: 800; line-height: 1; background: linear-gradient(135deg, #c4b5fd, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; flex-shrink: 0; }
+    .rule-body h4 { font-size: 16px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 5px; }
+    .rule-body p { font-size: 13px; color: rgba(255,255,255,0.45) !important; line-height: 1.55; }
+
+    /* ── AGENDA ──────────────────────────────────────── */
+    .agenda { width: 100%; max-width: 720px; margin: 44px auto 0; }
+    .ag-row { display: flex; align-items: center; gap: 20px; padding: 17px 0; border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left; }
+    .ag-row:last-child { border-bottom: none; }
+    .ag-time { font-size: 11px; font-weight: 700; color: #a78bfa !important; min-width: 44px; flex-shrink: 0; }
+    .ag-num { font-size: 10px; font-weight: 700; color: rgba(124,58,237,0.6) !important; min-width: 44px; text-transform: uppercase; letter-spacing: 0.8px; flex-shrink: 0; }
+    .ag-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.82) !important; flex: 1; }
+    .ag-dur { font-size: 11px; color: rgba(255,255,255,0.28) !important; flex-shrink: 0; }
+
+    /* ── HORIZONTAL TIMELINE ─────────────────────────── */
+    .h-timeline { display: flex; width: 100%; max-width: 960px; margin: 48px auto 0; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); }
+    .ht-item { flex: 1; padding: 14px 8px; background: rgba(255,255,255,0.025); border-right: 1px solid rgba(255,255,255,0.05); text-align: center; cursor: default; transition: background 0.2s; }
     .ht-item:last-child { border-right: none; }
     .ht-item:hover { background: rgba(124,58,237,0.1); }
-    .ht-item.pause { background: rgba(255,255,255,0.01); }
-    .ht-time { font-size: 9px; font-weight: 700; color: #a78bfa; display: block; margin-bottom: 4px; letter-spacing: 0.5px; }
-    .ht-label { font-size: 9px; color: rgba(255,255,255,0.35); line-height: 1.35; }
+    .ht-item.pause { background: rgba(255,255,255,0.012); }
+    .ht-time { font-size: 9px; font-weight: 700; color: #a78bfa !important; display: block; margin-bottom: 4px; }
+    .ht-label { font-size: 9px; color: rgba(255,255,255,0.38) !important; line-height: 1.35; }
 
-    /* ── BLOCK NUMBER BG ────────────────────────────────────── */
-    .block-bg-num {
-      position: absolute; z-index: 0;
-      font-size: clamp(180px, 25vw, 320px);
-      font-weight: 900; letter-spacing: -0.06em;
-      color: rgba(255,255,255,0.018);
-      top: 50%; left: 50%; transform: translate(-50%, -50%);
-      pointer-events: none; user-select: none; white-space: nowrap;
-    }
+    /* ── MODELS ──────────────────────────────────────── */
+    .models { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; width: 100%; max-width: 940px; margin: 40px auto 0; }
+    .model-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 20px 14px; text-align: center; transition: border-color 0.3s, transform 0.3s; }
+    .model-card:hover { border-color: rgba(167,139,250,0.35); transform: translateY(-3px); }
+    .model-card.hi { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.4); }
+    .model-name { font-size: 13px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 6px; }
+    .model-tag { font-size: 9px; color: #a78bfa !important; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+    .model-uses { font-size: 10px; color: rgba(255,255,255,0.38) !important; line-height: 1.7; }
 
-    /* ── RESPONSIVE ─────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .models { grid-template-columns: 1fr 1fr 1fr; }
-    }
+    /* ── LEGAL RULES ─────────────────────────────────── */
+    .legal-list { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 700px; margin: 40px auto 0; text-align: left; }
+    .legal-item { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px 22px; transition: border-color 0.3s; }
+    .legal-item:hover { border-color: rgba(167,139,250,0.28); }
+    .legal-check { width: 30px; height: 30px; border-radius: 50%; background: rgba(124,58,237,0.18); border: 1px solid rgba(124,58,237,0.5); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .legal-item p { font-size: 14px; color: rgba(255,255,255,0.72) !important; line-height: 1.4; }
+    .legal-item p strong { color: #f5f5f7 !important; }
+
+    /* ── EU CARDS ────────────────────────────────────── */
+    .eu-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; width: 100%; max-width: 840px; margin: 40px auto 0; text-align: left; }
+    .eu-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+    .eu-tag { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #a78bfa !important; margin-bottom: 10px; }
+    .eu-card h4 { font-size: 15px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 6px; }
+    .eu-card p { font-size: 12px; color: rgba(255,255,255,0.42) !important; line-height: 1.6; }
+
+    /* ── ACTION GRID ─────────────────────────────────── */
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 760px; margin: 40px auto 0; text-align: left; }
+    .action-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; transition: border-color 0.3s; }
+    .action-card:hover { border-color: rgba(167,139,250,0.28); }
+    .action-num { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #a78bfa !important; margin-bottom: 10px; }
+    .action-card h4 { font-size: 16px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 6px; }
+    .action-card p { font-size: 13px; color: rgba(255,255,255,0.42) !important; line-height: 1.55; }
+
+    /* ── BLOCK BG NUMBER ─────────────────────────────── */
+    .block-bg-num { position: absolute; z-index: 0; font-size: clamp(180px, 25vw, 320px); font-weight: 900; letter-spacing: -0.06em; color: rgba(255,255,255,0.016); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; user-select: none; white-space: nowrap; }
+
+    /* ── SECTION DIVIDER ─────────────────────────────── */
+    .s-divider { width: 1px; height: 80px; background: linear-gradient(to bottom, transparent, rgba(124,58,237,0.5), transparent); margin: 0 auto; }
+
+    /* ── PILLS ───────────────────────────────────────── */
+    .pill-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 28px; }
+    .pill { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3); border-radius: 30px; padding: 6px 18px; font-size: 13px; font-weight: 500; color: #c4b5fd !important; }
+
+    /* ── CLOSING ─────────────────────────────────────── */
+    .closing-contacts { display: flex; gap: 56px; justify-content: center; margin-top: 52px; flex-wrap: wrap; }
+    .c-contact { text-align: center; }
+    .c-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3) !important; margin-bottom: 5px; }
+    .c-val { font-size: 15px; font-weight: 500; color: #c4b5fd !important; }
+
+    /* ── ANIMATION SYSTEM ────────────────────────────── */
+    .split-words .w { display: inline-block; opacity: 0; transform: translateY(28px); transition: opacity 0.55s ease, transform 0.55s ease; transition-delay: calc(var(--wi, 0) * 55ms + 150ms); }
+    .split-words.in .w { opacity: 1; transform: translateY(0); }
+    .fu { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; transition-delay: var(--fd, 0ms); }
+    .fu.in { opacity: 1; transform: translateY(0); }
+    .si { opacity: 0; transform: scale(0.92) translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; transition-delay: var(--fd, 0ms); }
+    .si.in { opacity: 1; transform: scale(1) translateY(0); }
+    .fi { opacity: 0; transition: opacity 0.9s ease; transition-delay: var(--fd, 0ms); }
+    .fi.in { opacity: 1; }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 900px) { .models { grid-template-columns: 1fr 1fr 1fr; } }
     @media (max-width: 768px) {
-      #nav { padding: 0 20px; }
-      #nav .nav-center { display: none; }
-      section { padding: 80px 20px; }
+      #nav { padding: 0 20px; } #nav .nav-center { display: none; }
+      section { padding: 90px 20px; }
       .cards.c2, .cards.c3, .cards.c4 { grid-template-columns: 1fr; }
-      .rules { grid-template-columns: 1fr; }
+      .rules, .eu-cards, .action-grid { grid-template-columns: 1fr; }
       .models { grid-template-columns: 1fr 1fr; }
-      .eu-cards { grid-template-columns: 1fr; }
-      .action-grid { grid-template-columns: 1fr; }
       .h-timeline { display: none; }
       .stats-row { flex-direction: column; gap: 0; }
       .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
@@ -531,10 +276,8 @@
 </head>
 <body>
 
-<!-- Scroll progress -->
 <div id="scroll-progress"><div id="scroll-fill"></div></div>
 
-<!-- Nav -->
 <nav id="nav">
   <a href="/" class="nav-logo">lumin<span>AI</span>re</a>
   <div class="nav-center">
@@ -549,25 +292,32 @@
 </nav>
 
 
-<!-- ══════════════════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════════════ -->
+<!-- ══ HERO ════════════════════════════════════════════════ -->
 <section id="s-hero" class="bg0">
-  <div class="atmo atmo-hero-1"></div>
-  <div class="atmo atmo-hero-2"></div>
+  <!-- Video background (scroll-scrubbed) -->
+  <div class="section-bg">
+    <video class="bg-video" id="hero-video" muted playsinline preload="auto"
+      data-scroll-video="true"
+      src="data:,"><!-- video-url-hero --></video>
+    <img class="bg-img" id="hero-img"
+      src="https://tempfile.aiquickdraw.com/h/7c5e4cf5f3c75b36e9be5e95c5f730c3_1776605854.png"
+      alt="" />
+  </div>
+  <div class="section-overlay"></div>
+  <div class="section-glow">
+    <div class="atmo atmo-hero"></div>
+    <div class="atmo atmo-hero2"></div>
+  </div>
 
   <div class="s-inner">
     <div class="time-badge fu" style="--fd:100ms">KI-Führerschein Seminar · luminAIre</div>
-
     <h1 class="hero-title split-words">
       KI als echter<br>
       <span class="gradient-text">Denk- und<br>Arbeitspartner.</span>
     </h1>
-
     <p class="body-text fu" style="--fd:500ms">
       3 Stunden · 9 Blöcke · <strong>Ihr Job. Morgen anders.</strong>
     </p>
-
     <div class="pill-row fu" style="--fd:700ms">
       <span class="pill">KI-Führerschein</span>
       <span class="pill">EU AI Act konform</span>
@@ -575,22 +325,16 @@
       <span class="pill">Praxisnah</span>
     </div>
   </div>
-
   <div class="scroll-hint">
     Scroll
-    <div class="scroll-chevron">
-      <span></span>
-      <span></span>
-    </div>
+    <div class="scroll-chevron"><span></span><span></span></div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     OPENING QUOTE
-══════════════════════════════════════════════════════ -->
-<section class="interstitial">
-  <div class="atmo atmo-center"></div>
+<!-- ══ OPENING QUOTE ════════════════════════════════════════ -->
+<section class="interstitial bg0">
+  <div class="atmo atmo-center" style="position:absolute"></div>
   <div class="s-inner">
     <p class="big-quote split-words">
       „Heute verlassen Sie den Raum mit mindestens <em>2–3 konkreten KI-Anwendungen</em>, die Sie morgen direkt in Ihrem Job einsetzen können."
@@ -599,33 +343,19 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     AGENDA OVERVIEW
-══════════════════════════════════════════════════════ -->
+<!-- ══ AGENDA ═══════════════════════════════════════════════ -->
 <section id="s-agenda" class="bg1">
-  <div class="atmo atmo-left"></div>
-
+  <div class="atmo atmo-left" style="position:absolute"></div>
   <div class="s-inner">
     <p class="eyebrow fu">Der heutige Tag</p>
     <h2 class="section-title split-words">
       Ihr Weg vom<br><span class="gradient-text">Einsteiger zum Profi.</span>
     </h2>
-
     <div class="stats-row fu" style="--fd:300ms">
-      <div class="stat">
-        <span class="stat-val" data-count-to="9">0</span>
-        <span class="stat-lbl">Blöcke</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val">3h</span>
-        <span class="stat-lbl">Praxis</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val" data-count-to="100">0</span>
-        <span class="stat-lbl">% direkt einsetzbar</span>
-      </div>
+      <div class="stat"><span class="stat-val" data-count-to="9">0</span><span class="stat-lbl">Blöcke</span></div>
+      <div class="stat"><span class="stat-val">3h</span><span class="stat-lbl">Praxis</span></div>
+      <div class="stat"><span class="stat-val" data-count-to="100">0</span><span class="stat-lbl">% direkt einsetzbar</span></div>
     </div>
-
     <div class="h-timeline fu" style="--fd:500ms">
       <div class="ht-item"><span class="ht-time">09:00</span><span class="ht-label">Begrüßung</span></div>
       <div class="ht-item"><span class="ht-time">09:15</span><span class="ht-label">Wow-Demo</span></div>
@@ -637,7 +367,6 @@
       <div class="ht-item"><span class="ht-time">11:40</span><span class="ht-label">Recht</span></div>
       <div class="ht-item"><span class="ht-time">11:55</span><span class="ht-label">Action-Plan</span></div>
     </div>
-
     <div class="agenda fu" style="--fd:600ms">
       <div class="ag-row"><span class="ag-time">09:00</span><span class="ag-num">Block 1</span><span class="ag-title">Begrüßung, Ziel &amp; Icebreaker</span><span class="ag-dur">15 Min</span></div>
       <div class="ag-row"><span class="ag-time">09:15</span><span class="ag-num">Block 2</span><span class="ag-title">Wow-Demo – Was ist heute möglich?</span><span class="ag-dur">20 Min</span></div>
@@ -653,54 +382,34 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 1 – BEGRÜSSUNG
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 1 — BEGRÜSSUNG ════════════════════════════════ -->
 <section class="bg2">
   <div class="block-bg-num">01</div>
-  <div class="atmo atmo-right"></div>
-
+  <div class="section-bg">
+    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/c24a33c9a43810a639b2cd1d00a74932_1776605856.png" alt="" />
+  </div>
+  <div class="section-overlay"></div>
+  <div class="atmo atmo-right" style="position:absolute"></div>
   <div class="s-inner">
-    <div class="time-badge fu" style="--fd:0ms">09:00 – 09:15 · 15 Min</div>
+    <div class="time-badge fu">09:00 – 09:15 · 15 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 1</p>
     <h2 class="section-title split-words">
       Willkommen.<br><span class="gradient-text">Warum Sie heute hier sind.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      Erster Eindruck, klares Ziel, erste Energie. <strong>Jeder weiß, was ihn erwartet.</strong>
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">Erster Eindruck, klares Ziel, erste Energie. <strong>Jeder weiß, was ihn erwartet.</strong></p>
     <div class="cards c2">
-      <div class="card si" style="--fd:100ms">
-        <span class="card-icon">👋</span>
-        <h3>Begrüßung &amp; Vorstellung</h3>
-        <p>Trainer-Vorstellung · Überblick über den Tagesablauf · Erste Erwartungen abholen</p>
-      </div>
-      <div class="card si hi" style="--fd:200ms">
-        <span class="card-icon">🎯</span>
-        <h3>Das Seminar-Ziel</h3>
-        <p>„Sie werden KI nicht mehr nur als besseres Google sehen, sondern als echten Denk- und Arbeitspartner."</p>
-      </div>
-      <div class="card si" style="--fd:300ms">
-        <span class="card-icon">🧊</span>
-        <h3>Icebreaker (8–10 Min)</h3>
-        <p>Name + Bereich · Bisherige KI-Erfahrung · max. 15 Sek. pro Person</p>
-      </div>
-      <div class="card si" style="--fd:400ms">
-        <span class="card-icon">💬</span>
-        <h3>Erwartungsabfrage</h3>
-        <p>„Welche Aufgabe kostet Sie am meisten Zeit?" → Trainer fasst Pain Points zusammen</p>
-      </div>
+      <div class="card si" style="--fd:100ms"><span class="card-icon">👋</span><h3>Begrüßung &amp; Vorstellung</h3><p>Trainer-Vorstellung · Überblick über den Tagesablauf · Erste Erwartungen abholen</p></div>
+      <div class="card si hi" style="--fd:200ms"><span class="card-icon">🎯</span><h3>Das Seminar-Ziel</h3><p>„Sie werden KI nicht mehr nur als besseres Google sehen, sondern als echten Denk- und Arbeitspartner."</p></div>
+      <div class="card si" style="--fd:300ms"><span class="card-icon">🧊</span><h3>Icebreaker (8–10 Min)</h3><p>Name + Bereich · Bisherige KI-Erfahrung · max. 15 Sek. pro Person</p></div>
+      <div class="card si" style="--fd:400ms"><span class="card-icon">💬</span><h3>Erwartungsabfrage</h3><p>„Welche Aufgabe kostet Sie am meisten Zeit?" → Trainer fasst Pain Points zusammen</p></div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     INTERSTITIAL – Ziel-Statement
-══════════════════════════════════════════════════════ -->
+<!-- ══ QUOTE ════════════════════════════════════════════════ -->
 <section class="interstitial bg0" style="min-height:55vh">
-  <div class="atmo atmo-center"></div>
+  <div class="atmo atmo-center" style="position:absolute"></div>
   <div class="s-inner">
     <p class="big-quote split-words">
       „Sie werden KI nicht mehr nur als besseres Google sehen, sondern als <em>echten Denk- und Arbeitspartner.</em>"
@@ -709,562 +418,369 @@
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 2 – WOW-DEMO
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 2 — WOW-DEMO ═══════════════════════════════════ -->
 <section class="bg1">
   <div class="block-bg-num">02</div>
-  <div class="atmo atmo-left"></div>
-
+  <div class="section-bg">
+    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/22dfd7dc51c3a3b4e1dbd2db778769a2_1776605857.png" alt="" />
+  </div>
+  <div class="section-overlay"></div>
+  <div class="atmo atmo-left" style="position:absolute"></div>
   <div class="s-inner">
     <div class="time-badge fu">09:15 – 09:35 · 20 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 2</p>
     <h2 class="section-title split-words">
       In 8 Minuten.<br><span class="gradient-text">Eine komplette Präsentation.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      Live sehen, was moderne KI kann — <strong>ganz ohne Programmierkenntnisse.</strong>
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">Live sehen, was moderne KI kann — <strong>ganz ohne Programmierkenntnisse.</strong></p>
     <div class="cards c3">
-      <div class="card si" style="--fd:100ms">
-        <span class="card-icon">1️⃣</span>
-        <h3>Guten Prompt eingeben</h3>
-        <p>Thema: „KI im Vertriebsalltag" · Mit der 4-Regel-Formel formuliert</p>
-      </div>
-      <div class="card si hi" style="--fd:200ms">
-        <span class="card-icon">2️⃣</span>
-        <h3>Claude generiert</h3>
-        <p>Gliederung + vollständige Inhalte + Folien-Struktur — live auf dem Beamer</p>
-      </div>
-      <div class="card si" style="--fd:300ms">
-        <span class="card-icon">3️⃣</span>
-        <h3>Export &amp; Weiterverarbeitung</h3>
-        <p>Als PowerPoint · oder direkter Markdown-Export · Fertig in unter 10 Minuten</p>
-      </div>
+      <div class="card si" style="--fd:100ms"><span class="card-icon">1️⃣</span><h3>Guten Prompt eingeben</h3><p>Thema: „KI im Vertriebsalltag" · Mit der 4-Regel-Formel formuliert</p></div>
+      <div class="card si hi" style="--fd:200ms"><span class="card-icon">2️⃣</span><h3>Claude generiert</h3><p>Gliederung + vollständige Inhalte + Folien-Struktur — live auf dem Beamer</p></div>
+      <div class="card si" style="--fd:300ms"><span class="card-icon">3️⃣</span><h3>Export &amp; Weiterverarbeitung</h3><p>Als PowerPoint · direkter Markdown-Export · Fertig in unter 10 Minuten</p></div>
     </div>
-
     <div class="s-divider fu" style="--fd:500ms; margin-top:48px"></div>
-
-    <p class="body-text fu" style="--fd:600ms; margin-top:40px">
-      Früher hätten Sie dafür <strong>2–3 Stunden</strong> gebraucht.
-    </p>
+    <p class="body-text fu" style="--fd:600ms; margin-top:40px">Früher hätten Sie dafür <strong>2–3 Stunden</strong> gebraucht.</p>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 3 – PROMPT ENGINEERING
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 3 — PROMPT ENGINEERING ════════════════════════ -->
 <section id="s-b3" class="bg3">
   <div class="block-bg-num">03</div>
-  <div class="atmo atmo-right"></div>
-
+  <div class="atmo atmo-right" style="position:absolute"></div>
   <div class="s-inner">
     <div class="time-badge fu">09:35 – 10:05 · 30 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 3 · Prompt Engineering</p>
     <h2 class="section-title split-words">
       Die Formel,<br><span class="gradient-text">die alles ändert.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      Vier Regeln. Sofort anwendbar. <strong>Dramatisch bessere Ergebnisse.</strong>
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">Vier Regeln. Sofort anwendbar. <strong>Dramatisch bessere Ergebnisse.</strong></p>
     <div class="rules">
-      <div class="rule-card si" style="--fd:100ms">
-        <div class="rule-n">1</div>
-        <div class="rule-body">
-          <h4>Rolle</h4>
-          <p>„Du bist ein erfahrener Vertriebsleiter mit 15 Jahren Erfahrung…"</p>
-        </div>
-      </div>
-      <div class="rule-card si" style="--fd:200ms">
-        <div class="rule-n">2</div>
-        <div class="rule-body">
-          <h4>Aufgabe</h4>
-          <p>„Erstelle mir eine überzeugende E-Mail an Neukunden über…"</p>
-        </div>
-      </div>
-      <div class="rule-card si" style="--fd:300ms">
-        <div class="rule-n">3</div>
-        <div class="rule-body">
-          <h4>Kontext</h4>
-          <p>„Das Unternehmen ist… Das Ziel ist… Der Kunde ist…"</p>
-        </div>
-      </div>
-      <div class="rule-card si" style="--fd:400ms">
-        <div class="rule-n">4</div>
-        <div class="rule-body">
-          <h4>Format</h4>
-          <p>„Gib mir das als Tabelle / als E-Mail / als 5 Bullet Points / max. 200 Wörter"</p>
-        </div>
-      </div>
+      <div class="rule-card si" style="--fd:100ms"><div class="rule-n">1</div><div class="rule-body"><h4>Rolle</h4><p>„Du bist ein erfahrener Vertriebsleiter mit 15 Jahren Erfahrung…"</p></div></div>
+      <div class="rule-card si" style="--fd:200ms"><div class="rule-n">2</div><div class="rule-body"><h4>Aufgabe</h4><p>„Erstelle mir eine überzeugende E-Mail an Neukunden über…"</p></div></div>
+      <div class="rule-card si" style="--fd:300ms"><div class="rule-n">3</div><div class="rule-body"><h4>Kontext</h4><p>„Das Unternehmen ist… Das Ziel ist… Der Kunde ist…"</p></div></div>
+      <div class="rule-card si" style="--fd:400ms"><div class="rule-n">4</div><div class="rule-body"><h4>Format</h4><p>„Gib mir das als Tabelle / als E-Mail / als 5 Bullet Points / max. 200 Wörter"</p></div></div>
     </div>
-
     <div class="cards c2" style="margin-top:16px">
-      <div class="card si" style="--fd:500ms">
-        <span class="card-icon">📊</span>
-        <h3>Live-Vergleich</h3>
-        <p>Schlechter Prompt → mittelmäßiges Ergebnis<br>Guter Prompt → <strong style="color:#f5f5f7">dramatisch besseres Ergebnis</strong></p>
-      </div>
-      <div class="card si hi" style="--fd:600ms">
-        <span class="card-icon">✍️</span>
-        <h3>Interaktive Übung (12–15 Min)</h3>
-        <p>Jeder schreibt seinen eigenen Prompt · 2–3 Freiwillige zeigen ihr Ergebnis · Trainer verbessert live</p>
-      </div>
+      <div class="card si" style="--fd:500ms"><span class="card-icon">📊</span><h3>Live-Vergleich</h3><p>Schlechter Prompt → mittelmäßiges Ergebnis<br>Guter Prompt → <strong style="color:#f5f5f7">dramatisch besseres Ergebnis</strong></p></div>
+      <div class="card si hi" style="--fd:600ms"><span class="card-icon">✍️</span><h3>Interaktive Übung (12–15 Min)</h3><p>Jeder schreibt seinen eigenen Prompt · 2–3 Freiwillige zeigen Ergebnis · Trainer verbessert live</p></div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 4 – HANDS-ON
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 4 — HANDS-ON ═══════════════════════════════════ -->
 <section class="bg2">
   <div class="block-bg-num">04</div>
-  <div class="atmo atmo-left"></div>
-
+  <div class="atmo atmo-left" style="position:absolute"></div>
   <div class="s-inner">
     <div class="time-badge fu">10:05 – 10:25 · 20 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 4 · Hands-on</p>
     <h2 class="section-title split-words">
       Anfassen.<br><span class="gradient-text">Ausprobieren. Behalten.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      KI mobil erleben — <strong>und sofort etwas Praktisches mitnehmen.</strong>
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">KI mobil erleben — <strong>und sofort etwas Praktisches mitnehmen.</strong></p>
     <div class="cards c3">
-      <div class="card si" style="--fd:100ms">
-        <span class="card-icon">📱</span>
-        <h3>App installieren</h3>
-        <p>ChatGPT / Gemini / Claude auf dem Handy · Login mit bestehendem Account · 3–4 Min</p>
-      </div>
-      <div class="card si hi" style="--fd:200ms">
-        <span class="card-icon">🎙️</span>
-        <h3>Voice-Modus live</h3>
-        <p>Natürliches Sprechen mit KI · Gemeinsame Übung: „Stell mir 3 Fragen zu meinem Job" · 6–7 Min</p>
-      </div>
-      <div class="card si" style="--fd:300ms">
-        <span class="card-icon">🎨</span>
-        <h3>Bildgenerierung</h3>
-        <p>DALL-E / Flux · Jeder generiert ein eigenes Bild · Logo-Idee, LinkedIn-Post, Visualisierung · 8–9 Min</p>
-      </div>
+      <div class="card si" style="--fd:100ms"><span class="card-icon">📱</span><h3>App installieren</h3><p>ChatGPT / Gemini / Claude auf dem Handy · Login mit bestehendem Account · 3–4 Min</p></div>
+      <div class="card si hi" style="--fd:200ms"><span class="card-icon">🎙️</span><h3>Voice-Modus live</h3><p>Natürliches Sprechen mit KI · Übung: „Stell mir 3 Fragen zu meinem Job" · 6–7 Min</p></div>
+      <div class="card si" style="--fd:300ms"><span class="card-icon">🎨</span><h3>Bildgenerierung</h3><p>DALL-E / Flux · Jeder generiert ein eigenes Bild · Logo, LinkedIn-Post, Visualisierung · 8–9 Min</p></div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     PAUSE
-══════════════════════════════════════════════════════ -->
+<!-- ══ PAUSE ═════════════════════════════════════════════════ -->
 <section class="bg0 short">
+  <div class="atmo atmo-center" style="position:absolute"></div>
   <div class="s-inner">
-    <p class="hero-title fu" style="font-size:clamp(72px,10vw,140px); letter-spacing:-0.05em; --fd:100ms">☕</p>
+    <p class="hero-title fu" style="font-size:clamp(72px,10vw,130px); letter-spacing:-0.05em; --fd:100ms">☕</p>
     <p class="eyebrow fu" style="--fd:300ms">10:25 – 10:40 · 15 Minuten</p>
-    <h2 class="medium-title split-words" style="margin-top:16px">
-      Kurz <span class="gradient-text">durchatmen.</span>
-    </h2>
+    <h2 class="medium-title split-words" style="margin-top:16px">Kurz <span class="gradient-text">durchatmen.</span></h2>
     <p class="body-text fu" style="--fd:600ms">Weiter um 10:40 Uhr mit dem wichtigsten Block des Tages.</p>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 6 – WORKSHOP
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 6 — WORKSHOP ═══════════════════════════════════ -->
 <section id="s-b6" class="bg3">
   <div class="block-bg-num">06</div>
-  <div class="atmo atmo-right"></div>
-
+  <!-- Scroll-driven background video -->
+  <div class="section-bg">
+    <video class="bg-video" id="workshop-video" muted playsinline preload="auto"
+      data-scroll-video="true"
+      src="data:,"><!-- video-url-workshop --></video>
+    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/bd75ff8b33a7766d87493fc3e84bf306_1776605847.png" alt="" />
+  </div>
+  <div class="section-overlay"></div>
+  <div class="atmo atmo-right" style="position:absolute"></div>
   <div class="s-inner">
     <div class="time-badge fu">10:40 – 11:15 · 35 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 6 · Der wichtigste Block</p>
     <h2 class="section-title split-words">
       Deine Aufgabe.<br><span class="gradient-text">Deine Lösung.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      Jeder arbeitet an einer <strong>echten Aufgabe aus seinem Arbeitsalltag</strong> — und geht mit einem fertigen Ergebnis nach Hause.
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">Jeder arbeitet an einer <strong>echten Aufgabe aus seinem Arbeitsalltag</strong> — und geht mit einem fertigen Ergebnis nach Hause.</p>
     <div class="cards c4">
-      <div class="card si" style="--fd:100ms">
-        <span class="card-icon">✉️</span>
-        <h3>Kommunikation &amp; Texte</h3>
-        <p>E-Mails, Berichte, Protokolle, Zusammenfassungen</p>
-      </div>
-      <div class="card si" style="--fd:200ms">
-        <span class="card-icon">💡</span>
-        <h3>Kreativität &amp; Ideen</h3>
-        <p>Kampagnen, Brainstorming, Präsentationen, Konzepte</p>
-      </div>
-      <div class="card si" style="--fd:300ms">
-        <span class="card-icon">🔍</span>
-        <h3>Analyse &amp; Recherche</h3>
-        <p>Daten verstehen, Vergleiche, Marktanalysen</p>
-      </div>
-      <div class="card si hi" style="--fd:400ms">
-        <span class="card-icon">⚡</span>
-        <h3>Routine &amp; Zeitfresser</h3>
-        <p>Alles, was täglich Zeit kostet und nervt</p>
-      </div>
+      <div class="card si" style="--fd:100ms"><span class="card-icon">✉️</span><h3>Kommunikation &amp; Texte</h3><p>E-Mails, Berichte, Protokolle, Zusammenfassungen</p></div>
+      <div class="card si" style="--fd:200ms"><span class="card-icon">💡</span><h3>Kreativität &amp; Ideen</h3><p>Kampagnen, Brainstorming, Präsentationen, Konzepte</p></div>
+      <div class="card si" style="--fd:300ms"><span class="card-icon">🔍</span><h3>Analyse &amp; Recherche</h3><p>Daten verstehen, Vergleiche, Marktanalysen</p></div>
+      <div class="card si hi" style="--fd:400ms"><span class="card-icon">⚡</span><h3>Routine &amp; Zeitfresser</h3><p>Alles, was täglich Zeit kostet und nervt</p></div>
     </div>
-
     <div class="s-divider fu" style="--fd:500ms; margin-top:48px"></div>
-
     <div class="cards c3" style="margin-top:0">
-      <div class="card si" style="--fd:600ms">
-        <span class="card-icon">📝</span>
-        <h3>Schritt 1</h3>
-        <p>Eigene Aufgabe in eigenen Worten beschreiben</p>
-      </div>
-      <div class="card si hi" style="--fd:700ms">
-        <span class="card-icon">🧪</span>
-        <h3>Schritt 2 (25 Min)</h3>
-        <p>Guten Prompt mit der 4-Regel-Formel schreiben · KI ausführen · Ergebnis bewerten · Verbessern</p>
-      </div>
-      <div class="card si" style="--fd:800ms">
-        <span class="card-icon">🎤</span>
-        <h3>Schritt 3 (5 Min)</h3>
-        <p>3–4 Freiwillige zeigen ihr Ergebnis · „Was war überraschend?"</p>
-      </div>
+      <div class="card si" style="--fd:600ms"><span class="card-icon">📝</span><h3>Schritt 1</h3><p>Eigene Aufgabe in eigenen Worten beschreiben</p></div>
+      <div class="card si hi" style="--fd:700ms"><span class="card-icon">🧪</span><h3>Schritt 2 (25 Min)</h3><p>4-Regel-Prompt schreiben · KI ausführen · Ergebnis bewerten · Verbessern</p></div>
+      <div class="card si" style="--fd:800ms"><span class="card-icon">🎤</span><h3>Schritt 3 (5 Min)</h3><p>3–4 Freiwillige zeigen ihr Ergebnis · „Was war überraschend?"</p></div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 7 – MODELLE & TOOLS
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 7 — MODELLE & TOOLS ════════════════════════════ -->
 <section class="bg1">
   <div class="block-bg-num">07</div>
-  <div class="atmo atmo-left"></div>
-
+  <div class="atmo atmo-left" style="position:absolute"></div>
   <div class="s-inner">
     <div class="time-badge fu">11:15 – 11:40 · 25 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 7 · Modelle &amp; Tools</p>
     <h2 class="section-title split-words">
       Das richtige Tool<br><span class="gradient-text">für jede Aufgabe.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      Nicht immer das Gleiche nehmen — <strong>sondern das Beste für den Zweck.</strong>
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">Nicht immer das Gleiche nehmen — <strong>sondern das Beste für den Zweck.</strong></p>
     <div class="models">
-      <div class="model-card si" style="--fd:100ms">
-        <div class="model-name">GPT-4o</div>
-        <div class="model-tag">OpenAI</div>
-        <div class="model-uses">Texte<br>Kreativität<br>Vielseitig</div>
-      </div>
-      <div class="model-card si hi" style="--fd:200ms">
-        <div class="model-name">Claude 4</div>
-        <div class="model-tag">Anthropic</div>
-        <div class="model-uses">Analyse<br>Lange Texte<br>Coding</div>
-      </div>
-      <div class="model-card si" style="--fd:300ms">
-        <div class="model-name">Gemini 2</div>
-        <div class="model-tag">Google</div>
-        <div class="model-uses">Recherche<br>Google-Daten<br>Workspace</div>
-      </div>
-      <div class="model-card si" style="--fd:400ms">
-        <div class="model-name">DALL-E</div>
-        <div class="model-tag">OpenAI</div>
-        <div class="model-uses">Bilder<br>Visualisierungen<br>Design</div>
-      </div>
-      <div class="model-card si" style="--fd:500ms">
-        <div class="model-name">Grok</div>
-        <div class="model-tag">xAI</div>
-        <div class="model-uses">Code<br>Analyse<br>X-Daten</div>
-      </div>
+      <div class="model-card si" style="--fd:100ms"><div class="model-name">GPT-4o</div><div class="model-tag">OpenAI</div><div class="model-uses">Texte<br>Kreativität<br>Vielseitig</div></div>
+      <div class="model-card si hi" style="--fd:200ms"><div class="model-name">Claude 4</div><div class="model-tag">Anthropic</div><div class="model-uses">Analyse<br>Lange Texte<br>Coding</div></div>
+      <div class="model-card si" style="--fd:300ms"><div class="model-name">Gemini 2</div><div class="model-tag">Google</div><div class="model-uses">Recherche<br>Google-Daten<br>Workspace</div></div>
+      <div class="model-card si" style="--fd:400ms"><div class="model-name">DALL-E</div><div class="model-tag">OpenAI</div><div class="model-uses">Bilder<br>Visualisierungen<br>Design</div></div>
+      <div class="model-card si" style="--fd:500ms"><div class="model-name">Grok</div><div class="model-tag">xAI</div><div class="model-uses">Code<br>Analyse<br>X-Daten</div></div>
     </div>
-
     <div class="cards c3" style="margin-top:28px">
-      <div class="card si" style="--fd:600ms">
-        <span class="card-icon">🤖</span>
-        <h3>Agentic AI</h3>
-        <p>KI, die selbstständig mehrere Schritte macht · AutoGPT, CrewAI, Copilot Agents, Claude Projects</p>
-      </div>
-      <div class="card si" style="--fd:700ms">
-        <span class="card-icon">🪟</span>
-        <h3>Microsoft 365</h3>
-        <p>Copilot in Word, Excel, Teams, Outlook — direkt in Ihrem Arbeitsumfeld</p>
-      </div>
-      <div class="card si" style="--fd:800ms">
-        <span class="card-icon">✨</span>
-        <h3>Weitere Tools</h3>
-        <p>Google Workspace · Notion AI · Canva AI · Und viele mehr</p>
-      </div>
+      <div class="card si" style="--fd:600ms"><span class="card-icon">🤖</span><h3>Agentic AI</h3><p>KI die selbstständig mehrere Schritte macht · AutoGPT, CrewAI, Copilot Agents, Claude Projects</p></div>
+      <div class="card si" style="--fd:700ms"><span class="card-icon">🪟</span><h3>Microsoft 365</h3><p>Copilot in Word, Excel, Teams, Outlook — direkt in Ihrem Arbeitsumfeld</p></div>
+      <div class="card si" style="--fd:800ms"><span class="card-icon">✨</span><h3>Weitere Tools</h3><p>Google Workspace · Notion AI · Canva AI · und viele mehr</p></div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 8 – EU-AI ACT & RECHT
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 8 — EU-AI ACT ══════════════════════════════════ -->
 <section id="s-b8" class="bg2">
   <div class="block-bg-num">08</div>
-  <div class="atmo atmo-right"></div>
-
+  <div class="atmo atmo-right" style="position:absolute"></div>
   <div class="s-inner">
     <div class="time-badge fu">11:40 – 11:55 · 15 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 8 · EU-AI Act</p>
     <h2 class="section-title split-words">
-      Sicher.<br><span class="gradient-text">Legal. Verantwortungsvoll.</span>
+      Sicher. Legal.<br><span class="gradient-text">Verantwortungsvoll.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      Die wichtigsten Regeln — <strong>ohne dass es juristisch oder trocken wird.</strong>
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">Die wichtigsten Regeln — <strong>ohne dass es juristisch wird.</strong></p>
     <div class="eu-cards">
-      <div class="eu-card si" style="--fd:100ms">
-        <div class="eu-tag">Verboten</div>
-        <h4>Verbotene Anwendungen</h4>
-        <p>Social Scoring, Gesichtserkennung in der Öffentlichkeit, manipulative KI-Systeme</p>
-      </div>
-      <div class="eu-card si hi" style="--fd:200ms">
-        <div class="eu-tag">Hochrisiko</div>
-        <h4>Hochrisiko-Systeme</h4>
-        <p>KI in Personalentscheidungen, Kreditvergabe, Bildung — besondere Pflichten für Unternehmen</p>
-      </div>
-      <div class="eu-card si" style="--fd:300ms">
-        <div class="eu-tag">Transparenz</div>
-        <h4>Transparenzpflichten</h4>
-        <p>Kennzeichnung KI-generierter Inhalte, Information der Nutzer bei KI-Interaktion</p>
-      </div>
+      <div class="eu-card si" style="--fd:100ms"><div class="eu-tag">Verboten</div><h4>Verbotene Anwendungen</h4><p>Social Scoring, Gesichtserkennung in der Öffentlichkeit, manipulative KI-Systeme</p></div>
+      <div class="eu-card si hi" style="--fd:200ms" style="background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.35)"><div class="eu-tag">Hochrisiko</div><h4>Hochrisiko-Systeme</h4><p>KI in Personalentscheidungen, Kreditvergabe, Bildung — besondere Pflichten für Unternehmen</p></div>
+      <div class="eu-card si" style="--fd:300ms"><div class="eu-tag">Transparenz</div><h4>Transparenzpflichten</h4><p>Kennzeichnung KI-generierter Inhalte, Information der Nutzer bei KI-Interaktion</p></div>
     </div>
-
     <div class="s-divider fu" style="--fd:400ms; margin-top:48px"></div>
-
-    <h3 class="medium-title fu" style="--fd:500ms; margin-top:40px; font-size:clamp(24px,3.5vw,44px)">
-      Die 5 goldenen <span class="gradient-text">Regeln.</span>
-    </h3>
-
+    <h3 class="medium-title fu" style="--fd:500ms; margin-top:40px; font-size:clamp(24px,3.5vw,42px)">Die 5 goldenen <span class="gradient-text">Regeln.</span></h3>
     <div class="legal-list">
-      <div class="legal-item fu" style="--fd:600ms">
-        <div class="legal-check">🔒</div>
-        <p><strong>Keine sensiblen Firmendaten</strong> in öffentliche KI-Tools eingeben</p>
-      </div>
-      <div class="legal-item fu" style="--fd:700ms">
-        <div class="legal-check">✅</div>
-        <p><strong>Immer prüfen,</strong> ob das Ergebnis stimmt — KI macht Fehler</p>
-      </div>
-      <div class="legal-item fu" style="--fd:800ms">
-        <div class="legal-check">🏷️</div>
-        <p><strong>Kennzeichnen,</strong> wenn Inhalte KI-generiert sind (bei Kunden)</p>
-      </div>
-      <div class="legal-item fu" style="--fd:900ms">
-        <div class="legal-check">🛡️</div>
-        <p><strong>Datenschutz beachten</strong> — DSGVO gilt auch für KI-Eingaben</p>
-      </div>
-      <div class="legal-item fu" style="--fd:1000ms">
-        <div class="legal-check">👤</div>
-        <p><strong>Der Mensch bleibt verantwortlich</strong> — KI ist ein Werkzeug, kein Entscheider</p>
-      </div>
+      <div class="legal-item fu" style="--fd:600ms"><div class="legal-check">🔒</div><p><strong>Keine sensiblen Firmendaten</strong> in öffentliche KI-Tools eingeben</p></div>
+      <div class="legal-item fu" style="--fd:700ms"><div class="legal-check">✅</div><p><strong>Immer prüfen,</strong> ob das Ergebnis stimmt — KI macht Fehler</p></div>
+      <div class="legal-item fu" style="--fd:800ms"><div class="legal-check">🏷️</div><p><strong>Kennzeichnen,</strong> wenn Inhalte KI-generiert sind (bei Kunden)</p></div>
+      <div class="legal-item fu" style="--fd:900ms"><div class="legal-check">🛡️</div><p><strong>Datenschutz beachten</strong> — DSGVO gilt auch für KI-Eingaben</p></div>
+      <div class="legal-item fu" style="--fd:1000ms"><div class="legal-check">👤</div><p><strong>Der Mensch bleibt verantwortlich</strong> — KI ist ein Werkzeug, kein Entscheider</p></div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     INTERSTITIAL – Tagline
-══════════════════════════════════════════════════════ -->
+<!-- ══ FINAL QUOTE ═══════════════════════════════════════════ -->
 <section class="interstitial bg0" style="min-height:55vh">
-  <div class="atmo atmo-center"></div>
+  <div class="atmo atmo-center" style="position:absolute"></div>
   <div class="s-inner">
-    <p class="big-quote split-words">
-      „Das Teuerste an KI ist, <em>sie nicht zu nutzen.</em>"
-    </p>
+    <p class="big-quote split-words">„Das Teuerste an KI ist, <em>sie nicht zu nutzen.</em>"</p>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════════════
-     BLOCK 9 – ACTION-PLAN & ABSCHLUSS
-══════════════════════════════════════════════════════ -->
+<!-- ══ BLOCK 9 — ACTION-PLAN ════════════════════════════════ -->
 <section id="s-close" class="bg1">
   <div class="block-bg-num">09</div>
-  <div class="atmo atmo-left"></div>
-  <div class="atmo atmo-right"></div>
-
+  <div class="section-bg">
+    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/89e936f7ede9f24ac1a93cbcd8cfc173_1776605858.png" alt="" />
+  </div>
+  <div class="section-overlay"></div>
+  <div class="atmo atmo-left" style="position:absolute"></div>
+  <div class="atmo atmo-right" style="position:absolute"></div>
   <div class="s-inner">
     <div class="time-badge fu">11:55 – 12:00 · 5 Min</div>
     <p class="eyebrow fu" style="--fd:100ms">Block 9 · Abschluss</p>
     <h2 class="section-title split-words">
       Dein Plan.<br><span class="gradient-text">Ab morgen.</span>
     </h2>
-    <p class="body-text fu" style="--fd:400ms">
-      Jeder verlässt den Raum mit einem <strong>konkreten Plan</strong> — das sorgt für echten Transfer.
-    </p>
-
+    <p class="body-text fu" style="--fd:400ms">Jeder verlässt den Raum mit einem <strong>konkreten Plan</strong> — das sorgt für echten Transfer.</p>
     <div class="action-grid">
-      <div class="action-card si" style="--fd:100ms">
-        <div class="action-num">Schritt 1</div>
-        <h4>Meine 3 KI-Anwendungen</h4>
-        <p>Welche 3 konkreten Aufgaben werde ich ab morgen mit KI lösen?</p>
-      </div>
-      <div class="action-card si" style="--fd:200ms">
-        <div class="action-num">Schritt 2</div>
-        <h4>Erwartete Zeitersparnis</h4>
-        <p>Wieviel Zeit spare ich pro Woche? Was wird qualitativ besser?</p>
-      </div>
-      <div class="action-card si" style="--fd:300ms">
-        <div class="action-num">Schritt 3</div>
-        <h4>Erster Umsetzungstermin</h4>
-        <p>Wann genau probiere ich es das erste Mal aus? Datum &amp; Uhrzeit festlegen.</p>
-      </div>
-      <div class="action-card si hi" style="--fd:400ms">
-        <div class="action-num">Schritt 4</div>
-        <h4>Was ich noch ausprobieren will</h4>
-        <p>Welche Tools, Modelle oder Anwendungen interessieren mich für die Zukunft?</p>
-      </div>
+      <div class="action-card si" style="--fd:100ms"><div class="action-num">Schritt 1</div><h4>Meine 3 KI-Anwendungen</h4><p>Welche 3 konkreten Aufgaben werde ich ab morgen mit KI lösen?</p></div>
+      <div class="action-card si" style="--fd:200ms"><div class="action-num">Schritt 2</div><h4>Erwartete Zeitersparnis</h4><p>Wieviel Zeit spare ich pro Woche? Was wird qualitativ besser?</p></div>
+      <div class="action-card si" style="--fd:300ms"><div class="action-num">Schritt 3</div><h4>Erster Umsetzungstermin</h4><p>Wann genau probiere ich es das erste Mal aus? Datum &amp; Uhrzeit festlegen.</p></div>
+      <div class="action-card si hi" style="--fd:400ms"><div class="action-num">Schritt 4</div><h4>Was ich noch ausprobieren will</h4><p>Welche Tools, Modelle oder Anwendungen interessieren mich für die Zukunft?</p></div>
     </div>
-
     <div class="s-divider fu" style="--fd:600ms; margin-top:52px"></div>
-
-    <p class="big-quote fu" style="--fd:700ms; margin-top:48px; font-style:normal">
+    <p class="big-quote fu" style="--fd:700ms; margin-top:48px; font-style:normal; color:rgba(255,255,255,0.82)">
       „Sie haben heute den Grundstein gelegt. Der Rest liegt bei Ihnen —<br>
       aber Sie haben jetzt <em>alles, was Sie brauchen.</em>"
     </p>
-
     <div class="closing-contacts fu" style="--fd:900ms">
-      <div class="c-contact">
-        <div class="c-lbl">Trainer</div>
-        <div class="c-val">Philipp Mick</div>
-      </div>
-      <div class="c-contact">
-        <div class="c-lbl">E-Mail</div>
-        <div class="c-val">info@luminaire.training</div>
-      </div>
-      <div class="c-contact">
-        <div class="c-lbl">Telefon</div>
-        <div class="c-val">+49 179 1327191</div>
-      </div>
-      <div class="c-contact">
-        <div class="c-lbl">Website</div>
-        <div class="c-val">www.luminaire.training</div>
-      </div>
+      <div class="c-contact"><div class="c-lbl">Trainer</div><div class="c-val">Philipp Mick</div></div>
+      <div class="c-contact"><div class="c-lbl">E-Mail</div><div class="c-val">info@luminaire.training</div></div>
+      <div class="c-contact"><div class="c-lbl">Telefon</div><div class="c-val">+49 179 1327191</div></div>
+      <div class="c-contact"><div class="c-lbl">Website</div><div class="c-val">www.luminaire.training</div></div>
     </div>
-
     <div class="fu" style="--fd:1100ms; margin-top:52px">
-      <a href="/" style="display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:13px;transition:color 0.2s" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">
-        ← Zurück zur luminAIre Website
-      </a>
+      <a href="/" style="display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:13px;transition:color 0.2s" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">← Zurück zur luminAIre Website</a>
     </div>
   </div>
 </section>
 
 
 <script>
-  /* ── SCROLL PROGRESS ──────────────────────────────────── */
-  const fill   = document.getElementById('scroll-fill');
-  const nav    = document.getElementById('nav');
+/* ── SCROLL PROGRESS + NAV ─────────────────────────── */
+const fill = document.getElementById('scroll-fill');
+const nav  = document.getElementById('nav');
+window.addEventListener('scroll', onScroll, { passive: true });
+function onScroll() {
+  const y     = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  fill.style.width = (y / total * 100) + '%';
+  nav.classList.toggle('solid', y > 60);
+  tickVideos();
+  tickParallax();
+}
 
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const total    = document.body.scrollHeight - window.innerHeight;
-    fill.style.width = (scrolled / total * 100) + '%';
-    nav.classList.toggle('solid', scrolled > 60);
-  }, { passive: true });
+/* ── NAV BUTTONS ──────────────────────────────────── */
+document.querySelectorAll('.nav-btn[data-target]').forEach(btn =>
+  btn.addEventListener('click', () =>
+    document.getElementById(btn.dataset.target)?.scrollIntoView({ behavior: 'smooth' })
+  )
+);
 
-  /* ── NAV BUTTONS ─────────────────────────────────────── */
-  document.querySelectorAll('.nav-btn[data-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const el = document.getElementById(btn.dataset.target);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-
-  /* ── SPLIT HEADLINES INTO WORDS ─────────────────────── */
-  function splitWords(el) {
-    // Walk text nodes only, preserve HTML tags (spans, br)
-    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    let node;
-    while ((node = walker.nextNode())) nodes.push(node);
-    let idx = 0;
-    nodes.forEach(tn => {
-      const words = tn.textContent.split(/(\s+)/);
-      const frag  = document.createDocumentFragment();
-      words.forEach(w => {
-        if (/^\s+$/.test(w) || w === '') {
-          frag.appendChild(document.createTextNode(w));
-        } else {
-          const span = document.createElement('span');
-          span.className = 'w';
-          span.style.setProperty('--wi', idx++);
-          span.textContent = w;
-          frag.appendChild(span);
-        }
-      });
-      tn.replaceWith(frag);
-    });
-  }
-
-  document.querySelectorAll('.split-words').forEach(splitWords);
-
-  /* ── INTERSECTION OBSERVER ──────────────────────────── */
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        // For card grids: also animate children
-        entry.target.querySelectorAll('.si, .fu, .fi').forEach((child, i) => {
-          child.classList.add('in');
-        });
-        observer.unobserve(entry.target);
+/* ── SPLIT HEADLINES INTO WORDS ───────────────────── */
+function splitWords(el) {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  let n;
+  while ((n = walker.nextNode())) nodes.push(n);
+  let idx = 0;
+  nodes.forEach(tn => {
+    const parts = tn.textContent.split(/(\s+)/);
+    const frag  = document.createDocumentFragment();
+    parts.forEach(part => {
+      if (/^\s+$/.test(part) || part === '') {
+        frag.appendChild(document.createTextNode(part));
+      } else {
+        const s = document.createElement('span');
+        s.className = 'w';
+        s.style.setProperty('--wi', idx++);
+        s.textContent = part;
+        frag.appendChild(s);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-
-  // Observe top-level animated elements
-  document.querySelectorAll('.split-words, .fu, .si, .fi, .eyebrow').forEach(el => {
-    observer.observe(el);
+    tn.replaceWith(frag);
   });
+}
+document.querySelectorAll('.split-words').forEach(splitWords);
 
-  /* ── COUNTER ANIMATION ──────────────────────────────── */
-  function animateCounter(el, target, duration = 1200) {
-    const start = performance.now();
-    function step(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased    = 1 - Math.pow(1 - progress, 3); // ease-out-cubic
-      el.textContent = Math.round(eased * target);
-      if (progress < 1) requestAnimationFrame(step);
-      else el.textContent = target;
+/* ── INTERSECTION OBSERVER — animate in ──────────── */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in');
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.split-words, .fu, .si, .fi, .eyebrow').forEach(el => io.observe(el));
+
+/* ── COUNTER ANIMATION ────────────────────────────── */
+function animCount(el, to, dur = 1200) {
+  const t0 = performance.now();
+  const tick = now => {
+    const p = Math.min((now - t0) / dur, 1);
+    el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * to);
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = to;
+  };
+  requestAnimationFrame(tick);
+}
+const cio = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    animCount(e.target, +e.target.dataset.countTo);
+    cio.unobserve(e.target);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count-to]').forEach(el => cio.observe(el));
+
+/* ── SCROLL-SCRUBBED VIDEOS ───────────────────────── */
+// Maps section element → its video element
+const videoSections = [];
+document.querySelectorAll('[data-scroll-video]').forEach(vid => {
+  if (!vid.src || vid.src === window.location.href) return; // skip empty
+  const section = vid.closest('section');
+  if (section) videoSections.push({ section, vid });
+  vid.pause();
+});
+
+function tickVideos() {
+  videoSections.forEach(({ section, vid }) => {
+    if (!vid.duration) return;
+    const rect     = section.getBoundingClientRect();
+    const progress = 1 - (rect.bottom / (window.innerHeight + rect.height));
+    const clamped  = Math.max(0, Math.min(1, progress));
+    vid.currentTime = clamped * vid.duration;
+  });
+}
+
+// When a real video src is set, enable scrubbing
+document.querySelectorAll('[data-scroll-video]').forEach(vid => {
+  vid.addEventListener('loadedmetadata', () => {
+    const section = vid.closest('section');
+    if (section && !videoSections.find(v => v.vid === vid)) {
+      videoSections.push({ section, vid });
     }
-    requestAnimationFrame(step);
-  }
+  });
+});
 
-  const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el     = entry.target;
-        const target = parseInt(el.dataset.countTo);
-        animateCounter(el, target);
-        counterObserver.unobserve(el);
-      }
+/* ── PARALLAX IMAGE BACKGROUNDS ──────────────────── */
+let ticking = false;
+function tickParallax() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.bg-img').forEach(img => {
+      const rect  = img.closest('section').getBoundingClientRect();
+      const rel   = (window.innerHeight / 2 - rect.top - rect.height / 2);
+      const shift = rel * 0.06;
+      img.style.transform = `scale(1.08) translateY(${shift}px)`;
     });
-  }, { threshold: 0.5 });
-
-  document.querySelectorAll('[data-count-to]').forEach(el => {
-    counterObserver.observe(el);
+    ticking = false;
   });
+}
 
-  /* ── PARALLAX GLOW ──────────────────────────────────── */
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        document.querySelectorAll('.atmo').forEach((el, i) => {
-          const speed = 0.06 + i * 0.02;
-          el.style.transform = `translateY(${y * speed * (i % 2 === 0 ? 1 : -1)}px)`;
-        });
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
+/* ── FUNCTION TO INJECT VIDEO SRCS LATER ─────────── */
+// Call this when Kling videos are ready:
+// window.setVideoSrc('hero-video', 'https://...')
+// window.setVideoSrc('workshop-video', 'https://...')
+window.setVideoSrc = function(videoId, url) {
+  const vid = document.getElementById(videoId);
+  if (!vid) return;
+  vid.src = url;
+  vid.load();
+  // hide the fallback img once video loads
+  vid.addEventListener('loadeddata', () => {
+    const img = vid.nextElementSibling;
+    if (img && img.tagName === 'IMG') img.style.opacity = '0';
+    vid.style.opacity = '0.22';
+  });
+};
 </script>
 </body>
 </html>
