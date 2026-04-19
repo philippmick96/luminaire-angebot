@@ -273,6 +273,10 @@
       object-fit: cover; z-index: 0;
       opacity: 0;
       transition: opacity 1.5s ease;
+      /* GPU layer — prevents compositor stalls during scroll */
+      will-change: opacity;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
     .sticky-scene > video.loaded { opacity: 1; }
     .tunnel-fallback {
@@ -805,7 +809,7 @@ function onScroll() {
   const total = document.body.scrollHeight - window.innerHeight;
   fill.style.width = (y / total * 100) + '%';
   nav.classList.toggle('solid', y > 60);
-  tickTunnels();
+  tickTunnels();   // RAF-batched — no scroll lag
   tickParallax();
 }
 
@@ -877,59 +881,62 @@ document.querySelectorAll('[data-count-to]').forEach(el => cio.observe(el));
 const tunnels = [];
 
 document.querySelectorAll('.scroll-tunnel').forEach(tunnel => {
-  const scene  = tunnel.querySelector('.sticky-scene');
-  const video  = tunnel.querySelector('video');
-  const steps  = [...tunnel.querySelectorAll('.scene-step')];
-  const dots   = [...(tunnel.querySelector('.tunnel-progress')?.children || [])];
-  const hint   = tunnel.querySelector('.scene-scroll-hint');
+  const video   = tunnel.querySelector('video');
+  const steps   = [...tunnel.querySelectorAll('.scene-step')];
+  const dots    = [...(tunnel.querySelector('.tunnel-progress')?.children || [])];
+  const hint    = tunnel.querySelector('.scene-scroll-hint');
 
-  // Load video: show it once ready, fade out fallback
+  // Videos loop continuously — no scrubbing (scrubbing causes lag)
   if (video) {
-    video.pause();
+    video.loop = true;
+    video.playbackRate = 0.75; // slow, dreamy pace
     const fallback = tunnel.querySelector('.tunnel-fallback');
+    const tryPlay = () => video.play().catch(() => {});
     video.addEventListener('loadeddata', () => {
       video.classList.add('loaded');
-      if (fallback) { fallback.style.opacity = '0'; }
+      if (fallback) { fallback.style.transition = 'opacity 1.2s ease'; fallback.style.opacity = '0'; }
+      tryPlay();
     });
+    // Autoplay on mobile requires user gesture — fallback stays visible
+    document.addEventListener('click', tryPlay, { once: true });
+    document.addEventListener('touchstart', tryPlay, { once: true });
   }
 
-  tunnels.push({ tunnel, video, steps, dots, hint });
+  tunnels.push({ tunnel, steps, dots, hint });
 });
 
+// Scroll-driven text steps — batched in RAF, no video scrubbing
+let tunnelRaf = false;
 function tickTunnels() {
-  tunnels.forEach(({ tunnel, video, steps, dots, hint }) => {
-    const rect     = tunnel.getBoundingClientRect();
-    const scrolled = -rect.top;
-    const total    = tunnel.offsetHeight - window.innerHeight;
-    const progress = total > 0 ? Math.max(0, Math.min(1, scrolled / total)) : 0;
+  if (tunnelRaf) return;
+  tunnelRaf = true;
+  requestAnimationFrame(() => {
+    tunnelRaf = false;
+    tunnels.forEach(({ tunnel, steps, dots, hint }) => {
+      const rect     = tunnel.getBoundingClientRect();
+      const scrolled = -rect.top;
+      const total    = tunnel.offsetHeight - window.innerHeight;
+      const progress = total > 0 ? Math.max(0, Math.min(1, scrolled / total)) : 0;
 
-    // Scrub video
-    if (video && video.duration && video.readyState >= 1) {
-      video.currentTime = progress * video.duration;
-    }
+      let activeStep = 0;
+      steps.forEach((step, i) => {
+        const from = parseFloat(step.dataset.from);
+        const to   = parseFloat(step.dataset.to);
+        if (progress >= from && progress < to) {
+          step.classList.add('visible');
+          step.classList.remove('past');
+          activeStep = i;
+        } else if (progress >= to) {
+          step.classList.remove('visible');
+          step.classList.add('past');
+        } else {
+          step.classList.remove('visible', 'past');
+        }
+      });
 
-    // Show/hide text steps
-    let activeStep = 0;
-    steps.forEach((step, i) => {
-      const from = parseFloat(step.dataset.from);
-      const to   = parseFloat(step.dataset.to);
-      if (progress >= from && progress < to) {
-        step.classList.add('visible');
-        step.classList.remove('past');
-        activeStep = i;
-      } else if (progress >= to) {
-        step.classList.remove('visible');
-        step.classList.add('past');
-      } else {
-        step.classList.remove('visible', 'past');
-      }
+      dots.forEach((d, i) => d.classList.toggle('active', i === activeStep));
+      if (hint) hint.classList.toggle('hidden', progress > 0.05);
     });
-
-    // Update progress dots
-    dots.forEach((d, i) => d.classList.toggle('active', i === activeStep));
-
-    // Hide scroll hint once user has scrolled into tunnel
-    if (hint) hint.classList.toggle('hidden', progress > 0.05);
   });
 }
 
