@@ -346,7 +346,7 @@
   <div class="section-bg">
     <video class="bg-video" id="hero-video" muted playsinline preload="auto"
       data-scroll-video="true"
-      src="data:,"><!-- video-url-hero --></video>
+      src="https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4"><!-- video-url-hero --></video>
     <img class="bg-img" id="hero-img"
       src="https://tempfile.aiquickdraw.com/h/7c5e4cf5f3c75b36e9be5e95c5f730c3_1776605854.png"
       alt="" />
@@ -556,7 +556,7 @@
   <div class="section-bg">
     <video class="bg-video" id="workshop-video" muted playsinline preload="auto"
       data-scroll-video="true"
-      src="data:,"><!-- video-url-workshop --></video>
+      src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"><!-- video-url-workshop --></video>
     <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/bd75ff8b33a7766d87493fc3e84bf306_1776605847.png" alt="" />
   </div>
   <div class="section-overlay"></div>
@@ -787,13 +787,18 @@ function tickVideos() {
   });
 }
 
-// When a real video src is set, enable scrubbing
+// Register scroll-scrubbed videos and fade out fallback images on load
 document.querySelectorAll('[data-scroll-video]').forEach(vid => {
   vid.addEventListener('loadedmetadata', () => {
     const section = vid.closest('section');
     if (section && !videoSections.find(v => v.vid === vid)) {
       videoSections.push({ section, vid });
     }
+  });
+  vid.addEventListener('loadeddata', () => {
+    // Fade out the sibling fallback image
+    const img = vid.closest('.section-bg') && vid.closest('.section-bg').querySelector('.bg-img');
+    if (img) { img.style.transition = 'opacity 1s ease'; img.style.opacity = '0'; }
   });
 });
 
@@ -815,8 +820,9 @@ function tickParallax() {
 
 /* ── FUNCTION TO INJECT VIDEO SRCS LATER ─────────── */
 // Call this when Kling videos are ready:
-// window.setVideoSrc('hero-video', 'https://...')
-// window.setVideoSrc('workshop-video', 'https://...')
+// Videos already embedded:
+// Hero:     https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4
+// Workshop: https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4
 window.setVideoSrc = function(videoId, url) {
   const vid = document.getElementById(videoId);
   if (!vid) return;
