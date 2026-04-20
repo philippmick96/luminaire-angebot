@@ -10,1013 +10,1332 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Poppins', system-ui, sans-serif;
+      font-family: 'Poppins', -apple-system, system-ui, sans-serif;
       background: #000;
       color: #f5f5f7;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ── SCROLL PROGRESS ─────────────────────────────── */
-    #scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 2000; background: rgba(255,255,255,0.05); }
+    /* ── SCROLL PROGRESS ── */
+    #scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 2000; }
     #scroll-fill {
       height: 100%; width: 0%;
-      background: linear-gradient(90deg, #7c3aed, #a78bfa, #c4b5fd, #a78bfa, #7c3aed);
+      background: linear-gradient(90deg, #6d28d9, #8b5cf6, #c4b5fd, #8b5cf6, #6d28d9);
       background-size: 200% 100%;
-      animation: shimmer 3s linear infinite;
+      animation: shimmer-bar 3s linear infinite;
       transition: width 0.1s linear;
     }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes shimmer-bar { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-    /* ── NAV ─────────────────────────────────────────── */
+    /* ── NAV ── */
     #nav {
-      position: fixed; top: 3px; left: 0; right: 0; height: 52px;
+      position: fixed; top: 2px; left: 0; right: 0; height: 54px;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px; z-index: 1000;
-      transition: background 0.4s, backdrop-filter 0.4s;
+      padding: 0 48px; z-index: 1000;
+      transition: background 0.5s, backdrop-filter 0.5s;
     }
-    #nav.solid { background: rgba(0,0,0,0.85); backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .nav-logo { font-size: 17px; font-weight: 700; color: #f5f5f7; text-decoration: none; }
+    #nav.solid {
+      background: rgba(0,0,0,0.78);
+      backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo { font-size: 18px; font-weight: 800; color: #f5f5f7; text-decoration: none; letter-spacing: -0.03em; }
     .nav-logo span { color: #a78bfa; }
-    .nav-center { display: flex; gap: 2px; }
-    .nav-btn { background: none; border: none; color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 500; font-family: inherit; padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: color 0.2s, background 0.2s; }
-    .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
-    .nav-back { display: inline-flex; align-items: center; gap: 5px; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4); color: #a78bfa; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; text-decoration: none; transition: all 0.2s; }
-    .nav-back:hover { background: rgba(124,58,237,0.3); color: #c4b5fd; }
+    .nav-center { display: flex; gap: 0; }
+    .nav-btn {
+      background: none; border: none; color: rgba(255,255,255,0.48);
+      font-size: 12.5px; font-weight: 500; font-family: inherit;
+      padding: 6px 15px; border-radius: 20px; cursor: none;
+      transition: color 0.2s, background 0.2s; letter-spacing: -0.01em;
+    }
+    .nav-btn:hover { color: #f5f5f7; background: rgba(255,255,255,0.08); }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.35);
+      color: rgba(167,139,250,0.9); font-size: 12px; font-weight: 600;
+      padding: 7px 18px; border-radius: 20px; text-decoration: none;
+      transition: all 0.25s; cursor: none; letter-spacing: -0.01em;
+    }
+    .nav-back:hover { background: rgba(124,58,237,0.22); color: #d8b4fe; }
 
-    /* ── SECTION BASE ────────────────────────────────── */
-    section {
-      position: relative; overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; padding: 110px 24px;
+    /* ── HORIZONTAL PRESENTATION ── */
+    .h-presentation { height: 2800vh; position: relative; }
+    .h-sticky { position: sticky; top: 0; width: 100vw; height: 100vh; overflow: hidden; }
+    .h-track { display: flex; width: 2600vw; height: 100%; will-change: transform; transform: translateX(0); }
+    .h-slide {
+      width: 100vw; height: 100vh; flex-shrink: 0;
+      position: relative; display: flex;
+      align-items: center; justify-content: center;
+      overflow: hidden; will-change: transform, filter;
+    }
+
+    /* ── SLIDE BACKGROUNDS ── */
+    .s-bg-video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 0; opacity: 0; transition: opacity 2s ease;
+    }
+    .s-bg-video.loaded { opacity: 1; }
+    .s-bg-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 0; transform: scale(1.05);
+    }
+
+    /* ── CINEMATIC OVERLAYS — images breathe at top, text protected at bottom ── */
+    .s-overlay {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        linear-gradient(to top,
+          rgba(0,0,0,0.97) 0%,
+          rgba(0,0,0,0.65) 30%,
+          rgba(0,0,0,0.18) 60%,
+          rgba(0,0,0,0.04) 100%
+        );
+    }
+    .s-overlay.center {
+      background:
+        radial-gradient(ellipse 85% 80% at 50% 52%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.72) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 35%);
+    }
+    .s-overlay.heavy {
+      background:
+        linear-gradient(to top,
+          rgba(0,0,0,0.98) 0%,
+          rgba(0,0,0,0.80) 35%,
+          rgba(0,0,0,0.42) 65%,
+          rgba(0,0,0,0.12) 100%
+        );
+    }
+    .s-overlay.side {
+      background:
+        linear-gradient(to right,
+          rgba(0,0,0,0.96) 0%,
+          rgba(0,0,0,0.72) 38%,
+          rgba(0,0,0,0.22) 65%,
+          rgba(0,0,0,0.0) 100%
+        );
+    }
+
+    /* ── RICH CSS BACKGROUNDS — depth via layered radial glows ── */
+    .bg-subtle {
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 85%, rgba(109,40,217,0.32) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 80% at 85% 15%, rgba(79,36,172,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 100% 50% at 50% 50%, rgba(124,58,237,0.07) 0%, transparent 70%),
+        linear-gradient(180deg, #010109 0%, #020314 100%);
+    }
+    .bg-subtle2 {
+      background:
+        radial-gradient(ellipse 100% 50% at 50% 0%, rgba(109,40,217,0.26) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 100% at 90% 90%, rgba(139,92,246,0.20) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 50% at 10% 50%, rgba(99,40,210,0.14) 0%, transparent 60%),
+        linear-gradient(180deg, #020210 0%, #040318 100%);
+    }
+    .bg-void {
+      background:
+        radial-gradient(ellipse 70% 55% at 72% 28%, rgba(99,40,210,0.28) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 75% at 25% 72%, rgba(79,36,172,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 65%),
+        linear-gradient(135deg, #01010d 0%, #02020f 100%);
+    }
+    .bg-warm {
+      background:
+        radial-gradient(ellipse 90% 65% at 50% 25%, rgba(124,58,237,0.28) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 85% at 8% 85%, rgba(167,139,250,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 55% at 92% 75%, rgba(99,40,210,0.16) 0%, transparent 55%),
+        linear-gradient(180deg, #060214 0%, #040110 100%);
+    }
+    /* Edge vignette on all slides */
+    .h-slide::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 3; pointer-events: none;
+      background: radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%);
+    }
+
+    /* ── CONTENT ── */
+    .s-content {
+      position: relative; z-index: 5;
+      width: 100%; max-width: 1020px;
+      padding: 90px 56px 72px;
       text-align: center;
     }
-    section.short { min-height: 60vh; }
-    section.interstitial { min-height: 65vh; }
-    .s-inner { position: relative; z-index: 3; width: 100%; max-width: 980px; margin: 0 auto; }
+    .s-content.left { text-align: left; }
+    .s-content.wide { max-width: 1180px; }
 
-    /* ── BACKGROUND MEDIA SYSTEM ─────────────────────── */
-    .section-bg {
-      position: absolute; inset: 0; z-index: 0;
-      overflow: hidden;
+    /* ── TYPOGRAPHY ── */
+    .s-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(167,139,250,0.88); margin-bottom: 22px; display: block;
     }
-    .bg-img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      opacity: 0.45;
-      transform: scale(1.05);
-      transition: transform 0.1s linear;
-      will-change: transform;
-    }
-    .bg-video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      opacity: 0.50;
-      will-change: transform;
-    }
-    /* Dark gradient overlay so text stays readable */
-    .section-overlay {
-      position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.55) 0%,
-        rgba(0,0,0,0.30) 30%,
-        rgba(0,0,0,0.30) 70%,
-        rgba(0,0,0,0.55) 100%
-      );
-    }
-    /* Atmospheric glow layer (z-index 2) */
-    .section-glow { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-
-    /* ── ATMOSPHERIC GLOWS ───────────────────────────── */
-    .atmo {
-      position: absolute; border-radius: 50%;
-      pointer-events: none;
-      will-change: transform;
-    }
-    .atmo-hero { width: 900px; height: 700px; background: radial-gradient(circle, rgba(124,58,237,0.28) 0%, transparent 65%); top: -250px; left: 50%; transform: translateX(-50%); filter: blur(60px); }
-    .atmo-hero2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%); bottom: -100px; right: 5%; filter: blur(80px); }
-    .atmo-center { width: 600px; height: 400px; background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%,-50%); filter: blur(70px); }
-    .atmo-left { width: 400px; height: 400px; background: radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%); top: 20%; left: -10%; filter: blur(80px); }
-    .atmo-right { width: 400px; height: 400px; background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%); bottom: 10%; right: -5%; filter: blur(80px); }
-
-    /* ── SECTION BACKGROUNDS ─────────────────────────── */
-    section.bg0 { background: #000000; }
-    section.bg1 { background: #050508; }
-    section.bg2 { background: #08080e; }
-    section.bg3 { background: #0a0a14; }
-
-    /* ── TYPOGRAPHY — ALL FORCED WHITE ───────────────── */
-    .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #a78bfa !important; margin-bottom: 20px; }
-    .hero-title { font-size: clamp(56px, 9vw, 118px); font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; color: #f5f5f7 !important; margin-bottom: 32px; }
-    .section-title { font-size: clamp(44px, 6.5vw, 86px); font-weight: 800; line-height: 1.0; letter-spacing: -0.035em; color: #f5f5f7 !important; margin-bottom: 24px; }
-    .medium-title { font-size: clamp(32px, 4.5vw, 62px); font-weight: 700; line-height: 1.05; letter-spacing: -0.025em; color: #f5f5f7 !important; margin-bottom: 20px; }
-
-    /* ── GRADIENT TEXT — FIXED for word-split spans ──── */
-    .gradient-text {
-      background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #7c3aed 80%) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      background-clip: text !important;
-    }
-    /* KEY FIX: word spans inside gradient-text must carry gradient themselves */
-    .gradient-text .w {
-      background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #7c3aed 80%);
+    /* Animated gradient title accent */
+    .grad {
+      background: linear-gradient(135deg, #f0e6ff 0%, #d8b4fe 20%, #a78bfa 48%, #7c3aed 72%, #9d4edd 100%);
+      background-size: 200% 200%;
+      animation: grad-breathe 7s ease-in-out infinite;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .big-quote em .w {
-      background: linear-gradient(135deg, #c4b5fd, #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    @keyframes grad-breathe {
+      0%,100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
     }
-    /* Fallback: any .w NOT inside gradient should be white */
-    .w { color: #f5f5f7; }
-
-    .body-text { font-size: clamp(16px, 2vw, 21px); font-weight: 400; color: rgba(255,255,255,0.6) !important; line-height: 1.65; max-width: 680px; margin: 0 auto 40px; }
-    .body-text strong { color: rgba(255,255,255,0.9) !important; font-weight: 600; }
-
-    /* ── TIME BADGE ──────────────────────────────────── */
-    .time-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(124,58,237,0.14); border: 1px solid rgba(124,58,237,0.4); border-radius: 30px; padding: 6px 20px; font-size: 12px; font-weight: 600; color: #a78bfa !important; margin-bottom: 24px; letter-spacing: 0.5px; }
-    .time-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; animation: pdot 2s ease-in-out infinite; }
-    @keyframes pdot { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(0.7); } }
-
-    /* ── BIG QUOTE ───────────────────────────────────── */
-    .big-quote { font-size: clamp(22px, 3.2vw, 44px); font-weight: 400; line-height: 1.4; color: rgba(255,255,255,0.82) !important; max-width: 860px; margin: 0 auto; font-style: italic; }
-    .big-quote .w { color: rgba(255,255,255,0.82); }
-    .big-quote em { font-style: normal; font-weight: 600; }
-
-    /* ── SCROLL CHEVRON ──────────────────────────────── */
-    .scroll-hint { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; color: rgba(255,255,255,0.28); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
-    .scroll-chevron span { display: block; width: 12px; height: 12px; border-right: 2px solid rgba(255,255,255,0.22); border-bottom: 2px solid rgba(255,255,255,0.22); transform: rotate(45deg); margin-bottom: 2px; }
-    .scroll-chevron span:nth-child(1) { animation: chv 1.8s ease-in-out infinite 0s; }
-    .scroll-chevron span:nth-child(2) { animation: chv 1.8s ease-in-out infinite 0.2s; }
-    @keyframes chv { 0%,100% { opacity:0.18; transform:rotate(45deg) translateY(0); } 50% { opacity:0.65; transform:rotate(45deg) translateY(4px); } }
-
-    /* ── CARDS ───────────────────────────────────────── */
-    .cards { display: grid; gap: 16px; width: 100%; max-width: 940px; margin: 40px auto 0; text-align: left; }
-    .cards.c2 { grid-template-columns: 1fr 1fr; }
-    .cards.c3 { grid-template-columns: 1fr 1fr 1fr; }
-    .cards.c4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 28px; transition: border-color 0.3s, background 0.3s, transform 0.3s; }
-    .card:hover { background: rgba(255,255,255,0.08); border-color: rgba(167,139,250,0.35); transform: translateY(-3px); }
-    .card.hi { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.38); }
-    .card-icon { font-size: 30px; margin-bottom: 14px; display: block; }
-    .card h3 { font-size: 16px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 8px; line-height: 1.3; }
-    .card p { font-size: 13px; color: rgba(255,255,255,0.5) !important; line-height: 1.65; }
-
-    /* ── STATS ROW ───────────────────────────────────── */
-    .stats-row { display: flex; justify-content: center; max-width: 700px; margin: 52px auto 0; }
-    .stat { flex: 1; padding: 0 32px; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
-    .stat:last-child { border-right: none; }
-    .stat-val { font-size: clamp(36px, 4.5vw, 54px); font-weight: 800; letter-spacing: -0.04em; display: block; margin-bottom: 6px; background: linear-gradient(135deg, #c4b5fd, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .stat-lbl { font-size: 13px; color: rgba(255,255,255,0.45) !important; }
-
-    /* ── RULE CARDS ──────────────────────────────────── */
-    .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 840px; margin: 40px auto 0; text-align: left; }
-    .rule-card { display: flex; gap: 18px; align-items: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 22px; padding: 24px 26px; transition: border-color 0.3s, transform 0.3s; }
-    .rule-card:hover { border-color: rgba(167,139,250,0.35); transform: translateY(-2px); }
-    .rule-n { font-size: 38px; font-weight: 800; line-height: 1; background: linear-gradient(135deg, #c4b5fd, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; flex-shrink: 0; }
-    .rule-body h4 { font-size: 16px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 5px; }
-    .rule-body p { font-size: 13px; color: rgba(255,255,255,0.45) !important; line-height: 1.55; }
-
-    /* ── AGENDA ──────────────────────────────────────── */
-    .agenda { width: 100%; max-width: 720px; margin: 44px auto 0; }
-    .ag-row { display: flex; align-items: center; gap: 20px; padding: 17px 0; border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left; }
-    .ag-row:last-child { border-bottom: none; }
-    .ag-time { font-size: 11px; font-weight: 700; color: #a78bfa !important; min-width: 44px; flex-shrink: 0; }
-    .ag-num { font-size: 10px; font-weight: 700; color: rgba(124,58,237,0.6) !important; min-width: 44px; text-transform: uppercase; letter-spacing: 0.8px; flex-shrink: 0; }
-    .ag-title { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.82) !important; flex: 1; }
-    .ag-dur { font-size: 11px; color: rgba(255,255,255,0.28) !important; flex-shrink: 0; }
-
-    /* ── HORIZONTAL TIMELINE ─────────────────────────── */
-    .h-timeline { display: flex; width: 100%; max-width: 960px; margin: 48px auto 0; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); }
-    .ht-item { flex: 1; padding: 14px 8px; background: rgba(255,255,255,0.025); border-right: 1px solid rgba(255,255,255,0.05); text-align: center; cursor: default; transition: background 0.2s; }
-    .ht-item:last-child { border-right: none; }
-    .ht-item:hover { background: rgba(124,58,237,0.1); }
-    .ht-item.pause { background: rgba(255,255,255,0.012); }
-    .ht-time { font-size: 9px; font-weight: 700; color: #a78bfa !important; display: block; margin-bottom: 4px; }
-    .ht-label { font-size: 9px; color: rgba(255,255,255,0.38) !important; line-height: 1.35; }
-
-    /* ── MODELS ──────────────────────────────────────── */
-    .models { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; width: 100%; max-width: 940px; margin: 40px auto 0; }
-    .model-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 20px 14px; text-align: center; transition: border-color 0.3s, transform 0.3s; }
-    .model-card:hover { border-color: rgba(167,139,250,0.35); transform: translateY(-3px); }
-    .model-card.hi { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.4); }
-    .model-name { font-size: 13px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 6px; }
-    .model-tag { font-size: 9px; color: #a78bfa !important; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
-    .model-uses { font-size: 10px; color: rgba(255,255,255,0.38) !important; line-height: 1.7; }
-
-    /* ── LEGAL RULES ─────────────────────────────────── */
-    .legal-list { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 700px; margin: 40px auto 0; text-align: left; }
-    .legal-item { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px 22px; transition: border-color 0.3s; }
-    .legal-item:hover { border-color: rgba(167,139,250,0.28); }
-    .legal-check { width: 30px; height: 30px; border-radius: 50%; background: rgba(124,58,237,0.18); border: 1px solid rgba(124,58,237,0.5); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-    .legal-item p { font-size: 14px; color: rgba(255,255,255,0.72) !important; line-height: 1.4; }
-    .legal-item p strong { color: #f5f5f7 !important; }
-
-    /* ── EU CARDS ────────────────────────────────────── */
-    .eu-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; width: 100%; max-width: 840px; margin: 40px auto 0; text-align: left; }
-    .eu-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
-    .eu-tag { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #a78bfa !important; margin-bottom: 10px; }
-    .eu-card h4 { font-size: 15px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 6px; }
-    .eu-card p { font-size: 12px; color: rgba(255,255,255,0.42) !important; line-height: 1.6; }
-
-    /* ── ACTION GRID ─────────────────────────────────── */
-    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 760px; margin: 40px auto 0; text-align: left; }
-    .action-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; transition: border-color 0.3s; }
-    .action-card:hover { border-color: rgba(167,139,250,0.28); }
-    .action-num { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #a78bfa !important; margin-bottom: 10px; }
-    .action-card h4 { font-size: 16px; font-weight: 700; color: #f5f5f7 !important; margin-bottom: 6px; }
-    .action-card p { font-size: 13px; color: rgba(255,255,255,0.42) !important; line-height: 1.55; }
-
-    /* ── BLOCK BG NUMBER ─────────────────────────────── */
-    .block-bg-num { position: absolute; z-index: 0; font-size: clamp(180px, 25vw, 320px); font-weight: 900; letter-spacing: -0.06em; color: rgba(255,255,255,0.016); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; user-select: none; white-space: nowrap; }
-
-    /* ── SECTION DIVIDER ─────────────────────────────── */
-    .s-divider { width: 1px; height: 80px; background: linear-gradient(to bottom, transparent, rgba(124,58,237,0.5), transparent); margin: 0 auto; }
-
-    /* ── PILLS ───────────────────────────────────────── */
-    .pill-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 28px; }
-    .pill { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3); border-radius: 30px; padding: 6px 18px; font-size: 13px; font-weight: 500; color: #c4b5fd !important; }
-
-    /* ── CLOSING ─────────────────────────────────────── */
-    .closing-contacts { display: flex; gap: 56px; justify-content: center; margin-top: 52px; flex-wrap: wrap; }
-    .c-contact { text-align: center; }
-    .c-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3) !important; margin-bottom: 5px; }
-    .c-val { font-size: 15px; font-weight: 500; color: #c4b5fd !important; }
-
-    /* ── ANIMATION SYSTEM ────────────────────────────── */
-    .split-words .w { display: inline-block; opacity: 0; transform: translateY(28px); transition: opacity 0.55s ease, transform 0.55s ease; transition-delay: calc(var(--wi, 0) * 55ms + 150ms); }
-    .split-words.in .w { opacity: 1; transform: translateY(0); }
-    .fu { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; transition-delay: var(--fd, 0ms); }
-    .fu.in { opacity: 1; transform: translateY(0); }
-    .si { opacity: 0; transform: scale(0.92) translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; transition-delay: var(--fd, 0ms); }
-    .si.in { opacity: 1; transform: scale(1) translateY(0); }
-    .fi { opacity: 0; transition: opacity 0.9s ease; transition-delay: var(--fd, 0ms); }
-    .fi.in { opacity: 1; }
-
-    /* ── SCROLL TUNNEL (Apple-style) ────────────────── */
-    .scroll-tunnel { position: relative; }
-    .sticky-scene {
-      position: sticky;
-      top: 52px;
-      height: calc(100vh - 52px);
-      overflow: hidden;
-      background: #000;
+    .s-title {
+      font-size: clamp(44px, 5.8vw, 88px);
+      font-weight: 800; line-height: 1.0; letter-spacing: -0.04em;
+      color: #ffffff; margin-bottom: 24px;
+      text-shadow:
+        0 0 120px rgba(124,58,237,0.22),
+        0 2px 20px rgba(0,0,0,1),
+        0 8px 60px rgba(0,0,0,0.95);
     }
-    .sticky-scene > video {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover; z-index: 0;
+    .s-title.large {
+      font-size: clamp(64px, 8.8vw, 124px);
+      line-height: 1.0; letter-spacing: -0.045em;
+    }
+    .s-title.medium {
+      font-size: clamp(38px, 4.6vw, 72px);
+      letter-spacing: -0.036em;
+    }
+    .s-title.statement {
+      font-size: clamp(52px, 7vw, 108px);
+      line-height: 0.95; letter-spacing: -0.043em;
+    }
+    .s-subtitle {
+      font-size: clamp(17px, 1.9vw, 23px);
+      font-weight: 400; color: rgba(255,255,255,0.68);
+      line-height: 1.62; max-width: 680px; margin: 0 auto 38px;
+      letter-spacing: -0.012em;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.9);
+    }
+    .s-subtitle strong { color: #f0f0f2; font-weight: 600; }
+
+    /* ── SLIDE COUNTER ── */
+    .h-slide-counter {
+      position: absolute; bottom: 30px; right: 44px; z-index: 10;
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.22);
+      letter-spacing: 0.08em;
+    }
+    #slide-num { color: rgba(167,139,250,0.75); }
+    .h-progress-bar {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 10;
+      background: rgba(255,255,255,0.05);
+    }
+    #h-progress-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #6d28d9, #8b5cf6, #c4b5fd);
+      transition: width 0.1s linear;
+      box-shadow: 0 0 8px rgba(139,92,246,0.6);
+    }
+    .h-scroll-hint {
+      position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; align-items: center; gap: 10px;
+      color: rgba(255,255,255,0.25); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      transition: opacity 0.5s;
+    }
+    .h-scroll-hint.hidden { opacity: 0; pointer-events: none; }
+    .chevron-down { display: flex; flex-direction: column; gap: 3px; }
+    .chevron-down span { display: block; width: 9px; height: 9px; border-right: 1.5px solid rgba(255,255,255,0.22); border-bottom: 1.5px solid rgba(255,255,255,0.22); transform: rotate(45deg); }
+    .chevron-down span:nth-child(1) { animation: chv 1.9s ease-in-out infinite 0s; }
+    .chevron-down span:nth-child(2) { animation: chv 1.9s ease-in-out infinite 0.25s; }
+    @keyframes chv { 0%,100%{opacity:0.15;transform:rotate(45deg) translateY(0)} 50%{opacity:0.6;transform:rotate(45deg) translateY(5px)} }
+    .h-key-hint {
+      position: absolute; bottom: 30px; left: 44px; z-index: 10;
+      font-size: 10px; color: rgba(255,255,255,0.18); letter-spacing: 0.03em;
+    }
+    .key-badge {
+      display: inline-block; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
+      padding: 1px 7px; font-size: 9px;
+    }
+
+    /* ── TRANSITION FLASH ── */
+    #transition-flash {
+      position: absolute; inset: 0; z-index: 50; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 50%, rgba(109,40,217,0.65) 0%, transparent 65%);
       opacity: 0;
-      transition: opacity 1.5s ease;
-      /* GPU layer — prevents compositor stalls during scroll */
-      will-change: opacity;
-      transform: translateZ(0);
-      backface-visibility: hidden;
     }
-    .sticky-scene > video.loaded { opacity: 1; }
-    .tunnel-fallback {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover; z-index: 1;
-      opacity: 0.85;
-      transition: opacity 1.2s ease;
-      transform: scale(1.02);
-    }
-    /* Subtle edge vignette — doesn't cover center */
-    .scene-vignette {
-      position: absolute; inset: 0; z-index: 2; pointer-events: none;
-      background:
-        radial-gradient(ellipse 90% 85% at 50% 50%, transparent 45%, rgba(0,0,0,0.7) 100%),
-        linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 18%, transparent 78%, rgba(0,0,0,0.55) 100%);
-    }
-    /* Text steps */
-    .scene-step {
-      position: absolute; inset: 0; z-index: 3;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: 80px 24px;
-      opacity: 0; transform: translateY(44px);
-      transition: opacity 0.75s cubic-bezier(0.25,0.46,0.45,0.94),
-                  transform 0.75s cubic-bezier(0.25,0.46,0.45,0.94);
-      pointer-events: none;
-    }
-    .scene-step.visible {
-      opacity: 1; transform: translateY(0);
-      pointer-events: auto;
-    }
-    .scene-step.past {
-      opacity: 0; transform: translateY(-44px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    /* Side progress dots */
-    .tunnel-progress {
-      position: absolute; right: 28px; top: 50%; transform: translateY(-50%);
-      z-index: 4; display: flex; flex-direction: column; gap: 9px;
-    }
-    .tunnel-dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: rgba(255,255,255,0.22);
-      transition: background 0.3s, transform 0.3s;
-    }
-    .tunnel-dot.active {
-      background: #a78bfa; transform: scale(1.6);
-    }
-    /* Scene scroll hint */
-    .scene-scroll-hint {
-      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
-      z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 10px;
-      color: rgba(255,255,255,0.35); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-      transition: opacity 0.4s;
-    }
-    .scene-scroll-hint.hidden { opacity: 0; pointer-events: none; }
+    #transition-flash.flash { animation: tflash 0.6s ease-out forwards; }
+    @keyframes tflash { 0%{opacity:0.55} 100%{opacity:0} }
 
-    /* ── CUSTOM CURSOR ───────────────────────────────── */
+    /* ── SLIDE ENTRY ANIMATIONS ── */
+    .anim { opacity: 0; transform: translateY(28px); transition: opacity 0.75s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.75s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .anim.in { opacity: 1; transform: translateY(0); }
+    .anim-l { opacity: 0; transform: translateX(-26px); transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .anim-l.in { opacity: 1; transform: translateX(0); }
+    .anim-s { opacity: 0; transform: scale(0.93) translateY(14px); transition: opacity 0.75s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.75s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .anim-s.in { opacity: 1; transform: scale(1) translateY(0); }
+
+    /* Hero float animation */
+    @keyframes hero-float {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-8px); }
+    }
+    #slide-0 .s-content { animation: hero-float 8s ease-in-out infinite; }
+
+    /* ── CARDS ── */
+    .s-grid { display: grid; gap: 14px; width: 100%; margin-top: 32px; }
+    .s-grid.g2 { grid-template-columns: 1fr 1fr; }
+    .s-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+    .s-grid.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    .s-card {
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 20px; padding: 28px 26px;
+      text-align: left;
+      backdrop-filter: blur(12px) saturate(130%);
+      -webkit-backdrop-filter: blur(12px) saturate(130%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.3);
+      transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .s-card:hover {
+      border-color: rgba(167,139,250,0.42);
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-3px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 44px rgba(0,0,0,0.5);
+    }
+    .s-card.hi {
+      background: rgba(109,40,217,0.14);
+      border-color: rgba(139,92,246,0.42);
+      box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 0 0 rgba(109,40,217,0.2);
+      animation: card-breathe 5s ease-in-out infinite;
+    }
+    .s-card.hi:hover {
+      background: rgba(109,40,217,0.22);
+      border-color: rgba(139,92,246,0.6);
+    }
+    @keyframes card-breathe {
+      0%,100% { box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 30px rgba(109,40,217,0.08); }
+      50%      { box-shadow: inset 0 1px 0 rgba(196,181,253,0.18), 0 0 50px rgba(109,40,217,0.22); }
+    }
+    .s-card h3 {
+      font-size: 15px; font-weight: 700; color: #f5f5f7;
+      margin-bottom: 8px; line-height: 1.28; letter-spacing: -0.02em;
+    }
+    .s-card p {
+      font-size: 13px; color: rgba(255,255,255,0.62);
+      line-height: 1.65; letter-spacing: -0.01em;
+    }
+    .s-card p strong { color: rgba(255,255,255,0.9); }
+    .card-tag {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: rgba(167,139,250,0.9); margin-bottom: 11px;
+    }
+    .card-tag.red   { color: rgba(248,113,113,0.95); }
+    .card-tag.amber { color: rgba(251,191,36,0.95); }
+    .card-tag.green { color: rgba(52,211,153,0.95); }
+
+    /* ── LIST ITEMS ── */
+    .s-list {
+      display: flex; flex-direction: column; gap: 10px;
+      width: 100%; max-width: 720px; margin: 26px auto 0; text-align: left;
+    }
+    .s-item {
+      display: flex; align-items: flex-start; gap: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
+      padding: 16px 22px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .s-item:hover { border-color: rgba(139,92,246,0.3); background: rgba(255,255,255,0.065); }
+    .s-item-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: radial-gradient(circle, #c4b5fd, #7c3aed);
+      box-shadow: 0 0 10px rgba(124,58,237,0.7);
+      flex-shrink: 0; margin-top: 5px;
+    }
+    .s-item-text { font-size: 14.5px; color: rgba(255,255,255,0.78); line-height: 1.52; letter-spacing: -0.012em; }
+    .s-item-text strong { color: #f5f5f7; font-weight: 600; }
+
+    /* ── PILLS / TAGS ── */
+    .s-pill {
+      display: inline-block; background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13); border-radius: 30px;
+      padding: 6px 18px; font-size: 12.5px; font-weight: 500;
+      color: rgba(255,255,255,0.68); letter-spacing: -0.01em;
+    }
+    .s-pills { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 30px; }
+
+    /* ── TIME BADGE ── */
+    .time-badge {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: rgba(109,40,217,0.12); border: 1px solid rgba(109,40,217,0.35);
+      border-radius: 30px; padding: 6px 20px; font-size: 11px; font-weight: 600;
+      color: rgba(167,139,250,0.92); margin-bottom: 22px; letter-spacing: 0.02em;
+    }
+    .time-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.8);
+      animation: pdot 2.2s ease-in-out infinite;
+    }
+    @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.6)} }
+
+    /* ── PROMPT FORMULA ── */
+    .formula-row {
+      display: flex; align-items: center; gap: 0;
+      flex-wrap: wrap; justify-content: center; margin: 32px 0;
+    }
+    .formula-item {
+      background: rgba(109,40,217,0.12);
+      border: 1px solid rgba(109,40,217,0.5); border-radius: 16px;
+      padding: 18px 30px; font-size: 16px; font-weight: 700;
+      color: #d8b4fe; white-space: nowrap; letter-spacing: -0.015em;
+      box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 28px rgba(109,40,217,0.12);
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+    .formula-item:hover {
+      border-color: rgba(139,92,246,0.75);
+      box-shadow: inset 0 1px 0 rgba(196,181,253,0.18), 0 0 44px rgba(109,40,217,0.28);
+    }
+    .formula-plus { font-size: 26px; color: rgba(109,40,217,0.55); padding: 0 16px; font-weight: 300; }
+
+    .prompt-box {
+      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 24px 28px; text-align: left;
+      max-width: 760px; margin: 0 auto;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+    .prompt-box.bad  { border-color: rgba(239,68,68,0.28); }
+    .prompt-box.good { border-color: rgba(109,40,217,0.5); box-shadow: inset 0 1px 0 rgba(196,181,253,0.1), 0 0 30px rgba(109,40,217,0.1); }
+    .prompt-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 11px; }
+    .prompt-label.bad  { color: rgba(248,113,113,0.82); }
+    .prompt-label.good { color: rgba(167,139,250,0.92); }
+    .prompt-text { font-size: 13.5px; color: rgba(255,255,255,0.72); line-height: 1.72; font-style: italic; letter-spacing: -0.01em; }
+    .prompt-result { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .prompt-result-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+    .prompt-result-lbl.bad  { color: rgba(248,113,113,0.62); }
+    .prompt-result-lbl.good { color: rgba(167,139,250,0.82); }
+    .prompt-result-text { font-size: 12.5px; color: rgba(255,255,255,0.48); letter-spacing: -0.01em; }
+
+    /* ── AGENDA ── */
+    .agenda-compact { display: flex; flex-direction: column; gap: 5px; max-width: 700px; margin: 22px auto 0; text-align: left; }
+    .ag-item {
+      display: flex; align-items: center; gap: 16px; padding: 11px 18px;
+      background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.075);
+      border-radius: 14px; transition: border-color 0.25s, background 0.25s;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .ag-item:hover { border-color: rgba(139,92,246,0.25); background: rgba(255,255,255,0.055); }
+    .ag-num { font-size: 9px; font-weight: 700; color: rgba(109,40,217,0.7); min-width: 54px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .ag-time-sm { font-size: 10.5px; font-weight: 700; color: rgba(167,139,250,0.88); min-width: 42px; }
+    .ag-label { font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.80); flex: 1; letter-spacing: -0.01em; }
+    .ag-dur { font-size: 10px; color: rgba(255,255,255,0.22); }
+    .ag-pause { background: rgba(255,255,255,0.018); }
+
+    /* ── BAROMETER ── */
+    .barometer { display: flex; flex-direction: column; gap: 10px; max-width: 640px; margin: 28px auto 0; }
+    .baro-item {
+      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px; padding: 19px 26px; cursor: default;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: border-color 0.28s, background 0.28s, transform 0.28s;
+    }
+    .baro-item:hover { border-color: rgba(139,92,246,0.32); background: rgba(109,40,217,0.09); transform: translateX(4px); }
+    .baro-item.active {
+      border-color: rgba(139,92,246,0.5);
+      background: rgba(109,40,217,0.16);
+      box-shadow: inset 0 1px 0 rgba(196,181,253,0.14), 0 0 30px rgba(109,40,217,0.18);
+    }
+    .baro-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.76); letter-spacing: -0.012em; }
+    .baro-item.active .baro-text { color: #f0f0f5; font-weight: 700; }
+
+    /* ── LEVELS ── */
+    .levels-row { display: flex; gap: 0; width: 100%; max-width: 920px; margin: 30px auto 0; }
+    .level-item { flex: 1; padding: 0 16px; text-align: center; position: relative; }
+    .level-arrow { position: absolute; right: -16px; top: 50%; transform: translateY(-50%); color: rgba(109,40,217,0.45); font-size: 18px; z-index: 2; }
+    .level-item:last-child .level-arrow { display: none; }
+    .level-bg {
+      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 22px; padding: 32px 24px; height: 100%;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .level-bg:hover { transform: translateY(-4px); }
+    .level-item:nth-child(3) .level-bg {
+      border-color: rgba(139,92,246,0.48);
+      background: rgba(109,40,217,0.14);
+      box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 50px rgba(109,40,217,0.18);
+      animation: card-breathe 5s ease-in-out infinite;
+    }
+    .level-num {
+      font-size: 48px; font-weight: 800; letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #e9d5ff, #a78bfa, #7c3aed);
+      background-size: 200% 200%; animation: grad-breathe 6s ease-in-out infinite;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 12px;
+    }
+    .level-name { font-size: 18px; font-weight: 700; color: #f5f5f7; margin-bottom: 10px; letter-spacing: -0.022em; }
+    .level-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; letter-spacing: -0.01em; }
+
+    /* ── CANVAS ── */
+    .canvas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; max-width: 840px; margin: 26px auto 0; text-align: left; }
+    .canvas-field {
+      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px; padding: 20px 22px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .canvas-field:hover { border-color: rgba(139,92,246,0.32); background: rgba(255,255,255,0.06); }
+    .canvas-num { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(167,139,250,0.82); margin-bottom: 7px; }
+    .canvas-label { font-size: 14px; font-weight: 600; color: #f5f5f7; letter-spacing: -0.015em; }
+    .canvas-field.full { grid-column: 1 / -1; background: rgba(109,40,217,0.1); border-color: rgba(139,92,246,0.32); }
+
+    /* ── CLOSING ── */
+    .closing-quote {
+      font-size: clamp(20px, 2.7vw, 36px); font-weight: 400; font-style: italic;
+      color: rgba(255,255,255,0.88); line-height: 1.52;
+      max-width: 800px; margin: 0 auto 40px; letter-spacing: -0.022em;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.9), 0 0 80px rgba(109,40,217,0.15);
+    }
+    .closing-contacts { display: flex; gap: 56px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+    .c-contact { text-align: center; }
+    .c-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.22); margin-bottom: 6px; }
+    .c-val { font-size: 14.5px; font-weight: 500; color: rgba(196,181,253,0.92); letter-spacing: -0.01em; }
+
+    /* ── CUSTOM CURSOR ── */
     body { cursor: none; }
-    a, button, .card, .rule-card, .model-card, .legal-item, .eu-card, .action-card, .ht-item, .nav-btn, .nav-back { cursor: none; }
+    a, button, .s-card, .baro-item, .ag-item, .nav-btn, .nav-back, .s-item, .level-bg, .canvas-field, .formula-item { cursor: none; }
     #cursor-dot {
       position: fixed; top: 0; left: 0; z-index: 9999;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: #a78bfa;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: width 0.15s ease, height 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: radial-gradient(circle, #c4b5fd, #7c3aed);
+      pointer-events: none; transform: translate(-50%,-50%);
+      transition: width 0.15s, height 0.15s, opacity 0.15s;
       will-change: transform;
+      box-shadow: 0 0 10px rgba(167,139,250,0.7);
     }
     #cursor-ring {
       position: fixed; top: 0; left: 0; z-index: 9998;
       width: 38px; height: 38px; border-radius: 50%;
-      border: 1.5px solid rgba(167,139,250,0.65);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: width 0.35s cubic-bezier(.23,1,.32,1), height 0.35s cubic-bezier(.23,1,.32,1),
-                  border-color 0.35s ease, background 0.35s ease, opacity 0.2s ease;
+      border: 1.5px solid rgba(167,139,250,0.5);
+      pointer-events: none; transform: translate(-50%,-50%);
+      transition: width 0.32s cubic-bezier(.23,1,.32,1), height 0.32s cubic-bezier(.23,1,.32,1), border-color 0.32s, background 0.32s, opacity 0.2s;
       will-change: transform;
     }
-    /* Hover state — ring expands, fills subtly */
-    body.cursor-hover #cursor-ring {
-      width: 64px; height: 64px;
-      border-color: rgba(167,139,250,0.9);
-      background: rgba(124,58,237,0.12);
-    }
-    body.cursor-hover #cursor-dot {
-      width: 6px; height: 6px;
-      background: #c4b5fd;
-    }
-    /* Click state */
-    body.cursor-click #cursor-ring {
-      width: 28px; height: 28px;
-      border-color: rgba(196,181,253,1);
-      background: rgba(124,58,237,0.22);
-    }
-    body.cursor-click #cursor-dot {
-      width: 12px; height: 12px;
-      background: #c4b5fd;
-    }
+    body.cursor-hover #cursor-ring { width: 64px; height: 64px; border-color: rgba(167,139,250,0.9); background: rgba(109,40,217,0.12); }
+    body.cursor-hover #cursor-dot  { width: 5px; height: 5px; }
+    body.cursor-click #cursor-ring { width: 26px; height: 26px; border-color: #c4b5fd; background: rgba(109,40,217,0.25); }
     @media (hover: none) { #cursor-dot, #cursor-ring { display: none; } body { cursor: auto; } }
 
-    /* ── RESPONSIVE ──────────────────────────────────── */
-    @media (max-width: 900px) { .models { grid-template-columns: 1fr 1fr 1fr; } }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .s-grid.g3 { grid-template-columns: 1fr 1fr; }
+      .s-grid.g4 { grid-template-columns: 1fr 1fr; }
+      .levels-row { flex-direction: column; }
+      .level-arrow { display: none; }
+    }
     @media (max-width: 768px) {
-      #nav { padding: 0 20px; } #nav .nav-center { display: none; }
-      section { padding: 90px 20px; }
-      .cards.c2, .cards.c3, .cards.c4 { grid-template-columns: 1fr; }
-      .rules, .eu-cards, .action-grid { grid-template-columns: 1fr; }
-      .models { grid-template-columns: 1fr 1fr; }
-      .h-timeline { display: none; }
-      .stats-row { flex-direction: column; gap: 0; }
-      .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
-      .stat:last-child { border-bottom: none; }
-      .closing-contacts { gap: 32px; }
+      #nav { padding: 0 20px; } .nav-center { display: none; }
+      .s-content { padding: 72px 24px 52px; }
+      .formula-row { gap: 8px; }
+      .canvas-grid { grid-template-columns: 1fr; }
+      .s-grid.g2, .s-grid.g3, .s-grid.g4 { grid-template-columns: 1fr; }
+      .closing-contacts { gap: 28px; }
+      .h-key-hint { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- Custom cursor -->
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
-
 <div id="scroll-progress"><div id="scroll-fill"></div></div>
 
 <nav id="nav">
   <a href="/" class="nav-logo">lumin<span>AI</span>re</a>
   <div class="nav-center">
-    <button class="nav-btn" data-target="s-hero">Start</button>
-    <button class="nav-btn" data-target="s-agenda">Agenda</button>
-    <button class="nav-btn" data-target="s-b3">Prompts</button>
-    <button class="nav-btn" data-target="s-b6">Workshop</button>
-    <button class="nav-btn" data-target="s-b8">Recht</button>
-    <button class="nav-btn" data-target="s-close">Abschluss</button>
+    <button class="nav-btn" data-slide="0">Start</button>
+    <button class="nav-btn" data-slide="3">Agenda</button>
+    <button class="nav-btn" data-slide="9">Prompts</button>
+    <button class="nav-btn" data-slide="12">Use-Cases</button>
+    <button class="nav-btn" data-slide="15">Recht</button>
+    <button class="nav-btn" data-slide="25">Abschluss</button>
   </div>
   <a href="/" class="nav-back">← Zurück</a>
 </nav>
 
 
-<!-- ══ HERO SCROLL TUNNEL ════════════════════════════════ -->
-<div id="s-hero" class="scroll-tunnel" style="height:360vh">
-  <div class="sticky-scene">
-    <video id="hero-video" muted playsinline preload="auto"
-      src="https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4"></video>
-    <img class="tunnel-fallback" id="hero-img"
-      src="https://tempfile.aiquickdraw.com/h/7c5e4cf5f3c75b36e9be5e95c5f730c3_1776605854.png" alt="" />
-    <div class="scene-vignette"></div>
+<div class="h-presentation" id="h-presentation">
+<div class="h-sticky" id="h-sticky">
+  <div id="transition-flash"></div>
+  <div class="h-track" id="h-track">
 
-    <div class="tunnel-progress" id="hero-dots">
-      <div class="tunnel-dot active"></div>
-      <div class="tunnel-dot"></div>
-      <div class="tunnel-dot"></div>
-    </div>
 
-    <!-- Step 0: Main headline (0–38%) -->
-    <div class="scene-step visible" data-from="0" data-to="0.38">
-      <div class="time-badge" style="margin-bottom:24px">KI-Führerschein Seminar · luminAIre</div>
-      <h1 class="hero-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
-        KI als echter<br>
-        <span class="gradient-text">Denk- und<br>Arbeitspartner.</span>
-      </h1>
-    </div>
-
-    <!-- Step 1: Stats (38–72%) -->
-    <div class="scene-step" data-from="0.38" data-to="0.72">
-      <p class="eyebrow" style="margin-bottom:20px">Ihr Seminar auf einen Blick</p>
-      <h2 class="section-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
-        3 Stunden.<br><span class="gradient-text">Ihr Job. Morgen anders.</span>
-      </h2>
-      <div class="stats-row" style="margin-top:48px;max-width:600px">
-        <div class="stat"><span class="stat-val">9</span><span class="stat-lbl">Blöcke</span></div>
-        <div class="stat"><span class="stat-val">3h</span><span class="stat-lbl">Praxis</span></div>
-        <div class="stat"><span class="stat-val">100%</span><span class="stat-lbl">Direkt einsetzbar</span></div>
+    <!-- ═══ SLIDE 01 — HERO ═══ -->
+    <div class="h-slide" id="slide-0">
+      <video class="s-bg-video" id="hero-video" muted playsinline preload="auto"
+        src="https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4"></video>
+      <img class="s-bg-img" style="z-index:1;opacity:0.92"
+        src="https://tempfile.aiquickdraw.com/vnp/ec4612af99b51d6527ad08c3eb4aae81_1776688261.jpeg" id="hero-fallback" alt="" />
+      <div class="s-overlay center"></div>
+      <div class="s-content">
+        <div class="time-badge anim" style="transition-delay:80ms">KI-Führerschein Seminar · luminAIre</div>
+        <h1 class="s-title large anim" style="transition-delay:240ms">
+          KI im<br><span class="grad">Arbeitsalltag.</span>
+        </h1>
+        <p class="s-subtitle anim" style="transition-delay:420ms">
+          Von praktischen Soforthilfen bis zu<br>intelligenten Workflows und Agenten
+        </p>
+        <div class="s-pills anim" style="transition-delay:580ms">
+          <span class="s-pill">Präsenzseminar</span>
+          <span class="s-pill">3 Stunden</span>
+          <span class="s-pill">Praxisnah &amp; direkt nutzbar</span>
+        </div>
       </div>
     </div>
 
-    <!-- Step 2: Pills (72–100%) -->
-    <div class="scene-step" data-from="0.72" data-to="1.01">
-      <p class="eyebrow" style="margin-bottom:20px">Was Sie mitnehmen</p>
-      <h2 class="medium-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
-        <span class="gradient-text">Praxiswissen,</span><br>das morgen wirkt.
-      </h2>
-      <div class="pill-row" style="margin-top:32px">
-        <span class="pill">KI-Führerschein</span>
-        <span class="pill">EU AI Act konform</span>
-        <span class="pill">Sofort einsetzbar</span>
-        <span class="pill">Praxisnah</span>
+
+    <!-- ═══ SLIDE 02 — WARUM ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/na2/fd783889c299d89b54afdf1ddeb822c41545435.jpeg" alt="" />
+      <div class="s-overlay"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">Einstieg</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Warum wir heute<br><span class="grad">über KI sprechen.</span></h2>
+        <div class="s-grid g2 anim-s" style="transition-delay:280ms;max-width:840px;margin:28px auto 0">
+          <div class="s-card">
+            <h3>Zeit sparen</h3>
+            <p>KI spart Zeit bei wiederkehrenden Aufgaben – täglich, sofort, ohne Vorkenntnisse.</p>
+          </div>
+          <div class="s-card hi">
+            <h3>Besser denken</h3>
+            <p>Sie hilft beim Denken, Strukturieren und Formulieren – als echter Arbeitspartner.</p>
+          </div>
+          <div class="s-card">
+            <h3>Arbeitsalltag verändern</h3>
+            <p>KI verändert bereits heute, wie wir arbeiten – wer es früh nutzt, hat einen Vorsprung.</p>
+          </div>
+          <div class="s-card hi">
+            <h3>Potenzial erschließen</h3>
+            <p>Sie eröffnet Potenzial für bessere Abläufe, Prozesse und Qualität in Ihrem Job.</p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="scene-scroll-hint" id="hero-scroll-hint">
-      Scroll
-      <div class="scroll-chevron"><span></span><span></span></div>
-    </div>
-  </div>
-</div>
 
-
-<!-- ══ OPENING QUOTE ════════════════════════════════════════ -->
-<section class="interstitial bg0">
-  <div class="atmo atmo-center" style="position:absolute"></div>
-  <div class="s-inner">
-    <p class="big-quote split-words">
-      „Heute verlassen Sie den Raum mit mindestens <em>2–3 konkreten KI-Anwendungen</em>, die Sie morgen direkt in Ihrem Job einsetzen können."
-    </p>
-  </div>
-</section>
-
-
-<!-- ══ AGENDA ═══════════════════════════════════════════════ -->
-<section id="s-agenda" class="bg1">
-  <div class="atmo atmo-left" style="position:absolute"></div>
-  <div class="s-inner">
-    <p class="eyebrow fu">Der heutige Tag</p>
-    <h2 class="section-title split-words">
-      Ihr Weg vom<br><span class="gradient-text">Einsteiger zum Profi.</span>
-    </h2>
-    <div class="stats-row fu" style="--fd:300ms">
-      <div class="stat"><span class="stat-val" data-count-to="9">0</span><span class="stat-lbl">Blöcke</span></div>
-      <div class="stat"><span class="stat-val">3h</span><span class="stat-lbl">Praxis</span></div>
-      <div class="stat"><span class="stat-val" data-count-to="100">0</span><span class="stat-lbl">% direkt einsetzbar</span></div>
-    </div>
-    <div class="h-timeline fu" style="--fd:500ms">
-      <div class="ht-item"><span class="ht-time">09:00</span><span class="ht-label">Begrüßung</span></div>
-      <div class="ht-item"><span class="ht-time">09:15</span><span class="ht-label">Wow-Demo</span></div>
-      <div class="ht-item"><span class="ht-time">09:35</span><span class="ht-label">Prompts</span></div>
-      <div class="ht-item"><span class="ht-time">10:05</span><span class="ht-label">Hands-on</span></div>
-      <div class="ht-item pause"><span class="ht-time">10:25</span><span class="ht-label">☕ Pause</span></div>
-      <div class="ht-item"><span class="ht-time">10:40</span><span class="ht-label">Workshop</span></div>
-      <div class="ht-item"><span class="ht-time">11:15</span><span class="ht-label">Tools</span></div>
-      <div class="ht-item"><span class="ht-time">11:40</span><span class="ht-label">Recht</span></div>
-      <div class="ht-item"><span class="ht-time">11:55</span><span class="ht-label">Action-Plan</span></div>
-    </div>
-    <div class="agenda fu" style="--fd:600ms">
-      <div class="ag-row"><span class="ag-time">09:00</span><span class="ag-num">Block 1</span><span class="ag-title">Begrüßung, Ziel &amp; Icebreaker</span><span class="ag-dur">15 Min</span></div>
-      <div class="ag-row"><span class="ag-time">09:15</span><span class="ag-num">Block 2</span><span class="ag-title">Wow-Demo – Was ist heute möglich?</span><span class="ag-dur">20 Min</span></div>
-      <div class="ag-row"><span class="ag-time">09:35</span><span class="ag-num">Block 3</span><span class="ag-title">Prompt Engineering – Die Formel</span><span class="ag-dur">30 Min</span></div>
-      <div class="ag-row"><span class="ag-time">10:05</span><span class="ag-num">Block 4</span><span class="ag-title">Hands-on: App, Voice &amp; Bildgenerierung</span><span class="ag-dur">20 Min</span></div>
-      <div class="ag-row"><span class="ag-time">10:25</span><span class="ag-num">—</span><span class="ag-title">☕ Pause</span><span class="ag-dur">15 Min</span></div>
-      <div class="ag-row"><span class="ag-time">10:40</span><span class="ag-num">Block 6</span><span class="ag-title">Praktische Use-Cases &amp; Workshop</span><span class="ag-dur">35 Min</span></div>
-      <div class="ag-row"><span class="ag-time">11:15</span><span class="ag-num">Block 7</span><span class="ag-title">Modelle, Tools &amp; Agentic AI</span><span class="ag-dur">25 Min</span></div>
-      <div class="ag-row"><span class="ag-time">11:40</span><span class="ag-num">Block 8</span><span class="ag-title">EU-AI Act &amp; Rechtliches</span><span class="ag-dur">15 Min</span></div>
-      <div class="ag-row"><span class="ag-time">11:55</span><span class="ag-num">Block 9</span><span class="ag-title">Persönlicher Action-Plan &amp; Abschluss</span><span class="ag-dur">5 Min</span></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══ BLOCK 1 — BEGRÜSSUNG ════════════════════════════════ -->
-<section class="bg2">
-  <div class="block-bg-num">01</div>
-  <div class="section-bg">
-    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/c24a33c9a43810a639b2cd1d00a74932_1776605856.png" alt="" />
-  </div>
-  <div class="section-overlay"></div>
-  <div class="atmo atmo-right" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">09:00 – 09:15 · 15 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 1</p>
-    <h2 class="section-title split-words">
-      Willkommen.<br><span class="gradient-text">Warum Sie heute hier sind.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">Erster Eindruck, klares Ziel, erste Energie. <strong>Jeder weiß, was ihn erwartet.</strong></p>
-    <div class="cards c2">
-      <div class="card si" style="--fd:100ms"><span class="card-icon">👋</span><h3>Begrüßung &amp; Vorstellung</h3><p>Trainer-Vorstellung · Überblick über den Tagesablauf · Erste Erwartungen abholen</p></div>
-      <div class="card si hi" style="--fd:200ms"><span class="card-icon">🎯</span><h3>Das Seminar-Ziel</h3><p>„Sie werden KI nicht mehr nur als besseres Google sehen, sondern als echten Denk- und Arbeitspartner."</p></div>
-      <div class="card si" style="--fd:300ms"><span class="card-icon">🧊</span><h3>Icebreaker (8–10 Min)</h3><p>Name + Bereich · Bisherige KI-Erfahrung · max. 15 Sek. pro Person</p></div>
-      <div class="card si" style="--fd:400ms"><span class="card-icon">💬</span><h3>Erwartungsabfrage</h3><p>„Welche Aufgabe kostet Sie am meisten Zeit?" → Trainer fasst Pain Points zusammen</p></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══ QUOTE ════════════════════════════════════════════════ -->
-<section class="interstitial bg0" style="min-height:55vh">
-  <div class="atmo atmo-center" style="position:absolute"></div>
-  <div class="s-inner">
-    <p class="big-quote split-words">
-      „Sie werden KI nicht mehr nur als besseres Google sehen, sondern als <em>echten Denk- und Arbeitspartner.</em>"
-    </p>
-  </div>
-</section>
-
-
-<!-- ══ BLOCK 2 — WOW-DEMO ═══════════════════════════════════ -->
-<section class="bg1">
-  <div class="block-bg-num">02</div>
-  <div class="section-bg">
-    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/22dfd7dc51c3a3b4e1dbd2db778769a2_1776605857.png" alt="" />
-  </div>
-  <div class="section-overlay"></div>
-  <div class="atmo atmo-left" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">09:15 – 09:35 · 20 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 2</p>
-    <h2 class="section-title split-words">
-      In 8 Minuten.<br><span class="gradient-text">Eine komplette Präsentation.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">Live sehen, was moderne KI kann — <strong>ganz ohne Programmierkenntnisse.</strong></p>
-    <div class="cards c3">
-      <div class="card si" style="--fd:100ms"><span class="card-icon">1️⃣</span><h3>Guten Prompt eingeben</h3><p>Thema: „KI im Vertriebsalltag" · Mit der 4-Regel-Formel formuliert</p></div>
-      <div class="card si hi" style="--fd:200ms"><span class="card-icon">2️⃣</span><h3>Claude generiert</h3><p>Gliederung + vollständige Inhalte + Folien-Struktur — live auf dem Beamer</p></div>
-      <div class="card si" style="--fd:300ms"><span class="card-icon">3️⃣</span><h3>Export &amp; Weiterverarbeitung</h3><p>Als PowerPoint · direkter Markdown-Export · Fertig in unter 10 Minuten</p></div>
-    </div>
-    <div class="s-divider fu" style="--fd:500ms; margin-top:48px"></div>
-    <p class="body-text fu" style="--fd:600ms; margin-top:40px">Früher hätten Sie dafür <strong>2–3 Stunden</strong> gebraucht.</p>
-  </div>
-</section>
-
-
-<!-- ══ BLOCK 3 — PROMPT ENGINEERING ════════════════════════ -->
-<section id="s-b3" class="bg3">
-  <div class="block-bg-num">03</div>
-  <div class="atmo atmo-right" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">09:35 – 10:05 · 30 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 3 · Prompt Engineering</p>
-    <h2 class="section-title split-words">
-      Die Formel,<br><span class="gradient-text">die alles ändert.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">Vier Regeln. Sofort anwendbar. <strong>Dramatisch bessere Ergebnisse.</strong></p>
-    <div class="rules">
-      <div class="rule-card si" style="--fd:100ms"><div class="rule-n">1</div><div class="rule-body"><h4>Rolle</h4><p>„Du bist ein erfahrener Vertriebsleiter mit 15 Jahren Erfahrung…"</p></div></div>
-      <div class="rule-card si" style="--fd:200ms"><div class="rule-n">2</div><div class="rule-body"><h4>Aufgabe</h4><p>„Erstelle mir eine überzeugende E-Mail an Neukunden über…"</p></div></div>
-      <div class="rule-card si" style="--fd:300ms"><div class="rule-n">3</div><div class="rule-body"><h4>Kontext</h4><p>„Das Unternehmen ist… Das Ziel ist… Der Kunde ist…"</p></div></div>
-      <div class="rule-card si" style="--fd:400ms"><div class="rule-n">4</div><div class="rule-body"><h4>Format</h4><p>„Gib mir das als Tabelle / als E-Mail / als 5 Bullet Points / max. 200 Wörter"</p></div></div>
-    </div>
-    <div class="cards c2" style="margin-top:16px">
-      <div class="card si" style="--fd:500ms"><span class="card-icon">📊</span><h3>Live-Vergleich</h3><p>Schlechter Prompt → mittelmäßiges Ergebnis<br>Guter Prompt → <strong style="color:#f5f5f7">dramatisch besseres Ergebnis</strong></p></div>
-      <div class="card si hi" style="--fd:600ms"><span class="card-icon">✍️</span><h3>Interaktive Übung (12–15 Min)</h3><p>Jeder schreibt seinen eigenen Prompt · 2–3 Freiwillige zeigen Ergebnis · Trainer verbessert live</p></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══ BLOCK 4 — HANDS-ON ═══════════════════════════════════ -->
-<section class="bg2">
-  <div class="block-bg-num">04</div>
-  <div class="atmo atmo-left" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">10:05 – 10:25 · 20 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 4 · Hands-on</p>
-    <h2 class="section-title split-words">
-      Anfassen.<br><span class="gradient-text">Ausprobieren. Behalten.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">KI mobil erleben — <strong>und sofort etwas Praktisches mitnehmen.</strong></p>
-    <div class="cards c3">
-      <div class="card si" style="--fd:100ms"><span class="card-icon">📱</span><h3>App installieren</h3><p>ChatGPT / Gemini / Claude auf dem Handy · Login mit bestehendem Account · 3–4 Min</p></div>
-      <div class="card si hi" style="--fd:200ms"><span class="card-icon">🎙️</span><h3>Voice-Modus live</h3><p>Natürliches Sprechen mit KI · Übung: „Stell mir 3 Fragen zu meinem Job" · 6–7 Min</p></div>
-      <div class="card si" style="--fd:300ms"><span class="card-icon">🎨</span><h3>Bildgenerierung</h3><p>DALL-E / Flux · Jeder generiert ein eigenes Bild · Logo, LinkedIn-Post, Visualisierung · 8–9 Min</p></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══ PAUSE ═════════════════════════════════════════════════ -->
-<section class="bg0 short">
-  <div class="atmo atmo-center" style="position:absolute"></div>
-  <div class="s-inner">
-    <p class="hero-title fu" style="font-size:clamp(72px,10vw,130px); letter-spacing:-0.05em; --fd:100ms">☕</p>
-    <p class="eyebrow fu" style="--fd:300ms">10:25 – 10:40 · 15 Minuten</p>
-    <h2 class="medium-title split-words" style="margin-top:16px">Kurz <span class="gradient-text">durchatmen.</span></h2>
-    <p class="body-text fu" style="--fd:600ms">Weiter um 10:40 Uhr mit dem wichtigsten Block des Tages.</p>
-  </div>
-</section>
-
-
-<!-- ══ BLOCK 6 — WORKSHOP SCROLL TUNNEL ═════════════════ -->
-<div id="s-b6" class="scroll-tunnel" style="height:360vh">
-  <div class="sticky-scene">
-    <video id="workshop-video" muted playsinline preload="auto"
-      src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"></video>
-    <img class="tunnel-fallback"
-      src="https://tempfile.aiquickdraw.com/h/bd75ff8b33a7766d87493fc3e84bf306_1776605847.png" alt="" />
-    <div class="scene-vignette"></div>
-
-    <div class="tunnel-progress" id="ws-dots">
-      <div class="tunnel-dot active"></div>
-      <div class="tunnel-dot"></div>
-      <div class="tunnel-dot"></div>
-    </div>
-
-    <!-- Step 0: Headline (0–35%) -->
-    <div class="scene-step visible" data-from="0" data-to="0.35">
-      <div class="time-badge" style="margin-bottom:20px">10:40 – 11:15 · 35 Min</div>
-      <p class="eyebrow" style="margin-bottom:16px">Block 6 · Der wichtigste Block</p>
-      <h2 class="section-title" style="text-shadow:0 4px 60px rgba(0,0,0,0.9)">
-        Deine Aufgabe.<br><span class="gradient-text">Deine Lösung.</span>
-      </h2>
-      <p class="body-text" style="margin-top:24px">Jeder arbeitet an einer <strong>echten Aufgabe aus seinem Arbeitsalltag</strong> — und geht mit einem fertigen Ergebnis nach Hause.</p>
-    </div>
-
-    <!-- Step 1: Use-case cards (35–68%) -->
-    <div class="scene-step" data-from="0.35" data-to="0.68">
-      <p class="eyebrow" style="margin-bottom:24px">Mögliche Themen</p>
-      <div class="cards c4" style="max-width:880px">
-        <div class="card"><span class="card-icon">✉️</span><h3>Kommunikation &amp; Texte</h3><p>E-Mails, Berichte, Protokolle, Zusammenfassungen</p></div>
-        <div class="card"><span class="card-icon">💡</span><h3>Kreativität &amp; Ideen</h3><p>Kampagnen, Brainstorming, Präsentationen</p></div>
-        <div class="card"><span class="card-icon">🔍</span><h3>Analyse &amp; Recherche</h3><p>Daten verstehen, Vergleiche, Marktanalysen</p></div>
-        <div class="card hi"><span class="card-icon">⚡</span><h3>Routine &amp; Zeitfresser</h3><p>Alles, was täglich Zeit kostet und nervt</p></div>
+    <!-- ═══ SLIDE 03 — LERNZIELE ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/na2/fd783889c299d89b54afdf1ddeb822c41545435.jpeg" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">Ziel des Seminars</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Was Sie heute<br><span class="grad">konkret mitnehmen.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">Am Ende des Seminars können Sie:</p>
+        <div class="s-list">
+          <div class="s-item anim" style="transition-delay:310ms"><div class="s-item-dot"></div><span class="s-item-text"><strong>KI realistisch einordnen</strong> – Chancen erkennen, Grenzen verstehen</span></div>
+          <div class="s-item anim" style="transition-delay:380ms"><div class="s-item-dot"></div><span class="s-item-text"><strong>Bessere Prompts schreiben</strong> – mit einer einfachen, sofort nutzbaren Formel</span></div>
+          <div class="s-item anim" style="transition-delay:450ms"><div class="s-item-dot"></div><span class="s-item-text"><strong>KI sinnvoll im Arbeitsalltag nutzen</strong> – konkrete Aufgaben lösen</span></div>
+          <div class="s-item anim" style="transition-delay:520ms"><div class="s-item-dot"></div><span class="s-item-text"><strong>Zwischen Assistent, Workflow und Agent unterscheiden</strong></span></div>
+          <div class="s-item anim" style="transition-delay:590ms"><div class="s-item-dot"></div><span class="s-item-text"><strong>Einen eigenen KI-Anwendungsfall ableiten</strong> – für morgen</span></div>
+        </div>
       </div>
     </div>
 
-    <!-- Step 2: Process (68–100%) -->
-    <div class="scene-step" data-from="0.68" data-to="1.01">
-      <p class="eyebrow" style="margin-bottom:24px">Der Workshop-Ablauf</p>
-      <div class="cards c3" style="max-width:780px">
-        <div class="card"><span class="card-icon">📝</span><h3>Schritt 1</h3><p>Eigene Aufgabe in eigenen Worten beschreiben</p></div>
-        <div class="card hi"><span class="card-icon">🧪</span><h3>Schritt 2 · 25 Min</h3><p>4-Regel-Prompt schreiben · KI ausführen · Ergebnis verbessern</p></div>
-        <div class="card"><span class="card-icon">🎤</span><h3>Schritt 3 · 5 Min</h3><p>3–4 Freiwillige zeigen ihr Ergebnis · „Was war überraschend?"</p></div>
+
+    <!-- ═══ SLIDE 04 — AGENDA ═══ -->
+    <div class="h-slide bg-subtle">
+      <div class="s-content">
+        <span class="s-eyebrow anim">Tagesübersicht</span>
+        <h2 class="s-title medium anim" style="transition-delay:140ms">Der heutige Tag.<br><span class="grad">Schritt für Schritt.</span></h2>
+        <div class="agenda-compact">
+          <div class="ag-item anim" style="transition-delay:200ms"><span class="ag-num">Block 01</span><span class="ag-time-sm">09:00</span><span class="ag-label">Begrüßung, Ziel &amp; Icebreaker</span><span class="ag-dur">15 Min</span></div>
+          <div class="ag-item anim" style="transition-delay:240ms"><span class="ag-num">Block 02</span><span class="ag-time-sm">09:15</span><span class="ag-label">Wow-Demo – Was ist heute möglich?</span><span class="ag-dur">20 Min</span></div>
+          <div class="ag-item anim" style="transition-delay:280ms"><span class="ag-num">Block 03</span><span class="ag-time-sm">09:35</span><span class="ag-label">Prompt Engineering – Die Formel</span><span class="ag-dur">30 Min</span></div>
+          <div class="ag-item anim" style="transition-delay:320ms"><span class="ag-num">Block 04</span><span class="ag-time-sm">10:05</span><span class="ag-label">Hands-on: App, Voice &amp; Bildgenerierung</span><span class="ag-dur">20 Min</span></div>
+          <div class="ag-item ag-pause anim" style="transition-delay:360ms"><span class="ag-num">Pause</span><span class="ag-time-sm">10:25</span><span class="ag-label">Kaffeepause</span><span class="ag-dur">15 Min</span></div>
+          <div class="ag-item anim" style="transition-delay:400ms"><span class="ag-num">Block 06</span><span class="ag-time-sm">10:40</span><span class="ag-label">Praktische Use-Cases &amp; Workshop</span><span class="ag-dur">35 Min</span></div>
+          <div class="ag-item anim" style="transition-delay:440ms"><span class="ag-num">Block 07</span><span class="ag-time-sm">11:15</span><span class="ag-label">Modelle, Tools &amp; Agentic AI</span><span class="ag-dur">25 Min</span></div>
+          <div class="ag-item anim" style="transition-delay:480ms"><span class="ag-num">Block 08</span><span class="ag-time-sm">11:40</span><span class="ag-label">EU AI Act &amp; verantwortungsvoller Umgang</span><span class="ag-dur">15 Min</span></div>
+          <div class="ag-item anim" style="transition-delay:520ms"><span class="ag-num">Block 09</span><span class="ag-time-sm">11:55</span><span class="ag-label">Persönlicher Action-Plan &amp; Abschluss</span><span class="ag-dur">5 Min</span></div>
+        </div>
       </div>
     </div>
+
+
+    <!-- ═══ SLIDE 05 — KI-BAROMETER ═══ -->
+    <div class="h-slide bg-subtle2">
+      <div class="s-content">
+        <span class="s-eyebrow anim">Interaktion</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Wo stehen<br><span class="grad">wir heute?</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">Per Handzeichen: Wo würden Sie sich einordnen?</p>
+        <div class="barometer anim" style="transition-delay:360ms">
+          <div class="baro-item"><span class="baro-text">Ich habe noch keine Erfahrung mit KI</span></div>
+          <div class="baro-item"><span class="baro-text">Ich habe KI schon einmal getestet</span></div>
+          <div class="baro-item"><span class="baro-text">Ich nutze KI gelegentlich</span></div>
+          <div class="baro-item active"><span class="baro-text">Ich nutze KI bereits regelmäßig</span></div>
+        </div>
+        <p class="s-subtitle anim" style="transition-delay:540ms;margin-top:24px;font-size:14px"><em>Die Gruppe ist bewusst gemischt – das ist ein Vorteil.</em></p>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 06 — WOW-DEMO ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/249274bfd08605e132db736b9567047f_1776688271.jpeg" alt="" />
+      <div class="s-overlay"></div>
+      <div class="s-content">
+        <div class="time-badge anim">09:15 – 09:35 · Block 2</div>
+        <h2 class="s-title anim" style="transition-delay:200ms">In 8 Minuten.<br><span class="grad">Eine komplette Präsentation.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:340ms">Live sehen, was moderne KI kann – <strong>ganz ohne Programmierkenntnisse.</strong></p>
+        <div class="s-grid g3 anim" style="transition-delay:470ms;max-width:880px;margin:24px auto 0">
+          <div class="s-card"><h3>E-Mail</h3><p>Professionell formuliert in Sekunden</p></div>
+          <div class="s-card hi"><h3>Zusammenfassung</h3><p>Aus langen Texten das Wesentliche</p></div>
+          <div class="s-card"><h3>Agenda</h3><p>Strukturiert, klar, sofort nutzbar</p></div>
+          <div class="s-card"><h3>Checkliste</h3><p>Vollständig und praxisnah</p></div>
+          <div class="s-card hi"><h3>Präsentation</h3><p>Gliederung + Inhalte in Minuten</p></div>
+          <div class="s-card"><h3>Früher: 2–3 Stunden</h3><p>Heute: <strong>unter 10 Minuten</strong></p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 07 — WAS KI GUT KANN ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/ec4612af99b51d6527ad08c3eb4aae81_1776688261.jpeg" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">Stärken</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Was KI im Alltag<br><span class="grad">gut kann.</span></h2>
+        <div class="s-grid g3 anim" style="transition-delay:270ms;max-width:880px;margin:24px auto 0">
+          <div class="s-card"><h3>Texte formulieren</h3><p>E-Mails, Berichte, Posts – klar und professionell</p></div>
+          <div class="s-card hi"><h3>Inhalte zusammenfassen</h3><p>Aus langen Texten das Wesentliche extrahieren</p></div>
+          <div class="s-card"><h3>Ideen entwickeln</h3><p>Brainstorming, Kampagnen, Konzepte anstoßen</p></div>
+          <div class="s-card"><h3>Informationen strukturieren</h3><p>Tabellen, Listen, Gliederungen erstellen</p></div>
+          <div class="s-card hi"><h3>Vorlagen erstellen</h3><p>Checklisten, Templates, Standardtexte</p></div>
+          <div class="s-card"><h3>Denkarbeit unterstützen</h3><p>Vorbereitung, Argumentation, Reflexion</p></div>
+        </div>
+        <p class="s-subtitle anim" style="transition-delay:470ms;margin-top:22px;font-size:13.5px">KI ist besonders nützlich bei textlastigen, vorbereitenden und strukturierenden Aufgaben.</p>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 08 — WAS KI NICHT KANN ═══ -->
+    <div class="h-slide bg-void">
+      <div class="s-content">
+        <span class="s-eyebrow anim" style="color:rgba(248,113,113,0.88)">Grenzen verstehen</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Was KI <span style="color:#f87171;text-shadow:0 0 60px rgba(239,68,68,0.35)">nicht</span><br>leisten kann.</h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">KI ist ein Assistenzwerkzeug – kein Autopilot.</p>
+        <div class="s-list anim" style="transition-delay:360ms;max-width:680px">
+          <div class="s-item"><div class="s-item-dot" style="background:radial-gradient(circle,#fca5a5,#ef4444);box-shadow:0 0 10px rgba(239,68,68,0.6)"></div><span class="s-item-text"><strong>Verantwortung übernehmen</strong> – Der Mensch bleibt immer verantwortlich</span></div>
+          <div class="s-item"><div class="s-item-dot" style="background:radial-gradient(circle,#fca5a5,#ef4444);box-shadow:0 0 10px rgba(239,68,68,0.6)"></div><span class="s-item-text"><strong>Wahrheit garantieren</strong> – KI kann sich irren und halluzinieren</span></div>
+          <div class="s-item"><div class="s-item-dot" style="background:radial-gradient(circle,#fca5a5,#ef4444);box-shadow:0 0 10px rgba(239,68,68,0.6)"></div><span class="s-item-text"><strong>Kontext automatisch kennen</strong> – Ohne gute Eingabe kein gutes Ergebnis</span></div>
+          <div class="s-item"><div class="s-item-dot" style="background:radial-gradient(circle,#fca5a5,#ef4444);box-shadow:0 0 10px rgba(239,68,68,0.6)"></div><span class="s-item-text"><strong>Sensible Entscheidungen allein treffen</strong> – Immer menschliches Urteil nötig</span></div>
+          <div class="s-item"><div class="s-item-dot" style="background:radial-gradient(circle,#fca5a5,#ef4444);box-shadow:0 0 10px rgba(239,68,68,0.6)"></div><span class="s-item-text"><strong>Menschliches Urteil ersetzen</strong> – Empathie, Erfahrung, Verantwortung bleiben beim Menschen</span></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 09 — KI-KOMPETENZ ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/ec4612af99b51d6527ad08c3eb4aae81_1776688261.jpeg" alt="" />
+      <div class="s-overlay side"></div>
+      <div class="s-content left" style="max-width:1060px">
+        <span class="s-eyebrow anim">KI-Führerschein</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Warum KI-Kompetenz<br><span class="grad">heute wichtig ist.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms;max-width:540px;margin-left:0">Nicht nur die Nutzung zählt – sondern die <strong>sinnvolle und sichere Nutzung.</strong></p>
+        <div class="s-grid g3 anim" style="transition-delay:370ms;max-width:880px;margin:22px 0 0">
+          <div class="s-card"><h3>Chancen erkennen</h3><p>Wo kann KI mir in meinem Job heute schon helfen?</p></div>
+          <div class="s-card hi"><h3>Grenzen verstehen</h3><p>Was kann KI nicht – und wann brauche ich Urteilsvermögen?</p></div>
+          <div class="s-card"><h3>Gut eingeben</h3><p>Prompts schreiben, die wirklich gute Ergebnisse liefern</p></div>
+          <div class="s-card"><h3>Kritisch prüfen</h3><p>Ergebnisse nie blind übernehmen – immer nachdenken</p></div>
+          <div class="s-card hi"><h3>Verantwortungsvoll handeln</h3><p>Datenschutz, Transparenz, rechtliche Rahmenbedingungen beachten</p></div>
+          <div class="s-card"><h3>Wettbewerbsvorteil</h3><p>Wer KI sinnvoll nutzt, spart Zeit und erreicht mehr</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 10 — PROMPT-FORMEL ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/0eed42b823f9861c503502b180f48306_1776688298.jpeg" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <div class="time-badge anim">09:35 – 10:05 · Block 3 · Die wichtigste Folie</div>
+        <h2 class="s-title statement anim" style="transition-delay:200ms">Die Formel,<br><span class="grad">die alles ändert.</span></h2>
+        <div class="formula-row anim" style="transition-delay:380ms">
+          <div class="formula-item">Rolle</div>
+          <span class="formula-plus">+</span>
+          <div class="formula-item">Kontext</div>
+          <span class="formula-plus">+</span>
+          <div class="formula-item">Ziel</div>
+          <span class="formula-plus">+</span>
+          <div class="formula-item">Format</div>
+          <span class="formula-plus">+</span>
+          <div class="formula-item">Qualitätskriterien</div>
+        </div>
+        <div class="prompt-box good anim" style="transition-delay:540ms">
+          <div class="prompt-label good">Beispiel-Prompt</div>
+          <div class="prompt-text">
+            <strong style="color:#d8b4fe">Rolle:</strong> „Du bist mein Assistent für Kundenkommunikation" ·
+            <strong style="color:#d8b4fe">Kontext:</strong> „Ein Termin verschiebt sich um zwei Tage" ·
+            <strong style="color:#d8b4fe">Ziel:</strong> „Vertrauen erhalten und Klarheit schaffen" ·
+            <strong style="color:#d8b4fe">Format:</strong> „Kurze E-Mail" ·
+            <strong style="color:#d8b4fe">Qualität:</strong> „freundlich, professionell, klar"
+          </div>
+        </div>
+        <p class="s-subtitle anim" style="transition-delay:680ms;margin-top:20px;font-size:14px">Je klarer die Anfrage, desto nützlicher das Ergebnis.</p>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 11 — VON VAGE ZU WIRKSAM ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/0eed42b823f9861c503502b180f48306_1776688298.jpeg" alt="" />
+      <div class="s-overlay"></div>
+      <div class="s-content wide">
+        <span class="s-eyebrow anim">Live-Vergleich</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Von vage<br><span class="grad">zu wirksam.</span></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:940px;margin:26px auto 0">
+          <div class="prompt-box bad anim-s" style="transition-delay:290ms">
+            <div class="prompt-label bad">Schwacher Prompt</div>
+            <div class="prompt-text">„Schreib mir eine Mail."</div>
+            <div class="prompt-result">
+              <div class="prompt-result-lbl bad">Ergebnis</div>
+              <div class="prompt-result-text">Allgemein, vage, nicht verwendbar – KI weiß nicht, was gemeint ist</div>
+            </div>
+          </div>
+          <div class="prompt-box good anim-s" style="transition-delay:410ms">
+            <div class="prompt-label good">Starker Prompt</div>
+            <div class="prompt-text">„Du bist mein Assistent für professionelle Kundenkommunikation. Ich muss einem wichtigen Kunden mitteilen, dass sich ein Termin um zwei Tage verschiebt. Formuliere eine kurze, freundliche und verbindliche E-Mail. Ziel ist, Vertrauen zu erhalten. Gib mir zwei Varianten."</div>
+            <div class="prompt-result">
+              <div class="prompt-result-lbl good">Ergebnis</div>
+              <div class="prompt-result-text">Zwei konkrete, versandfähige E-Mails – sofort nutzbar</div>
+            </div>
+          </div>
+        </div>
+        <p class="s-subtitle anim" style="transition-delay:550ms;margin-top:24px;font-size:14px">Nicht die KI allein entscheidet über die Qualität – sondern die <strong>Eingabe.</strong></p>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 12 — KI ALS MEHR ALS SUCHE ═══ -->
+    <div class="h-slide bg-warm">
+      <div class="s-content">
+        <span class="s-eyebrow anim">Perspektivwechsel</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Mehr als<br><span class="grad">nur eine Suche.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">KI ist mehr als Google. Der größte Nutzen entsteht, wenn sie beim <strong>Denken und Ausarbeiten</strong> hilft.</p>
+        <div class="s-grid g3 anim" style="transition-delay:370ms;max-width:880px;margin:22px auto 0">
+          <div class="s-card hi"><h3>Denkpartner</h3><p>Ideen durchdenken, Argumente entwickeln, Probleme strukturieren</p></div>
+          <div class="s-card"><h3>Sparringspartner</h3><p>Konzepte hinterfragen, Gegenargumente finden, Positionen schärfen</p></div>
+          <div class="s-card"><h3>Trainingspartner</h3><p>Szenarien üben, Feedback holen, Kompetenzen ausbauen</p></div>
+          <div class="s-card"><h3>Strukturhilfe</h3><p>Chaos ordnen, Inhalte gliedern, Prioritäten setzen</p></div>
+          <div class="s-card hi"><h3>Formulierungshilfe</h3><p>Texte verbessern, Ton anpassen, Varianten erzeugen</p></div>
+          <div class="s-card"><h3>Sofort-Assistent</h3><p>Jederzeit verfügbar – auch unterwegs, auch mobil, auch per Sprache</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 13 — KONKRETE ANWENDUNGSFÄLLE ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/cf25928cbb128737e164ac05100b53a3_1776688280.jpeg" alt="" />
+      <div class="s-overlay"></div>
+      <div class="s-content">
+        <div class="time-badge anim">Block 4 · Praxis</div>
+        <h2 class="s-title anim" style="transition-delay:170ms">Wo KI heute<br><span class="grad">konkret hilft.</span></h2>
+        <div class="s-grid g3 anim" style="transition-delay:310ms;max-width:880px;margin:22px auto 0">
+          <div class="s-card hi"><h3>E-Mails &amp; Kommunikation</h3><p>Professionell, schnell, im richtigen Ton</p></div>
+          <div class="s-card"><h3>Zusammenfassungen &amp; Protokolle</h3><p>Meetings nachbereiten, Texte kürzen</p></div>
+          <div class="s-card"><h3>Gesprächs- &amp; Meetingvorbereitung</h3><p>Agenda, Fragen, Gesprächsleitfäden</p></div>
+          <div class="s-card"><h3>Vorlagen &amp; Checklisten</h3><p>Einmal erstellt, immer wieder genutzt</p></div>
+          <div class="s-card hi"><h3>Brainstorming &amp; Ideen</h3><p>Kreative Impulse, Kampagnenideen, neue Ansätze</p></div>
+          <div class="s-card"><h3>Erste Entwürfe &amp; Konzepte</h3><p>Präsentationen, Berichte, Angebote starten</p></div>
+        </div>
+        <p class="s-subtitle anim" style="transition-delay:510ms;margin-top:20px;font-size:14px">Fast jeder Arbeitsalltag enthält Aufgaben, bei denen KI direkt entlasten kann.</p>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 14 — MOBIL / VOICE / BILDER ═══ -->
+    <div class="h-slide bg-subtle">
+      <div class="s-content">
+        <div class="time-badge anim">10:05 – 10:25 · Block 4 · Hands-on</div>
+        <h2 class="s-title anim" style="transition-delay:190ms">KI niedrigschwellig<br><span class="grad">nutzen.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:310ms">KI muss kein Spezialwerkzeug am Desktop sein – <strong>sie läuft auch mobil, per Sprache und als Bildgenerator.</strong></p>
+        <div class="s-grid g3 anim" style="transition-delay:430ms;max-width:880px;margin:22px auto 0">
+          <div class="s-card hi"><h3>App installieren</h3><p>ChatGPT / Gemini / Claude direkt auf dem Handy – kostenlos &amp; sofort nutzbar</p></div>
+          <div class="s-card"><h3>Voice-Modus</h3><p>Natürlich sprechen statt tippen – ideal unterwegs oder für Brainstorming</p></div>
+          <div class="s-card"><h3>Bildgenerierung</h3><p>DALL-E / Flux: Logo-Idee, LinkedIn-Post, Visualisierung – in Sekunden</p></div>
+          <div class="s-card"><h3>Bildanalyse</h3><p>Foto hochladen und analysieren lassen – Dokumente, Grafiken, Fotos</p></div>
+          <div class="s-card hi"><h3>Spontane Ideen</h3><p>Gedanken unterwegs festhalten und sofort ausarbeiten lassen</p></div>
+          <div class="s-card"><h3>Schnelle Entwürfe</h3><p>Im Alltag, zwischen Meetings, auf dem Weg – immer dabei</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 15 — SELBST PRÜFEN ═══ -->
+    <div class="h-slide bg-subtle2">
+      <div class="s-content">
+        <span class="s-eyebrow anim">Qualitätskontrolle</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Was ich immer<br><span class="grad">selbst prüfen muss.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">KI spart Zeit – aber die Verantwortung bleibt beim Menschen.</p>
+        <div class="s-list anim" style="transition-delay:370ms;max-width:680px">
+          <div class="s-item"><div class="s-item-dot"></div><span class="s-item-text">Ist das inhaltlich <strong>plausibel</strong>? Hat KI etwas erfunden?</span></div>
+          <div class="s-item"><div class="s-item-dot"></div><span class="s-item-text">Passt es zu <strong>meinem Kontext</strong>? Stimmen Tonalität und Details?</span></div>
+          <div class="s-item"><div class="s-item-dot"></div><span class="s-item-text">Fehlt etwas <strong>Wichtiges</strong>? Ist das Ergebnis vollständig?</span></div>
+          <div class="s-item"><div class="s-item-dot"></div><span class="s-item-text">Ist der <strong>Ton passend</strong>? Passt der Stil zur Situation?</span></div>
+          <div class="s-item"><div class="s-item-dot"></div><span class="s-item-text">Ist das für <strong>externe Nutzung geeignet</strong>? Darf ich das so raussenden?</span></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 16 — RECHT / EU AI ACT ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/34ef7ea83942c691a3eedff593ceb357_1776688283.jpeg" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <div class="time-badge anim">11:40 – 11:55 · Block 8</div>
+        <h2 class="s-title statement anim" style="transition-delay:170ms">Sicher. Legal.<br><span class="grad">Verantwortungsvoll.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:290ms">Rahmenbedingungen – <strong>praktisch statt juristisch.</strong></p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:880px;margin:22px auto 0">
+          <div class="s-card anim-s" style="transition-delay:360ms">
+            <div class="card-tag red">EU AI Act · Verboten</div>
+            <h3>Verbotene Anwendungen</h3>
+            <p>Social Scoring, manipulative KI-Systeme, Gesichtserkennung in der Öffentlichkeit</p>
+          </div>
+          <div class="s-card hi anim-s" style="transition-delay:430ms">
+            <div class="card-tag amber">EU AI Act · Hochrisiko</div>
+            <h3>Hochrisiko-Systeme</h3>
+            <p>KI in Personalentscheidungen, Kreditvergabe, Bildung – besondere Pflichten</p>
+          </div>
+          <div class="s-card anim-s" style="transition-delay:500ms">
+            <div class="card-tag">EU AI Act · Pflichten</div>
+            <h3>Transparenzpflichten</h3>
+            <p>Kennzeichnung KI-generierter Inhalte, Information der Nutzer</p>
+          </div>
+          <div class="s-card anim-s" style="transition-delay:570ms">
+            <div class="card-tag green">Goldene Regel</div>
+            <h3>5 Grundregeln</h3>
+            <p>Keine sensiblen Daten · Ergebnisse prüfen · KI kennzeichnen · DSGVO beachten · Mensch bleibt verantwortlich</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 17 — TOOLS & MODELLE ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/c156a1e6d56136e0829cd6d58bf2d9a5_1776688276.jpeg" alt="" />
+      <div class="s-overlay"></div>
+      <div class="s-content">
+        <div class="time-badge anim">11:15 – 11:40 · Block 7</div>
+        <h2 class="s-title anim" style="transition-delay:170ms">Das richtige Tool<br><span class="grad">für jede Aufgabe.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:290ms">Nicht jedes KI-Tool ist für alles gleich gut – wichtiger als der Name ist die <strong>richtige Aufgabe.</strong></p>
+        <div class="s-grid g3 anim" style="transition-delay:410ms;max-width:880px;margin:22px auto 0">
+          <div class="s-card hi"><h3>Text &amp; Kommunikation</h3><p>GPT-4o, Claude 4 – E-Mails, Texte, Kommunikation aller Art</p></div>
+          <div class="s-card"><h3>Analyse &amp; Struktur</h3><p>Claude 4, Gemini 2 – komplexe Texte, Recherche, Wissensarbeit</p></div>
+          <div class="s-card"><h3>Code &amp; Technik</h3><p>Claude 4, Grok, GPT-4o – technische Aufgaben &amp; Programmierung</p></div>
+          <div class="s-card"><h3>Bilder &amp; Kreatives</h3><p>DALL-E, Flux, Midjourney – Visualisierungen, Design, Ideen</p></div>
+          <div class="s-card hi"><h3>Automatisierung</h3><p>Claude Projects, Copilot Agents, AutoGPT – mehrstufige Prozesse</p></div>
+          <div class="s-card"><h3>Recherche &amp; Daten</h3><p>Gemini 2 mit Google-Daten, Perplexity – aktuelle Informationen</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 18 — KI IN DER ARBEITSUMGEBUNG ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/cf25928cbb128737e164ac05100b53a3_1776688280.jpeg" alt="" />
+      <div class="s-overlay side"></div>
+      <div class="s-content left wide">
+        <span class="s-eyebrow anim">Integration</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">KI dort nutzen, wo<br><span class="grad">Arbeit stattfindet.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms;max-width:520px;margin-left:0">Der größte Hebel entsteht oft direkt in <strong>bestehenden Arbeitsumgebungen.</strong></p>
+        <div class="s-grid g4 anim" style="transition-delay:370ms;max-width:960px;margin:22px 0 0">
+          <div class="s-card"><h3>E-Mail</h3><p>Outlook Copilot, Gmail AI</p></div>
+          <div class="s-card hi"><h3>Dokumente</h3><p>Word Copilot, Google Docs AI</p></div>
+          <div class="s-card"><h3>Tabellen</h3><p>Excel Copilot, Sheets AI</p></div>
+          <div class="s-card"><h3>Meetings</h3><p>Teams Copilot, Meet AI</p></div>
+          <div class="s-card"><h3>Wissensablage</h3><p>Notion AI, Confluence AI</p></div>
+          <div class="s-card hi"><h3>Zusammenarbeit</h3><p>Microsoft 365, Google Workspace</p></div>
+          <div class="s-card"><h3>Design</h3><p>Canva AI, Adobe Firefly</p></div>
+          <div class="s-card"><h3>Weitere</h3><p>Slack AI, Salesforce AI und mehr</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 19 — DREI REIFESTUFEN ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/0e10956e07d49e4dcc048daef1e2e31e_1776688304.jpeg" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">Evolution</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Vom Assistenten<br><span class="grad">zum Agenten.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">Der KI-Nutzen entwickelt sich von Einzelaufgaben hin zur <strong>Prozessunterstützung.</strong></p>
+        <div class="levels-row anim" style="transition-delay:380ms">
+          <div class="level-item">
+            <div class="level-bg">
+              <div class="level-num">01</div>
+              <div class="level-name">Assistent</div>
+              <div class="level-desc">Hilft bei einer einzelnen Aufgabe. Einmalige Anfrage, einmaliges Ergebnis.</div>
+            </div>
+            <div class="level-arrow">→</div>
+          </div>
+          <div class="level-item">
+            <div class="level-bg">
+              <div class="level-num">02</div>
+              <div class="level-name">Workflow</div>
+              <div class="level-desc">Unterstützt mehrere feste, zusammenhängende Schritte in einem Prozess.</div>
+            </div>
+            <div class="level-arrow">→</div>
+          </div>
+          <div class="level-item">
+            <div class="level-bg">
+              <div class="level-num">03</div>
+              <div class="level-name">Agent</div>
+              <div class="level-desc">Arbeitet zielorientiert über mehrere Schritte – innerhalb klarer Grenzen und Freigaben.</div>
+            </div>
+            <div class="level-arrow">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 20 — WAS IST EIN AGENT ═══ -->
+    <div class="h-slide">
+      <video class="s-bg-video" id="workshop-video" muted playsinline preload="auto"
+        src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"></video>
+      <img class="s-bg-img" style="z-index:1;opacity:0.88"
+        src="https://tempfile.aiquickdraw.com/ggc/ca120a2a4fa5d63967afe59d507e57bc_1776688463688.jpeg" id="workshop-fallback" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">Agentic AI</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Was ein KI-Agent<br><span class="grad">wirklich ist.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">Ein Agent ist nicht einfach „mehr KI" – sondern KI mit <strong>mehrstufiger Prozesslogik.</strong></p>
+        <div class="s-grid g3 anim" style="transition-delay:370ms;max-width:880px;margin:22px auto 0">
+          <div class="s-card hi"><h3>Verfolgt ein Ziel</h3><p>Nicht nur antworten – sondern auf ein definiertes Ergebnis hinarbeiten</p></div>
+          <div class="s-card"><h3>Arbeitet mehrstufig</h3><p>Mehrere Schritte, Entscheidungen und Aktionen in Folge</p></div>
+          <div class="s-card"><h3>Nutzt Tools</h3><p>Suche, Kalender, E-Mail, Datenbanken – greift auf externe Systeme zu</p></div>
+          <div class="s-card"><h3>Reagiert adaptiv</h3><p>Passt sich an Zwischenergebnisse und neue Informationen an</p></div>
+          <div class="s-card hi"><h3>Bereitet Entscheidungen vor</h3><p>Nicht entscheiden – sondern aufbereiten und zur Freigabe vorlegen</p></div>
+          <div class="s-card"><h3>Braucht klare Grenzen</h3><p>Immer mit definierten Grenzen und menschlichen Freigaben</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 21 — WANN LOHNT SICH AGENTIC AI ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/ggc/ca120a2a4fa5d63967afe59d507e57bc_1776688463688.jpeg" alt="" />
+      <div class="s-overlay"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">Entscheidungshilfe</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Wann lohnt sich<br><span class="grad">Agentic AI?</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">Geeignet sind Aufgaben, die diese Kriterien erfüllen:</p>
+        <div class="s-grid g2 anim" style="transition-delay:360ms;max-width:800px;margin:22px auto 0">
+          <div class="s-card"><h3>Wiederkehrend</h3><p>Die Aufgabe kommt regelmäßig vor – wöchentlich, täglich, monatlich</p></div>
+          <div class="s-card hi"><h3>Mehrstufig</h3><p>Die Aufgabe besteht aus mehreren zusammenhängenden Schritten</p></div>
+          <div class="s-card"><h3>Klares Ziel</h3><p>Das gewünschte Ergebnis ist gut definierbar und messbar</p></div>
+          <div class="s-card"><h3>Ähnliche Muster</h3><p>Der Prozess folgt immer einem ähnlichen Schema</p></div>
+          <div class="s-card"><h3>Mehrere Quellen</h3><p>Informationen müssen aus verschiedenen Quellen zusammengeführt werden</p></div>
+          <div class="s-card hi"><h3>Freigaben integrierbar</h3><p>Menschliche Prüfung und Freigabe lässt sich sinnvoll einbauen</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 22 — PRAXISBEISPIELE ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/ggc/ca120a2a4fa5d63967afe59d507e57bc_1776688463688.jpeg" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">3 Praxisbeispiele</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Wo Agenten<br><span class="grad">echten Hebel haben.</span></h2>
+        <div class="s-grid g3 anim" style="transition-delay:290ms;max-width:940px;margin:26px auto 0">
+          <div class="s-card hi">
+            <h3>Meeting-Follow-up-Agent</h3>
+            <p style="margin-bottom:16px">Aus einer Aufnahme oder Notiz erzeugt der Agent automatisch:</p>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:12px;color:rgba(196,181,253,0.8);letter-spacing:-0.01em">&#x2713;&nbsp; Zusammenfassung</div>
+              <div style="font-size:12px;color:rgba(196,181,253,0.8);letter-spacing:-0.01em">&#x2713;&nbsp; To-dos mit Verantwortlichkeiten</div>
+              <div style="font-size:12px;color:rgba(196,181,253,0.8);letter-spacing:-0.01em">&#x2713;&nbsp; Follow-up-Mail</div>
+            </div>
+          </div>
+          <div class="s-card">
+            <h3>Angebots-/Vertriebs-Workflow</h3>
+            <p style="margin-bottom:16px">Der Workflow sammelt, strukturiert und erstellt:</p>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:-0.01em">&#x2713;&nbsp; Kundeninformationen sammeln</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:-0.01em">&#x2713;&nbsp; Angebotsentwurf erstellen</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:-0.01em">&#x2713;&nbsp; Lücken erkennen &amp; eskalieren</div>
+            </div>
+          </div>
+          <div class="s-card">
+            <h3>Backoffice-/Prüf-Agent</h3>
+            <p style="margin-bottom:16px">Automatische Qualitätskontrolle von Unterlagen:</p>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:-0.01em">&#x2713;&nbsp; Unterlagen prüfen</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:-0.01em">&#x2713;&nbsp; Abweichungen erkennen</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:-0.01em">&#x2713;&nbsp; Sonderfälle eskalieren</div>
+            </div>
+          </div>
+        </div>
+        <p class="s-subtitle anim" style="transition-delay:510ms;margin-top:24px;font-size:14px">Das eigentliche Potenzial zeigt sich, wo ganze Arbeitsschritte intelligenter werden.</p>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 23 — PRAXISWERKSTATT ═══ -->
+    <div class="h-slide">
+      <video class="s-bg-video" id="workshop-video2" muted playsinline preload="auto"
+        src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"></video>
+      <img class="s-bg-img" style="z-index:1;opacity:0.88"
+        src="https://tempfile.aiquickdraw.com/vnp/249274bfd08605e132db736b9567047f_1776688271.jpeg" alt="" />
+      <div class="s-overlay heavy"></div>
+      <div class="s-content">
+        <div class="time-badge anim">10:40 – 11:15 · Block 6 · Der wichtigste Block</div>
+        <h2 class="s-title anim" style="transition-delay:190ms">Deine Aufgabe.<br><span class="grad">Deine Lösung.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:320ms">Jeder arbeitet an einer <strong>echten Aufgabe aus seinem Arbeitsalltag</strong> – und geht mit einem fertigen Ergebnis nach Hause.</p>
+        <div class="s-grid g3 anim" style="transition-delay:440ms;max-width:880px;margin:22px auto 0">
+          <div class="s-card hi"><h3>Welche Aufgabe kostet mich Zeit?</h3><p>Die eine Sache, die mich wöchentlich nervt oder aufhält</p></div>
+          <div class="s-card"><h3>Was ist das gewünschte Ergebnis?</h3><p>So konkret wie möglich beschreiben: Entwurf, Text, Analyse…</p></div>
+          <div class="s-card"><h3>Wo hilft KI sofort?</h3><p>Welcher Teil lässt sich heute noch an KI delegieren?</p></div>
+          <div class="s-card"><h3>Welche Schritte wiederholen sich?</h3><p>Muster erkennen = Automatisierungspotenzial</p></div>
+          <div class="s-card hi"><h3>Wo wäre ein Workflow sinnvoll?</h3><p>Mehrere Schritte, die immer gleich ablaufen</p></div>
+          <div class="s-card"><h3>Wo hätte ein Agent Potenzial?</h3><p>Was könnte KI selbstständig vorbereiten oder erledigen?</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 24 — KI-CANVAS ═══ -->
+    <div class="h-slide bg-warm">
+      <div class="s-content wide">
+        <span class="s-eyebrow anim">Werkzeug</span>
+        <h2 class="s-title anim" style="transition-delay:140ms">Vom Problem zum<br><span class="grad">KI-Anwendungsfall.</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:270ms">Ein guter KI-Einsatz beginnt nicht mit dem Tool – sondern mit einer <strong>sauber verstandenen Aufgabe.</strong></p>
+        <div class="canvas-grid anim" style="transition-delay:370ms">
+          <div class="canvas-field"><div class="canvas-num">01 · Aufgabe</div><div class="canvas-label">Was ist die Aufgabe oder der Prozess?</div></div>
+          <div class="canvas-field"><div class="canvas-num">02 · Ergebnis</div><div class="canvas-label">Was ist das gewünschte Ergebnis?</div></div>
+          <div class="canvas-field"><div class="canvas-num">03 · Assistent</div><div class="canvas-label">Wo kann KI bei einer Einzelaufgabe helfen?</div></div>
+          <div class="canvas-field"><div class="canvas-num">04 · Workflow</div><div class="canvas-label">Welche Schritte lassen sich als Workflow abbilden?</div></div>
+          <div class="canvas-field"><div class="canvas-num">05 · Agent</div><div class="canvas-label">Wo könnte ein Agent mehrere Schritte übernehmen?</div></div>
+          <div class="canvas-field"><div class="canvas-num">06 · Freigaben</div><div class="canvas-label">Wo brauche ich menschliche Entscheidung oder Kontrolle?</div></div>
+          <div class="canvas-field full"><div class="canvas-num">07 · Nutzen / Erfolgskriterium</div><div class="canvas-label">Woran merke ich, dass es etwas gebracht hat? Zeitersparnis? Qualitätsgewinn?</div></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 25 — TRANSFERPLAN ═══ -->
+    <div class="h-slide bg-subtle">
+      <div class="s-content">
+        <div class="time-badge anim">11:55 – 12:00 · Block 9</div>
+        <h2 class="s-title anim" style="transition-delay:170ms">Was setze ich in den<br><span class="grad">nächsten 7 Tagen um?</span></h2>
+        <p class="s-subtitle anim" style="transition-delay:290ms">Das Seminar ist erfolgreich, wenn aus dem Impuls eine <strong>konkrete Anwendung</strong> wird.</p>
+        <div class="s-list anim" style="transition-delay:410ms;max-width:700px">
+          <div class="s-item">
+            <div style="font-size:11px;font-weight:800;color:rgba(167,139,250,0.9);min-width:26px;letter-spacing:0.04em;margin-top:2px;text-shadow:0 0 12px rgba(124,58,237,0.6)">01</div>
+            <span class="s-item-text">Für welche <strong>Aufgabe</strong> nutze ich KI als Erstes?</span>
+          </div>
+          <div class="s-item">
+            <div style="font-size:11px;font-weight:800;color:rgba(167,139,250,0.9);min-width:26px;letter-spacing:0.04em;margin-top:2px;text-shadow:0 0 12px rgba(124,58,237,0.6)">02</div>
+            <span class="s-item-text">Welchen <strong>Prompt</strong> probiere ich heute noch aus?</span>
+          </div>
+          <div class="s-item">
+            <div style="font-size:11px;font-weight:800;color:rgba(167,139,250,0.9);min-width:26px;letter-spacing:0.04em;margin-top:2px;text-shadow:0 0 12px rgba(124,58,237,0.6)">03</div>
+            <span class="s-item-text">Welcher <strong>Prozess</strong> hat Potenzial für einen Workflow?</span>
+          </div>
+          <div class="s-item">
+            <div style="font-size:11px;font-weight:800;color:rgba(167,139,250,0.9);min-width:26px;letter-spacing:0.04em;margin-top:2px;text-shadow:0 0 12px rgba(124,58,237,0.6)">04</div>
+            <span class="s-item-text">Wo brauche ich <strong>menschliche Freigabe</strong>? Was muss ich selbst entscheiden?</span>
+          </div>
+          <div class="s-item">
+            <div style="font-size:11px;font-weight:800;color:rgba(167,139,250,0.9);min-width:26px;letter-spacing:0.04em;margin-top:2px;text-shadow:0 0 12px rgba(124,58,237,0.6)">05</div>
+            <span class="s-item-text">Woran merke ich, dass es etwas <strong>gebracht</strong> hat? Was ist mein Erfolgskriterium?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══ SLIDE 26 — ABSCHLUSS ═══ -->
+    <div class="h-slide">
+      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/d5a62a934a744e92689819875ec6d77f_1776688309.jpeg" alt="" />
+      <div class="s-overlay center"></div>
+      <div class="s-content">
+        <span class="s-eyebrow anim">Abschluss</span>
+        <h2 class="s-title anim" style="transition-delay:170ms">Die wichtigste<br><span class="grad">Erkenntnis.</span></h2>
+        <div class="s-grid g2 anim" style="transition-delay:310ms;max-width:780px;margin:22px auto 0">
+          <div class="s-card"><h3>Zeit bei Einzelaufgaben</h3><p>KI spart nicht nur Zeit – sie hebt die Qualität jeder einzelnen Aufgabe</p></div>
+          <div class="s-card hi"><h3>Denken &amp; Strukturieren</h3><p>Sie hilft beim Denken, Vorbereiten und Formulieren – täglich</p></div>
+          <div class="s-card"><h3>Wiederkehrende Prozesse</h3><p>Der größere Hebel entsteht bei Workflows und Agenten</p></div>
+          <div class="s-card hi"><h3>Integration ist entscheidend</h3><p>KI in den Arbeitsalltag integrieren – nicht als Extra, sondern als Standard</p></div>
+        </div>
+        <p class="closing-quote anim" style="transition-delay:490ms;margin-top:38px">"Nicht die KI allein macht den Unterschied – sondern <em>die Art, wie wir sie nutzen.</em>"</p>
+        <div class="closing-contacts anim" style="transition-delay:660ms">
+          <div class="c-contact"><div class="c-lbl">Trainer</div><div class="c-val">Philipp Mick</div></div>
+          <div class="c-contact"><div class="c-lbl">E-Mail</div><div class="c-val">info@luminaire.training</div></div>
+          <div class="c-contact"><div class="c-lbl">Telefon</div><div class="c-val">+49 179 1327191</div></div>
+          <div class="c-contact"><div class="c-lbl">Website</div><div class="c-val">www.luminaire.training</div></div>
+        </div>
+        <div class="anim" style="transition-delay:840ms;margin-top:32px">
+          <a href="/" style="color:rgba(255,255,255,0.22);text-decoration:none;font-size:12px;letter-spacing:0.02em;transition:color 0.2s"
+            onmouseover="this.style.color='rgba(255,255,255,0.55)'" onmouseout="this.style.color='rgba(255,255,255,0.22)'">← Zurück zur luminAIre Website</a>
+        </div>
+      </div>
+    </div>
+
+
+  </div><!-- end h-track -->
+
+  <div class="h-progress-bar"><div id="h-progress-fill"></div></div>
+  <div class="h-slide-counter"><span id="slide-num">01</span> / 26</div>
+  <div class="h-scroll-hint" id="scroll-hint">
+    Scroll <div class="chevron-down"><span></span><span></span></div>
   </div>
-</div>
-
-
-<!-- ══ BLOCK 7 — MODELLE & TOOLS ════════════════════════════ -->
-<section class="bg1">
-  <div class="block-bg-num">07</div>
-  <div class="atmo atmo-left" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">11:15 – 11:40 · 25 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 7 · Modelle &amp; Tools</p>
-    <h2 class="section-title split-words">
-      Das richtige Tool<br><span class="gradient-text">für jede Aufgabe.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">Nicht immer das Gleiche nehmen — <strong>sondern das Beste für den Zweck.</strong></p>
-    <div class="models">
-      <div class="model-card si" style="--fd:100ms"><div class="model-name">GPT-4o</div><div class="model-tag">OpenAI</div><div class="model-uses">Texte<br>Kreativität<br>Vielseitig</div></div>
-      <div class="model-card si hi" style="--fd:200ms"><div class="model-name">Claude 4</div><div class="model-tag">Anthropic</div><div class="model-uses">Analyse<br>Lange Texte<br>Coding</div></div>
-      <div class="model-card si" style="--fd:300ms"><div class="model-name">Gemini 2</div><div class="model-tag">Google</div><div class="model-uses">Recherche<br>Google-Daten<br>Workspace</div></div>
-      <div class="model-card si" style="--fd:400ms"><div class="model-name">DALL-E</div><div class="model-tag">OpenAI</div><div class="model-uses">Bilder<br>Visualisierungen<br>Design</div></div>
-      <div class="model-card si" style="--fd:500ms"><div class="model-name">Grok</div><div class="model-tag">xAI</div><div class="model-uses">Code<br>Analyse<br>X-Daten</div></div>
-    </div>
-    <div class="cards c3" style="margin-top:28px">
-      <div class="card si" style="--fd:600ms"><span class="card-icon">🤖</span><h3>Agentic AI</h3><p>KI die selbstständig mehrere Schritte macht · AutoGPT, CrewAI, Copilot Agents, Claude Projects</p></div>
-      <div class="card si" style="--fd:700ms"><span class="card-icon">🪟</span><h3>Microsoft 365</h3><p>Copilot in Word, Excel, Teams, Outlook — direkt in Ihrem Arbeitsumfeld</p></div>
-      <div class="card si" style="--fd:800ms"><span class="card-icon">✨</span><h3>Weitere Tools</h3><p>Google Workspace · Notion AI · Canva AI · und viele mehr</p></div>
-    </div>
+  <div class="h-key-hint">
+    <span class="key-badge">↑↓</span> oder <span class="key-badge">←→</span> navigieren
   </div>
-</section>
 
-
-<!-- ══ BLOCK 8 — EU-AI ACT ══════════════════════════════════ -->
-<section id="s-b8" class="bg2">
-  <div class="block-bg-num">08</div>
-  <div class="atmo atmo-right" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">11:40 – 11:55 · 15 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 8 · EU-AI Act</p>
-    <h2 class="section-title split-words">
-      Sicher. Legal.<br><span class="gradient-text">Verantwortungsvoll.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">Die wichtigsten Regeln — <strong>ohne dass es juristisch wird.</strong></p>
-    <div class="eu-cards">
-      <div class="eu-card si" style="--fd:100ms"><div class="eu-tag">Verboten</div><h4>Verbotene Anwendungen</h4><p>Social Scoring, Gesichtserkennung in der Öffentlichkeit, manipulative KI-Systeme</p></div>
-      <div class="eu-card si hi" style="--fd:200ms" style="background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.35)"><div class="eu-tag">Hochrisiko</div><h4>Hochrisiko-Systeme</h4><p>KI in Personalentscheidungen, Kreditvergabe, Bildung — besondere Pflichten für Unternehmen</p></div>
-      <div class="eu-card si" style="--fd:300ms"><div class="eu-tag">Transparenz</div><h4>Transparenzpflichten</h4><p>Kennzeichnung KI-generierter Inhalte, Information der Nutzer bei KI-Interaktion</p></div>
-    </div>
-    <div class="s-divider fu" style="--fd:400ms; margin-top:48px"></div>
-    <h3 class="medium-title fu" style="--fd:500ms; margin-top:40px; font-size:clamp(24px,3.5vw,42px)">Die 5 goldenen <span class="gradient-text">Regeln.</span></h3>
-    <div class="legal-list">
-      <div class="legal-item fu" style="--fd:600ms"><div class="legal-check">🔒</div><p><strong>Keine sensiblen Firmendaten</strong> in öffentliche KI-Tools eingeben</p></div>
-      <div class="legal-item fu" style="--fd:700ms"><div class="legal-check">✅</div><p><strong>Immer prüfen,</strong> ob das Ergebnis stimmt — KI macht Fehler</p></div>
-      <div class="legal-item fu" style="--fd:800ms"><div class="legal-check">🏷️</div><p><strong>Kennzeichnen,</strong> wenn Inhalte KI-generiert sind (bei Kunden)</p></div>
-      <div class="legal-item fu" style="--fd:900ms"><div class="legal-check">🛡️</div><p><strong>Datenschutz beachten</strong> — DSGVO gilt auch für KI-Eingaben</p></div>
-      <div class="legal-item fu" style="--fd:1000ms"><div class="legal-check">👤</div><p><strong>Der Mensch bleibt verantwortlich</strong> — KI ist ein Werkzeug, kein Entscheider</p></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══ FINAL QUOTE ═══════════════════════════════════════════ -->
-<section class="interstitial bg0" style="min-height:55vh">
-  <div class="atmo atmo-center" style="position:absolute"></div>
-  <div class="s-inner">
-    <p class="big-quote split-words">„Das Teuerste an KI ist, <em>sie nicht zu nutzen.</em>"</p>
-  </div>
-</section>
-
-
-<!-- ══ BLOCK 9 — ACTION-PLAN ════════════════════════════════ -->
-<section id="s-close" class="bg1">
-  <div class="block-bg-num">09</div>
-  <div class="section-bg">
-    <img class="bg-img" src="https://tempfile.aiquickdraw.com/h/89e936f7ede9f24ac1a93cbcd8cfc173_1776605858.png" alt="" />
-  </div>
-  <div class="section-overlay"></div>
-  <div class="atmo atmo-left" style="position:absolute"></div>
-  <div class="atmo atmo-right" style="position:absolute"></div>
-  <div class="s-inner">
-    <div class="time-badge fu">11:55 – 12:00 · 5 Min</div>
-    <p class="eyebrow fu" style="--fd:100ms">Block 9 · Abschluss</p>
-    <h2 class="section-title split-words">
-      Dein Plan.<br><span class="gradient-text">Ab morgen.</span>
-    </h2>
-    <p class="body-text fu" style="--fd:400ms">Jeder verlässt den Raum mit einem <strong>konkreten Plan</strong> — das sorgt für echten Transfer.</p>
-    <div class="action-grid">
-      <div class="action-card si" style="--fd:100ms"><div class="action-num">Schritt 1</div><h4>Meine 3 KI-Anwendungen</h4><p>Welche 3 konkreten Aufgaben werde ich ab morgen mit KI lösen?</p></div>
-      <div class="action-card si" style="--fd:200ms"><div class="action-num">Schritt 2</div><h4>Erwartete Zeitersparnis</h4><p>Wieviel Zeit spare ich pro Woche? Was wird qualitativ besser?</p></div>
-      <div class="action-card si" style="--fd:300ms"><div class="action-num">Schritt 3</div><h4>Erster Umsetzungstermin</h4><p>Wann genau probiere ich es das erste Mal aus? Datum &amp; Uhrzeit festlegen.</p></div>
-      <div class="action-card si hi" style="--fd:400ms"><div class="action-num">Schritt 4</div><h4>Was ich noch ausprobieren will</h4><p>Welche Tools, Modelle oder Anwendungen interessieren mich für die Zukunft?</p></div>
-    </div>
-    <div class="s-divider fu" style="--fd:600ms; margin-top:52px"></div>
-    <p class="big-quote fu" style="--fd:700ms; margin-top:48px; font-style:normal; color:rgba(255,255,255,0.82)">
-      „Sie haben heute den Grundstein gelegt. Der Rest liegt bei Ihnen —<br>
-      aber Sie haben jetzt <em>alles, was Sie brauchen.</em>"
-    </p>
-    <div class="closing-contacts fu" style="--fd:900ms">
-      <div class="c-contact"><div class="c-lbl">Trainer</div><div class="c-val">Philipp Mick</div></div>
-      <div class="c-contact"><div class="c-lbl">E-Mail</div><div class="c-val">info@luminaire.training</div></div>
-      <div class="c-contact"><div class="c-lbl">Telefon</div><div class="c-val">+49 179 1327191</div></div>
-      <div class="c-contact"><div class="c-lbl">Website</div><div class="c-val">www.luminaire.training</div></div>
-    </div>
-    <div class="fu" style="--fd:1100ms; margin-top:52px">
-      <a href="/" style="display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:13px;transition:color 0.2s" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">← Zurück zur luminAIre Website</a>
-    </div>
-  </div>
-</section>
+</div><!-- end h-sticky -->
+</div><!-- end h-presentation -->
 
 
 <script>
-/* ── SCROLL PROGRESS + NAV ─────────────────────────── */
-const fill = document.getElementById('scroll-fill');
-const nav  = document.getElementById('nav');
-window.addEventListener('scroll', onScroll, { passive: true });
-function onScroll() {
-  const y     = window.scrollY;
-  const total = document.body.scrollHeight - window.innerHeight;
-  fill.style.width = (y / total * 100) + '%';
-  nav.classList.toggle('solid', y > 60);
-  tickTunnels();   // RAF-batched — no scroll lag
-  tickParallax();
-}
+const TOTAL = 26;
 
-/* ── NAV BUTTONS ──────────────────────────────────── */
-document.querySelectorAll('.nav-btn[data-target]').forEach(btn =>
-  btn.addEventListener('click', () =>
-    document.getElementById(btn.dataset.target)?.scrollIntoView({ behavior: 'smooth' })
-  )
-);
+const presentation = document.getElementById('h-presentation');
+const track        = document.getElementById('h-track');
+const scrollFill   = document.getElementById('scroll-fill');
+const hFill        = document.getElementById('h-progress-fill');
+const slideNumEl   = document.getElementById('slide-num');
+const scrollHint   = document.getElementById('scroll-hint');
+const flash        = document.getElementById('transition-flash');
+const nav          = document.getElementById('nav');
+const slides       = [...track.children];
 
-/* ── SPLIT HEADLINES INTO WORDS ───────────────────── */
-function splitWords(el) {
-  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-  const nodes = [];
-  let n;
-  while ((n = walker.nextNode())) nodes.push(n);
-  let idx = 0;
-  nodes.forEach(tn => {
-    const parts = tn.textContent.split(/(\s+)/);
-    const frag  = document.createDocumentFragment();
-    parts.forEach(part => {
-      if (/^\s+$/.test(part) || part === '') {
-        frag.appendChild(document.createTextNode(part));
-      } else {
-        const s = document.createElement('span');
-        s.className = 'w';
-        s.style.setProperty('--wi', idx++);
-        s.textContent = part;
-        frag.appendChild(s);
-      }
-    });
-    tn.replaceWith(frag);
+let currentIdx = -1, lastFlashed = -1, rafPending = false;
+
+/* ── VIDEO AUTOPLAY ── */
+function tryPlay(v) { if (v) v.play().catch(()=>{}); }
+['hero-video','workshop-video','workshop-video2'].forEach(id => {
+  const v = document.getElementById(id);
+  if (!v) return;
+  v.loop = true; v.playbackRate = 0.75;
+  v.addEventListener('loadeddata', () => {
+    v.classList.add('loaded');
+    const fb = id === 'hero-video'    ? document.getElementById('hero-fallback')
+             : id === 'workshop-video'? document.getElementById('workshop-fallback')
+             : null;
+    if (fb) fb.style.opacity = '0';
+    tryPlay(v);
   });
-}
-document.querySelectorAll('.split-words').forEach(splitWords);
-
-/* ── INTERSECTION OBSERVER — animate in ──────────── */
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    e.target.classList.add('in');
-    io.unobserve(e.target);
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-document.querySelectorAll('.split-words, .fu, .si, .fi, .eyebrow').forEach(el => io.observe(el));
-
-/* ── COUNTER ANIMATION ────────────────────────────── */
-function animCount(el, to, dur = 1200) {
-  const t0 = performance.now();
-  const tick = now => {
-    const p = Math.min((now - t0) / dur, 1);
-    el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * to);
-    if (p < 1) requestAnimationFrame(tick);
-    else el.textContent = to;
-  };
-  requestAnimationFrame(tick);
-}
-const cio = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    animCount(e.target, +e.target.dataset.countTo);
-    cio.unobserve(e.target);
-  });
-}, { threshold: 0.5 });
-document.querySelectorAll('[data-count-to]').forEach(el => cio.observe(el));
-
-/* ── SCROLL TUNNELS (Apple-style) ────────────────── */
-const tunnels = [];
-
-document.querySelectorAll('.scroll-tunnel').forEach(tunnel => {
-  const video   = tunnel.querySelector('video');
-  const steps   = [...tunnel.querySelectorAll('.scene-step')];
-  const dots    = [...(tunnel.querySelector('.tunnel-progress')?.children || [])];
-  const hint    = tunnel.querySelector('.scene-scroll-hint');
-
-  // Videos loop continuously — no scrubbing (scrubbing causes lag)
-  if (video) {
-    video.loop = true;
-    video.playbackRate = 0.75; // slow, dreamy pace
-    const fallback = tunnel.querySelector('.tunnel-fallback');
-    const tryPlay = () => video.play().catch(() => {});
-    video.addEventListener('loadeddata', () => {
-      video.classList.add('loaded');
-      if (fallback) { fallback.style.transition = 'opacity 1.2s ease'; fallback.style.opacity = '0'; }
-      tryPlay();
-    });
-    // Autoplay on mobile requires user gesture — fallback stays visible
-    document.addEventListener('click', tryPlay, { once: true });
-    document.addEventListener('touchstart', tryPlay, { once: true });
-  }
-
-  tunnels.push({ tunnel, steps, dots, hint });
+  document.addEventListener('click',      () => tryPlay(v), { once: true });
+  document.addEventListener('touchstart', () => tryPlay(v), { once: true });
 });
 
-// Scroll-driven text steps — batched in RAF, no video scrubbing
-let tunnelRaf = false;
-function tickTunnels() {
-  if (tunnelRaf) return;
-  tunnelRaf = true;
-  requestAnimationFrame(() => {
-    tunnelRaf = false;
-    tunnels.forEach(({ tunnel, steps, dots, hint }) => {
-      const rect     = tunnel.getBoundingClientRect();
-      const scrolled = -rect.top;
-      const total    = tunnel.offsetHeight - window.innerHeight;
-      const progress = total > 0 ? Math.max(0, Math.min(1, scrolled / total)) : 0;
+/* ── SCROLL HANDLER ── */
+window.addEventListener('scroll', () => {
+  if (!rafPending) { rafPending = true; requestAnimationFrame(update); }
+}, { passive: true });
 
-      let activeStep = 0;
-      steps.forEach((step, i) => {
-        const from = parseFloat(step.dataset.from);
-        const to   = parseFloat(step.dataset.to);
-        if (progress >= from && progress < to) {
-          step.classList.add('visible');
-          step.classList.remove('past');
-          activeStep = i;
-        } else if (progress >= to) {
-          step.classList.remove('visible');
-          step.classList.add('past');
-        } else {
-          step.classList.remove('visible', 'past');
-        }
-      });
+function update() {
+  rafPending = false;
+  const y      = window.scrollY;
+  const pTop   = presentation.offsetTop;
+  const vH     = window.innerHeight;
+  const rel    = y - pTop;
+  const maxS   = presentation.offsetHeight - vH;
+  const prog   = Math.max(0, Math.min(1, rel / maxS));
+  const slideF = prog * (TOTAL - 1);
+  const idx    = Math.min(TOTAL - 1, Math.floor(slideF + 0.5));
 
-      dots.forEach((d, i) => d.classList.toggle('active', i === activeStep));
-      if (hint) hint.classList.toggle('hidden', progress > 0.05);
-    });
+  track.style.transform = `translateX(${-slideF * 100}vw)`;
+
+  /* Dramatic brightness gap: inactive slides go very dark */
+  slides.forEach((s, i) => {
+    const dist = Math.abs(slideF - i);
+    const a    = Math.max(0, 1 - dist);
+    s.style.transform = `scale(${0.93 + a * 0.07})`;
+    s.style.filter    = `brightness(${0.28 + a * 0.72}) saturate(${0.7 + a * 0.3})`;
   });
+
+  /* Flash on slide boundary */
+  const roundIdx = Math.round(slideF);
+  if (roundIdx !== lastFlashed && Math.abs(slideF - roundIdx) < 0.11) {
+    lastFlashed = roundIdx;
+    flash.classList.remove('flash');
+    void flash.offsetWidth;
+    flash.classList.add('flash');
+  }
+
+  if (idx !== currentIdx) { currentIdx = idx; activateSlide(idx); }
+
+  slideNumEl.textContent = String(idx + 1).padStart(2, '0');
+  hFill.style.width   = (prog * 100) + '%';
+  scrollFill.style.width = (y / (document.body.scrollHeight - vH) * 100) + '%';
+  nav.classList.toggle('solid', y > 60);
+  scrollHint.classList.toggle('hidden', y > vH * 0.28);
 }
 
-tickTunnels(); // init state on load
-
-/* ── PARALLAX IMAGE BACKGROUNDS ──────────────────── */
-let ticking = false;
-function tickParallax() {
-  if (ticking) return;
-  ticking = true;
-  requestAnimationFrame(() => {
-    document.querySelectorAll('.bg-img').forEach(img => {
-      const sec = img.closest('section');
-      if (!sec) return;
-      const rect  = sec.getBoundingClientRect();
-      const rel   = (window.innerHeight / 2 - rect.top - rect.height / 2);
-      img.style.transform = `scale(1.08) translateY(${rel * 0.06}px)`;
-    });
-    ticking = false;
+/* ── ACTIVATION ── */
+function activateSlide(idx) {
+  const slide = slides[idx];
+  if (!slide) return;
+  slide.querySelectorAll('.anim, .anim-l, .anim-s').forEach((el, i) => {
+    if (!el.style.transitionDelay) el.style.transitionDelay = `${i * 72}ms`;
+    el.classList.add('in');
   });
+  const next = slides[idx + 1];
+  if (next) next.querySelectorAll('.anim, .anim-l, .anim-s').forEach(el => el.classList.remove('in'));
 }
 
-/* ── CUSTOM CURSOR ─────────────────────────────────────── */
+/* ── SCROLL TO SLIDE ── */
+function scrollToSlide(idx) {
+  idx = Math.max(0, Math.min(TOTAL - 1, idx));
+  const maxS = presentation.offsetHeight - window.innerHeight;
+  window.scrollTo({ top: presentation.offsetTop + (idx / (TOTAL - 1)) * maxS, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.nav-btn[data-slide]').forEach(btn =>
+  btn.addEventListener('click', () => scrollToSlide(+btn.dataset.slide))
+);
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', e => {
+  if      (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); scrollToSlide(currentIdx + 1); }
+  else if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); scrollToSlide(currentIdx - 1); }
+});
+
+/* ── TOUCH ── */
+let tY = 0;
+document.addEventListener('touchstart', e => { tY = e.touches[0].clientY; },        { passive: true });
+document.addEventListener('touchend',   e => { const dy = tY - e.changedTouches[0].clientY; if (Math.abs(dy) > 45) scrollToSlide(currentIdx + (dy > 0 ? 1 : -1)); }, { passive: true });
+
+/* ── CURSOR ── */
 (function() {
-  const dot  = document.getElementById('cursor-dot');
+  const dot = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
   if (!dot || !ring) return;
-
-  let mx = -200, my = -200; // start off-screen
-  let rx = -200, ry = -200; // ring lagged position
-
-  // Snap dot instantly, lag ring slightly
-  function moveCursor(e) {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-  }
-
-  let rafId;
-  function lagRing() {
-    rx += (mx - rx) * 0.14;
-    ry += (my - ry) * 0.14;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    rafId = requestAnimationFrame(lagRing);
-  }
-  lagRing();
-
-  document.addEventListener('mousemove', moveCursor, { passive: true });
-
-  // Hide when leaving window
-  document.addEventListener('mouseleave', () => {
-    dot.style.opacity  = '0';
-    ring.style.opacity = '0';
-  });
-  document.addEventListener('mouseenter', () => {
-    dot.style.opacity  = '1';
-    ring.style.opacity = '1';
-  });
-
-  // Hover detection — react to interactive elements
-  const interactiveSelector = 'a, button, .card, .rule-card, .model-card, .legal-item, .eu-card, .action-card, .ht-item, .nav-btn, .nav-back, .pill';
-  document.querySelectorAll(interactiveSelector).forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-  });
-
-  // Also handle dynamically (e.g. after animations reveal cards)
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest(interactiveSelector)) {
-      document.body.classList.add('cursor-hover');
-    } else {
-      document.body.classList.remove('cursor-hover');
-    }
-  });
-
-  // Click feedback
+  let mx=-200,my=-200,rx=-200,ry=-200;
+  const move = e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; };
+  const lag  = () => { rx+=(mx-rx)*0.13; ry+=(my-ry)*0.13; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(lag); };
+  lag();
+  document.addEventListener('mousemove',  move, { passive: true });
+  document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
+  const sel = 'a,button,.s-card,.baro-item,.ag-item,.nav-btn,.nav-back,.s-item,.level-bg,.canvas-field,.formula-item,.s-pill';
+  document.addEventListener('mouseover', e => document.body.classList.toggle('cursor-hover', !!e.target.closest(sel)));
   document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
   document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-click'));
 })();
+
+/* ── INIT ── */
+activateSlide(0);
+update();
 </script>
 </body>
 </html>
