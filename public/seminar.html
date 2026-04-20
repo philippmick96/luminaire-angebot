@@ -73,7 +73,7 @@
       width: 100vw; height: 100vh; flex-shrink: 0;
       position: relative; display: flex;
       align-items: center; justify-content: center;
-      overflow: hidden; will-change: transform, filter;
+      overflow: hidden; contain: layout style paint;
     }
 
     /* ── SLIDE BACKGROUNDS ── */
@@ -264,11 +264,13 @@
 
     /* ── SLIDE TRANSITION EFFECT ── */
     .h-slide {
-      transition: filter 0.72s cubic-bezier(0.25,0.46,0.45,0.94),
+      transition: opacity 0.72s cubic-bezier(0.25,0.46,0.45,0.94),
                   transform 0.72s cubic-bezier(0.25,0.46,0.45,0.94);
+      opacity: 0.22;
+      transform: scale(0.96);
     }
     .h-slide.is-active {
-      filter: brightness(1) saturate(1) !important;
+      opacity: 1 !important;
       transform: scale(1) !important;
     }
 
@@ -303,12 +305,10 @@
     .s-grid.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
     .s-card {
-      background: rgba(255,255,255,0.055);
+      background: rgba(255,255,255,0.075);
       border: 1px solid rgba(255,255,255,0.11);
       border-radius: 20px; padding: 28px 26px;
       text-align: left;
-      backdrop-filter: blur(12px) saturate(130%);
-      -webkit-backdrop-filter: blur(12px) saturate(130%);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.3);
       transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
     }
@@ -357,11 +357,9 @@
     }
     .s-item {
       display: flex; align-items: flex-start; gap: 18px;
-      background: rgba(255,255,255,0.045);
+      background: rgba(255,255,255,0.07);
       border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
       padding: 16px 22px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
       transition: border-color 0.25s, background 0.25s;
     }
@@ -1278,15 +1276,15 @@ function goToSlide(idx) {
   /* Move the track — CSS transition handles the animation */
   track.style.transform = `translateX(${-idx * 100}vw)`;
 
-  /* Active / inactive slide styling */
+  /* Active / inactive slide styling — opacity is GPU-composited, no repaint */
   slides.forEach((s, i) => {
     s.classList.toggle('is-active', i === idx);
     if (i !== idx) {
-      s.style.transform = 'scale(0.93)';
-      s.style.filter    = 'brightness(0.28) saturate(0.7)';
-    } else {
+      s.style.opacity   = '';
       s.style.transform = '';
-      s.style.filter    = '';
+    } else {
+      s.style.opacity   = '';
+      s.style.transform = '';
     }
   });
 
@@ -1378,9 +1376,6 @@ document.querySelectorAll('.nav-btn[data-slide]').forEach(btn =>
 })();
 
 /* ── INIT ── */
-slides.forEach((s, i) => {
-  if (i !== 0) { s.style.transform = 'scale(0.93)'; s.style.filter = 'brightness(0.28) saturate(0.7)'; }
-});
 slides[0].classList.add('is-active');
 activateSlide(0);
 updateUI();
