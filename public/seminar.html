@@ -22,12 +22,9 @@
     #scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 2000; }
     #scroll-fill {
       height: 100%; width: 0%;
-      background: linear-gradient(90deg, #6d28d9, #8b5cf6, #c4b5fd, #8b5cf6, #6d28d9);
-      background-size: 200% 100%;
-      animation: shimmer-bar 3s linear infinite;
+      background: linear-gradient(90deg, #4f46e5, #6366f1, #818cf8);
       transition: width 0.1s linear;
     }
-    @keyframes shimmer-bar { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     /* ── NAV ── */
     #nav {
@@ -37,12 +34,12 @@
       transition: background 0.5s, backdrop-filter 0.5s;
     }
     #nav.solid {
-      background: rgba(0,0,0,0.78);
-      backdrop-filter: blur(24px) saturate(180%);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(7,7,13,0.85);
+      backdrop-filter: blur(20px) saturate(160%);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .nav-logo { font-size: 18px; font-weight: 800; color: #f5f5f7; text-decoration: none; letter-spacing: -0.03em; }
-    .nav-logo span { color: #a78bfa; }
+    .nav-logo span { color: #818cf8; }
     .nav-center { display: flex; gap: 0; }
     .nav-btn {
       background: none; border: none; color: rgba(255,255,255,0.48);
@@ -53,12 +50,12 @@
     .nav-btn:hover { color: #f5f5f7; background: rgba(255,255,255,0.08); }
     .nav-back {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.35);
-      color: rgba(167,139,250,0.9); font-size: 12px; font-weight: 600;
+      background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.28);
+      color: rgba(129,140,248,0.88); font-size: 12px; font-weight: 600;
       padding: 7px 18px; border-radius: 20px; text-decoration: none;
       transition: all 0.25s; cursor: none; letter-spacing: -0.01em;
     }
-    .nav-back:hover { background: rgba(124,58,237,0.22); color: #d8b4fe; }
+    .nav-back:hover { background: rgba(99,102,241,0.18); color: #a5b4fc; }
 
     /* ── HORIZONTAL PRESENTATION ── */
     .h-presentation { position: fixed; inset: 0; z-index: 1; }
@@ -76,86 +73,56 @@
       overflow: hidden; contain: layout style paint;
     }
 
-    /* ── SLIDE BACKGROUNDS ── */
-    .s-bg-video {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; z-index: 0; opacity: 0; transition: opacity 2s ease;
+    /* ── SLIDE BACKGROUNDS — CSS only, no images ── */
+    .h-slide {
+      background: #07070d;
     }
-    .s-bg-video.loaded { opacity: 1; }
-    .s-bg-img {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; z-index: 0; transform: scale(1.05);
+    /* Subtle dot grid on all slides */
+    .h-slide::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
     }
-
-    /* ── CINEMATIC OVERLAYS — images breathe at top, text protected at bottom ── */
-    .s-overlay {
-      position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background:
-        linear-gradient(to top,
-          rgba(0,0,0,0.97) 0%,
-          rgba(0,0,0,0.65) 30%,
-          rgba(0,0,0,0.18) 60%,
-          rgba(0,0,0,0.04) 100%
-        );
-    }
-    .s-overlay.center {
-      background:
-        radial-gradient(ellipse 85% 80% at 50% 52%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.72) 100%),
-        linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 35%);
-    }
-    .s-overlay.heavy {
-      background:
-        linear-gradient(to top,
-          rgba(0,0,0,0.98) 0%,
-          rgba(0,0,0,0.80) 35%,
-          rgba(0,0,0,0.42) 65%,
-          rgba(0,0,0,0.12) 100%
-        );
-    }
-    .s-overlay.side {
-      background:
-        linear-gradient(to right,
-          rgba(0,0,0,0.96) 0%,
-          rgba(0,0,0,0.72) 38%,
-          rgba(0,0,0,0.22) 65%,
-          rgba(0,0,0,0.0) 100%
-        );
-    }
-
-    /* ── RICH CSS BACKGROUNDS — depth via layered radial glows ── */
-    .bg-subtle {
-      background:
-        radial-gradient(ellipse 80% 60% at 15% 85%, rgba(109,40,217,0.32) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 80% at 85% 15%, rgba(79,36,172,0.22) 0%, transparent 55%),
-        radial-gradient(ellipse 100% 50% at 50% 50%, rgba(124,58,237,0.07) 0%, transparent 70%),
-        linear-gradient(180deg, #010109 0%, #020314 100%);
-    }
-    .bg-subtle2 {
-      background:
-        radial-gradient(ellipse 100% 50% at 50% 0%, rgba(109,40,217,0.26) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 100% at 90% 90%, rgba(139,92,246,0.20) 0%, transparent 55%),
-        radial-gradient(ellipse 80% 50% at 10% 50%, rgba(99,40,210,0.14) 0%, transparent 60%),
-        linear-gradient(180deg, #020210 0%, #040318 100%);
-    }
-    .bg-void {
-      background:
-        radial-gradient(ellipse 70% 55% at 72% 28%, rgba(99,40,210,0.28) 0%, transparent 55%),
-        radial-gradient(ellipse 55% 75% at 25% 72%, rgba(79,36,172,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 65%),
-        linear-gradient(135deg, #01010d 0%, #02020f 100%);
-    }
-    .bg-warm {
-      background:
-        radial-gradient(ellipse 90% 65% at 50% 25%, rgba(124,58,237,0.28) 0%, transparent 55%),
-        radial-gradient(ellipse 55% 85% at 8% 85%, rgba(167,139,250,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 45% 55% at 92% 75%, rgba(99,40,210,0.16) 0%, transparent 55%),
-        linear-gradient(180deg, #060214 0%, #040110 100%);
-    }
-    /* Edge vignette on all slides */
+    /* Simple radial fade vignette */
     .h-slide::after {
       content: '';
-      position: absolute; inset: 0; z-index: 3; pointer-events: none;
-      background: radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%);
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(7,7,13,0.6) 100%);
+    }
+
+    /* Hero slide */
+    #slide-0 { background: #07070d; }
+    #slide-0::before {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Section break slides */
+    .slide-section::before {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px),
+        radial-gradient(ellipse 55% 55% at 88% 12%, rgba(99,102,241,0.07) 0%, transparent 60%);
+      background-size: 32px 32px, 100% 100%;
+    }
+
+    /* Alternate slides: glow bottom-left */
+    .slide-alt::before {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px),
+        radial-gradient(ellipse 50% 50% at 10% 88%, rgba(99,102,241,0.06) 0%, transparent 60%);
+      background-size: 32px 32px, 100% 100%;
+    }
+
+    /* Hero glow element */
+    .hero-glow {
+      position: absolute; z-index: 1; pointer-events: none;
+      width: 900px; height: 900px; border-radius: 50%;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, rgba(99,102,241,0.04) 35%, transparent 65%);
+      animation: hero-glow-pulse 6s ease-in-out infinite;
+    }
+    @keyframes hero-glow-pulse {
+      0%,100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 1; transform: translate(-50%,-50%) scale(1.06); }
     }
 
     /* ── CONTENT ── */
@@ -170,8 +137,9 @@
 
     /* ── TYPOGRAPHY ── */
     .s-eyebrow {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-      color: rgba(167,139,250,0.88); margin-bottom: 22px; display: block;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #818cf8; margin-bottom: 20px; display: block;
+      opacity: 0.9;
     }
     /* Animated gradient title accent */
     .grad {
@@ -190,11 +158,7 @@
     .s-title {
       font-size: clamp(44px, 5.8vw, 88px);
       font-weight: 800; line-height: 1.0; letter-spacing: -0.04em;
-      color: #ffffff; margin-bottom: 24px;
-      text-shadow:
-        0 0 120px rgba(124,58,237,0.22),
-        0 2px 20px rgba(0,0,0,1),
-        0 8px 60px rgba(0,0,0,0.95);
+      color: #f0f0f5; margin-bottom: 24px;
     }
     .s-title.large {
       font-size: clamp(64px, 8.8vw, 124px);
@@ -209,30 +173,29 @@
       line-height: 0.95; letter-spacing: -0.043em;
     }
     .s-subtitle {
-      font-size: clamp(17px, 1.9vw, 23px);
-      font-weight: 400; color: rgba(255,255,255,0.68);
-      line-height: 1.62; max-width: 680px; margin: 0 auto 38px;
-      letter-spacing: -0.012em;
-      text-shadow: 0 2px 24px rgba(0,0,0,0.9);
+      font-size: clamp(16px, 1.7vw, 21px);
+      font-weight: 400; color: rgba(255,255,255,0.55);
+      line-height: 1.65; max-width: 660px; margin: 0 auto 36px;
+      letter-spacing: -0.01em;
     }
-    .s-subtitle strong { color: #f0f0f2; font-weight: 600; }
+    .s-subtitle strong { color: rgba(255,255,255,0.88); font-weight: 500; }
 
     /* ── SLIDE COUNTER ── */
     .h-slide-counter {
       position: absolute; bottom: 30px; right: 44px; z-index: 10;
-      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.22);
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.18);
       letter-spacing: 0.08em;
     }
-    #slide-num { color: rgba(167,139,250,0.75); }
+    #slide-num { color: #818cf8; }
     .h-progress-bar {
       position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 10;
       background: rgba(255,255,255,0.05);
     }
     #h-progress-fill {
       height: 100%; width: 0%;
-      background: linear-gradient(90deg, #6d28d9, #8b5cf6, #c4b5fd);
+      background: linear-gradient(90deg, #4f46e5, #818cf8);
       transition: width 0.1s linear;
-      box-shadow: 0 0 8px rgba(139,92,246,0.6);
+      box-shadow: 0 0 6px rgba(99,102,241,0.5);
     }
     .h-scroll-hint {
       position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
@@ -305,50 +268,40 @@
     .s-grid.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
     .s-card {
-      background: rgba(255,255,255,0.075);
-      border: 1px solid rgba(255,255,255,0.11);
-      border-radius: 20px; padding: 28px 26px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 24px 22px;
       text-align: left;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.3);
-      transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
     }
     .s-card:hover {
-      border-color: rgba(167,139,250,0.42);
-      background: rgba(255,255,255,0.08);
-      transform: translateY(-3px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 44px rgba(0,0,0,0.5);
+      border-color: rgba(129,140,248,0.32);
+      background: rgba(255,255,255,0.065);
+      transform: translateY(-2px);
     }
     .s-card.hi {
-      background: rgba(109,40,217,0.14);
-      border-color: rgba(139,92,246,0.42);
-      box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 0 0 rgba(109,40,217,0.2);
-      animation: card-breathe 5s ease-in-out infinite;
+      background: rgba(99,102,241,0.08);
+      border-color: rgba(99,102,241,0.28);
+      box-shadow: inset 0 1px 0 rgba(129,140,248,0.1);
     }
     .s-card.hi:hover {
-      background: rgba(109,40,217,0.22);
-      border-color: rgba(139,92,246,0.6);
-    }
-    @keyframes card-breathe {
-      0%,100% { box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 30px rgba(109,40,217,0.08); }
-      50%      { box-shadow: inset 0 1px 0 rgba(196,181,253,0.18), 0 0 50px rgba(109,40,217,0.22); }
+      background: rgba(99,102,241,0.14);
+      border-color: rgba(99,102,241,0.45);
     }
     .s-card h3 {
-      font-size: 15px; font-weight: 700; color: #f5f5f7;
-      margin-bottom: 8px; line-height: 1.28; letter-spacing: -0.02em;
+      font-size: 14.5px; font-weight: 600; color: #f0f0f5;
+      margin-bottom: 7px; line-height: 1.3; letter-spacing: -0.018em;
     }
     .s-card p {
-      font-size: 13px; color: rgba(255,255,255,0.62);
-      line-height: 1.65; letter-spacing: -0.01em;
+      font-size: 13px; color: rgba(255,255,255,0.55);
+      line-height: 1.62; letter-spacing: -0.01em;
     }
     .s-card p strong { color: rgba(255,255,255,0.9); }
-    .card-tag {
-      display: inline-block; font-size: 9px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: rgba(167,139,250,0.9); margin-bottom: 11px;
-    }
-    .card-tag.red   { color: rgba(248,113,113,0.95); }
-    .card-tag.amber { color: rgba(251,191,36,0.95); }
-    .card-tag.green { color: rgba(52,211,153,0.95); }
+    .card-tag { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(129,140,248,0.85); margin-bottom: 10px; }
+    .card-tag.red   { color: rgba(248,113,113,0.9); }
+    .card-tag.amber { color: rgba(251,191,36,0.9); }
+    .card-tag.green { color: rgba(52,211,153,0.9); }
 
     /* ── LIST ITEMS ── */
     .s-list {
@@ -356,19 +309,19 @@
       width: 100%; max-width: 720px; margin: 26px auto 0; text-align: left;
     }
     .s-item {
-      display: flex; align-items: flex-start; gap: 18px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.09); border-radius: 16px;
-      padding: 16px 22px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-      transition: border-color 0.25s, background 0.25s;
+      display: flex; align-items: flex-start; gap: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07); border-radius: 10px;
+      padding: 14px 18px;
+      box-shadow: none;
+      transition: border-color 0.22s, background 0.22s;
     }
-    .s-item:hover { border-color: rgba(139,92,246,0.3); background: rgba(255,255,255,0.065); }
+    .s-item:hover { border-color: rgba(99,102,241,0.28); background: rgba(255,255,255,0.055); }
     .s-item-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: radial-gradient(circle, #c4b5fd, #7c3aed);
-      box-shadow: 0 0 10px rgba(124,58,237,0.7);
-      flex-shrink: 0; margin-top: 5px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #6366f1;
+      box-shadow: 0 0 8px rgba(99,102,241,0.5);
+      flex-shrink: 0; margin-top: 7px;
     }
     .s-item-text { font-size: 14.5px; color: rgba(255,255,255,0.78); line-height: 1.52; letter-spacing: -0.012em; }
     .s-item-text strong { color: #f5f5f7; font-weight: 600; }
@@ -384,17 +337,15 @@
 
     /* ── TIME BADGE ── */
     .time-badge {
-      display: inline-flex; align-items: center; gap: 9px;
-      background: rgba(109,40,217,0.12); border: 1px solid rgba(109,40,217,0.35);
-      border-radius: 30px; padding: 6px 20px; font-size: 11px; font-weight: 600;
-      color: rgba(167,139,250,0.92); margin-bottom: 22px; letter-spacing: 0.02em;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      border: 1px solid rgba(129,140,248,0.25);
+      border-radius: 6px; padding: 4px 14px;
+      font-size: 10.5px; font-weight: 600;
+      color: rgba(129,140,248,0.8); margin-bottom: 20px;
+      letter-spacing: 0.04em; text-transform: uppercase;
     }
-    .time-badge::before {
-      content: ''; width: 6px; height: 6px; border-radius: 50%;
-      background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.8);
-      animation: pdot 2.2s ease-in-out infinite;
-    }
-    @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.6)} }
+    .time-badge::before { display: none; }
 
     /* ── PROMPT FORMULA ── */
     .formula-row {
@@ -402,121 +353,108 @@
       flex-wrap: wrap; justify-content: center; margin: 32px 0;
     }
     .formula-item {
-      background: rgba(109,40,217,0.12);
-      border: 1px solid rgba(109,40,217,0.5); border-radius: 16px;
-      padding: 18px 30px; font-size: 16px; font-weight: 700;
-      color: #d8b4fe; white-space: nowrap; letter-spacing: -0.015em;
-      box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 28px rgba(109,40,217,0.12);
-      transition: box-shadow 0.3s, border-color 0.3s;
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.3); border-radius: 10px;
+      padding: 14px 24px; font-size: 15px; font-weight: 600;
+      color: rgba(129,140,248,0.95); white-space: nowrap; letter-spacing: -0.01em;
+      transition: border-color 0.25s;
     }
-    .formula-item:hover {
-      border-color: rgba(139,92,246,0.75);
-      box-shadow: inset 0 1px 0 rgba(196,181,253,0.18), 0 0 44px rgba(109,40,217,0.28);
-    }
-    .formula-plus { font-size: 26px; color: rgba(109,40,217,0.55); padding: 0 16px; font-weight: 300; }
+    .formula-item:hover { border-color: rgba(99,102,241,0.55); }
+    .formula-plus { font-size: 22px; color: rgba(99,102,241,0.4); padding: 0 12px; font-weight: 300; }
 
     .prompt-box {
-      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px; padding: 24px 28px; text-align: left;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 20px 24px; text-align: left;
       max-width: 760px; margin: 0 auto;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
     }
-    .prompt-box.bad  { border-color: rgba(239,68,68,0.28); }
-    .prompt-box.good { border-color: rgba(109,40,217,0.5); box-shadow: inset 0 1px 0 rgba(196,181,253,0.1), 0 0 30px rgba(109,40,217,0.1); }
-    .prompt-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 11px; }
-    .prompt-label.bad  { color: rgba(248,113,113,0.82); }
-    .prompt-label.good { color: rgba(167,139,250,0.92); }
-    .prompt-text { font-size: 13.5px; color: rgba(255,255,255,0.72); line-height: 1.72; font-style: italic; letter-spacing: -0.01em; }
-    .prompt-result { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.07); }
-    .prompt-result-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
-    .prompt-result-lbl.bad  { color: rgba(248,113,113,0.62); }
-    .prompt-result-lbl.good { color: rgba(167,139,250,0.82); }
-    .prompt-result-text { font-size: 12.5px; color: rgba(255,255,255,0.48); letter-spacing: -0.01em; }
+    .prompt-box.bad  { border-color: rgba(239,68,68,0.22); background: rgba(239,68,68,0.03); }
+    .prompt-box.good { border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.05); }
+    .prompt-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; }
+    .prompt-label.bad  { color: rgba(248,113,113,0.75); }
+    .prompt-label.good { color: rgba(129,140,248,0.85); }
+    .prompt-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.72; font-style: italic; letter-spacing: -0.01em; }
+    .prompt-result { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .prompt-result-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+    .prompt-result-lbl.bad  { color: rgba(248,113,113,0.6); }
+    .prompt-result-lbl.good { color: rgba(129,140,248,0.75); }
+    .prompt-result-text { font-size: 12px; color: rgba(255,255,255,0.42); }
 
     /* ── AGENDA ── */
     .agenda-compact { display: flex; flex-direction: column; gap: 5px; max-width: 700px; margin: 22px auto 0; text-align: left; }
     .ag-item {
-      display: flex; align-items: center; gap: 16px; padding: 11px 18px;
-      background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.075);
-      border-radius: 14px; transition: border-color 0.25s, background 0.25s;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      display: flex; align-items: center; gap: 16px; padding: 10px 16px;
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px; transition: border-color 0.22s, background 0.22s;
     }
-    .ag-item:hover { border-color: rgba(139,92,246,0.25); background: rgba(255,255,255,0.055); }
-    .ag-num { font-size: 9px; font-weight: 700; color: rgba(109,40,217,0.7); min-width: 54px; letter-spacing: 0.06em; text-transform: uppercase; }
-    .ag-time-sm { font-size: 10.5px; font-weight: 700; color: rgba(167,139,250,0.88); min-width: 42px; }
-    .ag-label { font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.80); flex: 1; letter-spacing: -0.01em; }
-    .ag-dur { font-size: 10px; color: rgba(255,255,255,0.22); }
-    .ag-pause { background: rgba(255,255,255,0.018); }
+    .ag-item:hover { border-color: rgba(99,102,241,0.22); background: rgba(255,255,255,0.045); }
+    .ag-num { font-size: 9px; font-weight: 700; color: rgba(99,102,241,0.65); min-width: 54px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .ag-time-sm { font-size: 10.5px; font-weight: 600; color: rgba(129,140,248,0.8); min-width: 42px; }
+    .ag-label { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.76); flex: 1; }
+    .ag-dur { font-size: 10px; color: rgba(255,255,255,0.2); }
+    .ag-pause { background: rgba(255,255,255,0.015); opacity: 0.6; }
 
     /* ── BAROMETER ── */
     .barometer { display: flex; flex-direction: column; gap: 10px; max-width: 640px; margin: 28px auto 0; }
     .baro-item {
-      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px; padding: 19px 26px; cursor: default;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-      transition: border-color 0.28s, background 0.28s, transform 0.28s;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 16px 22px;
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
     }
-    .baro-item:hover { border-color: rgba(139,92,246,0.32); background: rgba(109,40,217,0.09); transform: translateX(4px); }
+    .baro-item:hover { border-color: rgba(99,102,241,0.28); background: rgba(99,102,241,0.06); transform: translateX(3px); }
     .baro-item.active {
-      border-color: rgba(139,92,246,0.5);
-      background: rgba(109,40,217,0.16);
-      box-shadow: inset 0 1px 0 rgba(196,181,253,0.14), 0 0 30px rgba(109,40,217,0.18);
+      border-color: rgba(99,102,241,0.45);
+      background: rgba(99,102,241,0.1);
     }
-    .baro-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.76); letter-spacing: -0.012em; }
-    .baro-item.active .baro-text { color: #f0f0f5; font-weight: 700; }
+    .baro-text { font-size: 14.5px; font-weight: 400; color: rgba(255,255,255,0.72); }
+    .baro-item.active .baro-text { color: #f0f0f5; font-weight: 500; }
 
     /* ── LEVELS ── */
     .levels-row { display: flex; gap: 0; width: 100%; max-width: 920px; margin: 30px auto 0; }
     .level-item { flex: 1; padding: 0 16px; text-align: center; position: relative; }
-    .level-arrow { position: absolute; right: -16px; top: 50%; transform: translateY(-50%); color: rgba(109,40,217,0.45); font-size: 18px; z-index: 2; }
+    .level-arrow { position: absolute; right: -16px; top: 50%; transform: translateY(-50%); color: rgba(99,102,241,0.4); font-size: 16px; z-index: 2; }
     .level-item:last-child .level-arrow { display: none; }
     .level-bg {
-      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 22px; padding: 32px 24px; height: 100%;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
-      transition: border-color 0.25s, transform 0.25s;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 28px 20px; height: 100%;
+      transition: border-color 0.22s, transform 0.22s;
     }
-    .level-bg:hover { transform: translateY(-4px); }
+    .level-bg:hover { transform: translateY(-3px); border-color: rgba(99,102,241,0.25); }
     .level-item:nth-child(3) .level-bg {
-      border-color: rgba(139,92,246,0.48);
-      background: rgba(109,40,217,0.14);
-      box-shadow: inset 0 1px 0 rgba(196,181,253,0.12), 0 0 50px rgba(109,40,217,0.18);
-      animation: card-breathe 5s ease-in-out infinite;
+      border-color: rgba(99,102,241,0.4);
+      background: rgba(99,102,241,0.08);
+      animation: none;
     }
     .level-num {
-      font-size: 48px; font-weight: 800; letter-spacing: -0.04em;
-      background: linear-gradient(135deg, #e9d5ff, #a78bfa, #7c3aed);
-      background-size: 200% 200%; animation: grad-breathe 6s ease-in-out infinite;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      margin-bottom: 12px;
+      font-size: 44px; font-weight: 800; letter-spacing: -0.04em;
+      color: #6366f1; margin-bottom: 10px;
+      background: none; -webkit-text-fill-color: initial;
     }
-    .level-name { font-size: 18px; font-weight: 700; color: #f5f5f7; margin-bottom: 10px; letter-spacing: -0.022em; }
-    .level-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; letter-spacing: -0.01em; }
+    .level-name { font-size: 17px; font-weight: 600; color: #f0f0f5; margin-bottom: 8px; }
+    .level-desc { font-size: 12.5px; color: rgba(255,255,255,0.48); line-height: 1.6; }
+    .level-arrow { color: rgba(99,102,241,0.4); font-size: 16px; }
 
     /* ── CANVAS ── */
     .canvas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; max-width: 840px; margin: 26px auto 0; text-align: left; }
     .canvas-field {
-      background: rgba(255,255,255,0.042); border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 18px; padding: 20px 22px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-      transition: border-color 0.25s, background 0.25s;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 18px 20px;
+      transition: border-color 0.22s, background 0.22s;
     }
-    .canvas-field:hover { border-color: rgba(139,92,246,0.32); background: rgba(255,255,255,0.06); }
-    .canvas-num { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(167,139,250,0.82); margin-bottom: 7px; }
-    .canvas-label { font-size: 14px; font-weight: 600; color: #f5f5f7; letter-spacing: -0.015em; }
-    .canvas-field.full { grid-column: 1 / -1; background: rgba(109,40,217,0.1); border-color: rgba(139,92,246,0.32); }
+    .canvas-field:hover { border-color: rgba(99,102,241,0.28); background: rgba(255,255,255,0.05); }
+    .canvas-num { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(129,140,248,0.75); margin-bottom: 6px; }
+    .canvas-label { font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.82); }
+    .canvas-field.full { grid-column: 1 / -1; background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.22); }
 
     /* ── CLOSING ── */
     .closing-quote {
-      font-size: clamp(20px, 2.7vw, 36px); font-weight: 400; font-style: italic;
-      color: rgba(255,255,255,0.88); line-height: 1.52;
-      max-width: 800px; margin: 0 auto 40px; letter-spacing: -0.022em;
-      text-shadow: 0 2px 30px rgba(0,0,0,0.9), 0 0 80px rgba(109,40,217,0.15);
+      font-size: clamp(18px, 2.4vw, 32px); font-weight: 400; font-style: italic;
+      color: rgba(255,255,255,0.82); line-height: 1.55;
+      max-width: 780px; margin: 0 auto 36px; letter-spacing: -0.018em;
     }
     .closing-contacts { display: flex; gap: 56px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
     .c-contact { text-align: center; }
     .c-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.22); margin-bottom: 6px; }
-    .c-val { font-size: 14.5px; font-weight: 500; color: rgba(196,181,253,0.92); letter-spacing: -0.01em; }
+    .c-val { font-size: 14px; font-weight: 500; color: rgba(129,140,248,0.9); }
 
     /* ── CUSTOM CURSOR ── */
     body { cursor: none; }
@@ -589,11 +527,7 @@
 
     <!-- ═══ SLIDE 01 — HERO ═══ -->
     <div class="h-slide" id="slide-0">
-      <video class="s-bg-video" id="hero-video" muted playsinline preload="auto"
-        src="https://tempfile.aiquickdraw.com/wan25/1776606536725-5cvwlj8ywp6.mp4"></video>
-      <img class="s-bg-img" style="z-index:1;opacity:0.92"
-        src="https://tempfile.aiquickdraw.com/vnp/ec4612af99b51d6527ad08c3eb4aae81_1776688261.jpeg" id="hero-fallback" alt="" />
-      <div class="s-overlay center"></div>
+      <div class="hero-glow"></div>
       <div class="s-content">
         <div class="time-badge anim" style="transition-delay:80ms">KI-Führerschein Seminar · luminAIre</div>
         <h1 class="s-title large anim" style="transition-delay:240ms">
@@ -613,8 +547,6 @@
 
     <!-- ═══ SLIDE 02 — WARUM ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/na2/fd783889c299d89b54afdf1ddeb822c41545435.jpeg" alt="" />
-      <div class="s-overlay"></div>
       <div class="s-content">
         <span class="s-eyebrow anim">Einstieg</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Warum wir heute<br><span class="grad">über KI sprechen.</span></h2>
@@ -642,8 +574,6 @@
 
     <!-- ═══ SLIDE 03 — LERNZIELE ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/na2/fd783889c299d89b54afdf1ddeb822c41545435.jpeg" alt="" />
-      <div class="s-overlay heavy"></div>
       <div class="s-content">
         <span class="s-eyebrow anim">Ziel des Seminars</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Was Sie heute<br><span class="grad">konkret mitnehmen.</span></h2>
@@ -660,7 +590,7 @@
 
 
     <!-- ═══ SLIDE 04 — AGENDA ═══ -->
-    <div class="h-slide bg-subtle">
+    <div class="h-slide slide-alt">
       <div class="s-content">
         <span class="s-eyebrow anim">Tagesübersicht</span>
         <h2 class="s-title medium anim" style="transition-delay:140ms">Der heutige Tag.<br><span class="grad">Schritt für Schritt.</span></h2>
@@ -680,7 +610,7 @@
 
 
     <!-- ═══ SLIDE 05 — KI-BAROMETER ═══ -->
-    <div class="h-slide bg-subtle2">
+    <div class="h-slide">
       <div class="s-content">
         <span class="s-eyebrow anim">Interaktion</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Wo stehen<br><span class="grad">wir heute?</span></h2>
@@ -698,8 +628,6 @@
 
     <!-- ═══ SLIDE 06 — WOW-DEMO ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/249274bfd08605e132db736b9567047f_1776688271.jpeg" alt="" />
-      <div class="s-overlay"></div>
       <div class="s-content">
         <div class="time-badge anim">09:15 – 09:35 · Block 2</div>
         <h2 class="s-title anim" style="transition-delay:200ms">In 8 Minuten.<br><span class="grad">Eine komplette Präsentation.</span></h2>
@@ -718,8 +646,6 @@
 
     <!-- ═══ SLIDE 07 — WAS KI GUT KANN ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/ec4612af99b51d6527ad08c3eb4aae81_1776688261.jpeg" alt="" />
-      <div class="s-overlay heavy"></div>
       <div class="s-content">
         <span class="s-eyebrow anim">Stärken</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Was KI im Alltag<br><span class="grad">gut kann.</span></h2>
@@ -737,7 +663,7 @@
 
 
     <!-- ═══ SLIDE 08 — WAS KI NICHT KANN ═══ -->
-    <div class="h-slide bg-void">
+    <div class="h-slide slide-alt">
       <div class="s-content">
         <span class="s-eyebrow anim" style="color:rgba(248,113,113,0.88)">Grenzen verstehen</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Was KI <span style="color:#f87171;text-shadow:0 0 60px rgba(239,68,68,0.35)">nicht</span><br>leisten kann.</h2>
@@ -755,8 +681,6 @@
 
     <!-- ═══ SLIDE 09 — KI-KOMPETENZ ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/ec4612af99b51d6527ad08c3eb4aae81_1776688261.jpeg" alt="" />
-      <div class="s-overlay side"></div>
       <div class="s-content left" style="max-width:1060px">
         <span class="s-eyebrow anim">KI-Führerschein</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Warum KI-Kompetenz<br><span class="grad">heute wichtig ist.</span></h2>
@@ -774,9 +698,7 @@
 
 
     <!-- ═══ SLIDE 10 — PROMPT-FORMEL ═══ -->
-    <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/0eed42b823f9861c503502b180f48306_1776688298.jpeg" alt="" />
-      <div class="s-overlay heavy"></div>
+    <div class="h-slide slide-section">
       <div class="s-content">
         <div class="time-badge anim">09:35 – 10:05 · Block 3 · Die wichtigste Folie</div>
         <h2 class="s-title statement anim" style="transition-delay:200ms">Die Formel,<br><span class="grad">die alles ändert.</span></h2>
@@ -808,8 +730,6 @@
 
     <!-- ═══ SLIDE 11 — VON VAGE ZU WIRKSAM ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/0eed42b823f9861c503502b180f48306_1776688298.jpeg" alt="" />
-      <div class="s-overlay"></div>
       <div class="s-content wide">
         <span class="s-eyebrow anim">Live-Vergleich</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Von vage<br><span class="grad">zu wirksam.</span></h2>
@@ -837,7 +757,7 @@
 
 
     <!-- ═══ SLIDE 12 — KI ALS MEHR ALS SUCHE ═══ -->
-    <div class="h-slide bg-warm">
+    <div class="h-slide slide-section">
       <div class="s-content">
         <span class="s-eyebrow anim">Perspektivwechsel</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Mehr als<br><span class="grad">nur eine Suche.</span></h2>
@@ -856,8 +776,6 @@
 
     <!-- ═══ SLIDE 13 — KONKRETE ANWENDUNGSFÄLLE ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/cf25928cbb128737e164ac05100b53a3_1776688280.jpeg" alt="" />
-      <div class="s-overlay"></div>
       <div class="s-content">
         <div class="time-badge anim">Block 4 · Praxis</div>
         <h2 class="s-title anim" style="transition-delay:170ms">Wo KI heute<br><span class="grad">konkret hilft.</span></h2>
@@ -875,7 +793,7 @@
 
 
     <!-- ═══ SLIDE 14 — MOBIL / VOICE / BILDER ═══ -->
-    <div class="h-slide bg-subtle">
+    <div class="h-slide slide-alt">
       <div class="s-content">
         <div class="time-badge anim">10:05 – 10:25 · Block 4 · Hands-on</div>
         <h2 class="s-title anim" style="transition-delay:190ms">KI niedrigschwellig<br><span class="grad">nutzen.</span></h2>
@@ -893,7 +811,7 @@
 
 
     <!-- ═══ SLIDE 15 — SELBST PRÜFEN ═══ -->
-    <div class="h-slide bg-subtle2">
+    <div class="h-slide">
       <div class="s-content">
         <span class="s-eyebrow anim">Qualitätskontrolle</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Was ich immer<br><span class="grad">selbst prüfen muss.</span></h2>
@@ -910,9 +828,7 @@
 
 
     <!-- ═══ SLIDE 16 — RECHT / EU AI ACT ═══ -->
-    <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/34ef7ea83942c691a3eedff593ceb357_1776688283.jpeg" alt="" />
-      <div class="s-overlay heavy"></div>
+    <div class="h-slide slide-section">
       <div class="s-content">
         <div class="time-badge anim">11:40 – 11:55 · Block 8</div>
         <h2 class="s-title statement anim" style="transition-delay:170ms">Sicher. Legal.<br><span class="grad">Verantwortungsvoll.</span></h2>
@@ -945,8 +861,6 @@
 
     <!-- ═══ SLIDE 17 — TOOLS & MODELLE ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/c156a1e6d56136e0829cd6d58bf2d9a5_1776688276.jpeg" alt="" />
-      <div class="s-overlay"></div>
       <div class="s-content">
         <div class="time-badge anim">11:15 – 11:40 · Block 7</div>
         <h2 class="s-title anim" style="transition-delay:170ms">Das richtige Tool<br><span class="grad">für jede Aufgabe.</span></h2>
@@ -965,8 +879,6 @@
 
     <!-- ═══ SLIDE 18 — KI IN DER ARBEITSUMGEBUNG ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/cf25928cbb128737e164ac05100b53a3_1776688280.jpeg" alt="" />
-      <div class="s-overlay side"></div>
       <div class="s-content left wide">
         <span class="s-eyebrow anim">Integration</span>
         <h2 class="s-title anim" style="transition-delay:140ms">KI dort nutzen, wo<br><span class="grad">Arbeit stattfindet.</span></h2>
@@ -986,9 +898,7 @@
 
 
     <!-- ═══ SLIDE 19 — DREI REIFESTUFEN ═══ -->
-    <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/0e10956e07d49e4dcc048daef1e2e31e_1776688304.jpeg" alt="" />
-      <div class="s-overlay heavy"></div>
+    <div class="h-slide slide-alt">
       <div class="s-content">
         <span class="s-eyebrow anim">Evolution</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Vom Assistenten<br><span class="grad">zum Agenten.</span></h2>
@@ -1025,11 +935,6 @@
 
     <!-- ═══ SLIDE 20 — WAS IST EIN AGENT ═══ -->
     <div class="h-slide">
-      <video class="s-bg-video" id="workshop-video" muted playsinline preload="auto"
-        src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"></video>
-      <img class="s-bg-img" style="z-index:1;opacity:0.88"
-        src="https://tempfile.aiquickdraw.com/ggc/ca120a2a4fa5d63967afe59d507e57bc_1776688463688.jpeg" id="workshop-fallback" alt="" />
-      <div class="s-overlay heavy"></div>
       <div class="s-content">
         <span class="s-eyebrow anim">Agentic AI</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Was ein KI-Agent<br><span class="grad">wirklich ist.</span></h2>
@@ -1048,8 +953,6 @@
 
     <!-- ═══ SLIDE 21 — WANN LOHNT SICH AGENTIC AI ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/ggc/ca120a2a4fa5d63967afe59d507e57bc_1776688463688.jpeg" alt="" />
-      <div class="s-overlay"></div>
       <div class="s-content">
         <span class="s-eyebrow anim">Entscheidungshilfe</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Wann lohnt sich<br><span class="grad">Agentic AI?</span></h2>
@@ -1068,8 +971,6 @@
 
     <!-- ═══ SLIDE 22 — PRAXISBEISPIELE ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/ggc/ca120a2a4fa5d63967afe59d507e57bc_1776688463688.jpeg" alt="" />
-      <div class="s-overlay heavy"></div>
       <div class="s-content">
         <span class="s-eyebrow anim">3 Praxisbeispiele</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Wo Agenten<br><span class="grad">echten Hebel haben.</span></h2>
@@ -1108,12 +1009,7 @@
 
 
     <!-- ═══ SLIDE 23 — PRAXISWERKSTATT ═══ -->
-    <div class="h-slide">
-      <video class="s-bg-video" id="workshop-video2" muted playsinline preload="auto"
-        src="https://tempfile.aiquickdraw.com/wan25/1776606552914-x61vv3ggize.mp4"></video>
-      <img class="s-bg-img" style="z-index:1;opacity:0.88"
-        src="https://tempfile.aiquickdraw.com/vnp/249274bfd08605e132db736b9567047f_1776688271.jpeg" alt="" />
-      <div class="s-overlay heavy"></div>
+    <div class="h-slide slide-section">
       <div class="s-content">
         <div class="time-badge anim">10:40 – 11:15 · Block 6 · Der wichtigste Block</div>
         <h2 class="s-title anim" style="transition-delay:190ms">Deine Aufgabe.<br><span class="grad">Deine Lösung.</span></h2>
@@ -1131,7 +1027,7 @@
 
 
     <!-- ═══ SLIDE 24 — KI-CANVAS ═══ -->
-    <div class="h-slide bg-warm">
+    <div class="h-slide slide-section">
       <div class="s-content wide">
         <span class="s-eyebrow anim">Werkzeug</span>
         <h2 class="s-title anim" style="transition-delay:140ms">Vom Problem zum<br><span class="grad">KI-Anwendungsfall.</span></h2>
@@ -1150,7 +1046,7 @@
 
 
     <!-- ═══ SLIDE 25 — TRANSFERPLAN ═══ -->
-    <div class="h-slide bg-subtle">
+    <div class="h-slide slide-alt">
       <div class="s-content">
         <div class="time-badge anim">11:55 – 12:00 · Block 9</div>
         <h2 class="s-title anim" style="transition-delay:170ms">Was setze ich in den<br><span class="grad">nächsten 7 Tagen um?</span></h2>
@@ -1183,8 +1079,6 @@
 
     <!-- ═══ SLIDE 26 — ABSCHLUSS ═══ -->
     <div class="h-slide">
-      <img class="s-bg-img" src="https://tempfile.aiquickdraw.com/vnp/d5a62a934a744e92689819875ec6d77f_1776688309.jpeg" alt="" />
-      <div class="s-overlay center"></div>
       <div class="s-content">
         <span class="s-eyebrow anim">Abschluss</span>
         <h2 class="s-title anim" style="transition-delay:170ms">Die wichtigste<br><span class="grad">Erkenntnis.</span></h2>
