@@ -1173,9 +1173,6 @@
   <div class="h-key-hint">
     <span class="key-badge">↑↓</span> oder <span class="key-badge">←→</span> navigieren
   </div>
-  <div class="h-key-hint" style="bottom:48px">
-    <span class="key-badge">N</span> Moderationshinweise
-  </div>
 
 </div><!-- end h-sticky -->
 </div><!-- end h-presentation -->
@@ -1186,7 +1183,7 @@
     <div id="trainer-header">
       <span id="trainer-slide-label">Folie 01 / 26</span>
       <span id="trainer-time-label"></span>
-      <span id="trainer-toggle-hint"><kbd>N</kbd> schließen · <kbd>Esc</kbd> schließen</span>
+      <span id="trainer-toggle-hint">Moderationshinweise</span>
     </div>
     <div id="trainer-notes-container">
       <!-- notes injected by JS -->
@@ -1567,7 +1564,6 @@ const trainerPanel   = document.getElementById('trainer-panel');
 const trainerNotes   = document.getElementById('trainer-notes-container');
 const trainerSlideEl = document.getElementById('trainer-slide-label');
 const trainerTimeEl  = document.getElementById('trainer-time-label');
-let notesOpen = false;
 
 function updateTrainerPanel(idx) {
   const note = TRAINER_NOTES[idx];
@@ -1579,27 +1575,12 @@ function updateTrainerPanel(idx) {
   ).join('');
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'n' || e.key === 'N') {
-    notesOpen = !notesOpen;
-    trainerPanel.classList.toggle('open', notesOpen);
-    if (notesOpen) updateTrainerPanel(currentIdx);
-  }
-  if (e.key === 'Escape' && notesOpen) {
-    notesOpen = false;
-    trainerPanel.classList.remove('open');
-  }
-});
-
-// Update notes when slide changes (if panel is open)
-const _origGoToSlide = goToSlide;
-// Patch: after goToSlide resolves, update trainer panel
-const trainerObserver = new MutationObserver(() => {
-  if (notesOpen) updateTrainerPanel(currentIdx);
-});
+// Notes always visible — update on slide change
+const trainerObserver = new MutationObserver(() => updateTrainerPanel(currentIdx));
 trainerObserver.observe(document.getElementById('slide-num'), { childList: true });
 
-// Init trainer
+// Init trainer — open immediately
+trainerPanel.classList.add('open');
 updateTrainerPanel(0);
 </script>
 

@@ -164,6 +164,17 @@ export default function Landing({ onNavigate }: Props) {
             >
               Seminar
             </a>
+            <a href="/seminar-trainer.html" style={{
+              background: 'rgba(99,102,241,0.10)', border: '1px solid rgba(99,102,241,0.25)',
+              cursor: 'pointer', color: 'rgba(129,140,248,0.85)', fontSize: 12, fontWeight: 600,
+              fontFamily: 'inherit', padding: '4px 12px', borderRadius: 6, transition: 'all 0.15s',
+              textDecoration: 'none', display: 'inline-block', letterSpacing: '0.04em',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.2)'; e.currentTarget.style.color = '#a5b4fc'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.10)'; e.currentTarget.style.color = 'rgba(129,140,248,0.85)'; }}
+            >
+              Trainer
+            </a>
           </div>
         </div>
 
