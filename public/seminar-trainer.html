@@ -513,45 +513,41 @@
 }
 #trainer-panel.open { transform: translateY(0); }
 #trainer-panel-inner {
-  background: rgba(4,4,12,0.97);
-  border-top: 1px solid rgba(99,102,241,0.4);
-  padding: 14px 48px 18px;
+  background: rgba(4,4,14,0.98);
+  border-top: 2px solid rgba(99,102,241,0.5);
+  padding: 16px 52px 22px;
 }
 #trainer-header {
-  display: flex; align-items: center; gap: 24px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 24px; margin-bottom: 14px;
 }
 #trainer-slide-label {
-  font-size: 10px; font-weight: 700; color: #818cf8; letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: 11px; font-weight: 700; color: #818cf8; letter-spacing: 0.1em; text-transform: uppercase;
 }
 #trainer-time-label {
-  font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 0.04em;
+  font-size: 11px; color: rgba(255,255,255,0.38); letter-spacing: 0.04em;
 }
 #trainer-toggle-hint {
-  font-size: 9px; color: rgba(255,255,255,0.2); margin-left: auto; letter-spacing: 0.04em;
-}
-#trainer-toggle-hint kbd {
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 3px; padding: 1px 5px; font-size: 9px; font-family: inherit;
+  font-size: 11px; color: rgba(255,255,255,0.25); margin-left: auto; letter-spacing: 0.02em;
 }
 #trainer-notes-container {
-  display: flex; gap: 32px; flex-wrap: nowrap;
+  display: flex; gap: 40px; flex-wrap: nowrap;
 }
 .trainer-note-col {
   flex: 1; min-width: 0;
 }
 .trainer-note-col ul {
-  list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px;
+  list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px;
 }
 .trainer-note-col li {
-  font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.45; letter-spacing: -0.01em;
-  padding-left: 14px; position: relative;
+  font-size: 14.5px; color: rgba(255,255,255,0.78); line-height: 1.5; letter-spacing: -0.01em;
+  padding-left: 18px; position: relative;
 }
 .trainer-note-col li::before {
   content: '→'; position: absolute; left: 0;
-  color: #6366f1; font-size: 10px; top: 1px;
+  color: #6366f1; font-size: 12px; top: 2px;
 }
-.trainer-note-col li strong { color: rgba(255,255,255,0.9); font-weight: 600; }
-.trainer-note-col li em { color: rgba(129,140,248,0.85); font-style: normal; }
+.trainer-note-col li strong { color: #ffffff; font-weight: 600; }
+.trainer-note-col li em { color: #a5b4fc; font-style: normal; font-weight: 500; }
 @media (max-width: 768px) {
   #trainer-panel-inner { padding: 12px 20px 16px; }
   #trainer-notes-container { flex-direction: column; gap: 10px; }
@@ -1354,208 +1350,402 @@ const TRAINER_NOTES = [
   {
     time: '09:00',
     cols: [
-      ['<strong>Begrüßung & Vorstellung</strong> – Name, luminAIre, wer du bist (kurz: 1 Min)', 'Sag wo die Toiletten sind, wann Pause ist', 'Handy darf bleiben – wer mitmacht lernt mehr'],
-      ['„Heute kein Theorievortrag – ihr geht mit etwas raus, das ihr morgen früh anwenden könnt"', '<strong>Ziel setzen:</strong> Jeder verlässt mit einem konkreten Anwendungsfall aus dem eigenen Alltag']
+      [
+        '<strong>Begrüßung:</strong> „Willkommen zum KI-Führerschein. Mein Name ist Philipp Mick, ich bin KI-Trainer bei luminAIre."',
+        '„Heute geht es nicht um Theorie. Wir arbeiten praxisnah – ihr verlasst diesen Raum mit etwas, das ihr morgen früh sofort anwenden könnt."',
+        'Organisatorisches: Toiletten, Pause um 10:25 Uhr, Handy darf bleiben'
+      ],
+      [
+        '„Keine Vorkenntnisse nötig – und keine dummen Fragen. Wer fragt, lernt."',
+        '<em>Ton setzen: locker, direkt, auf Augenhöhe – kein Frontalvortrag</em>'
+      ]
     ]
   },
   // Slide 2 — Warum
   {
     time: '09:02',
     cols: [
-      ['<strong>Einstieg-Frage:</strong> „Wer hat heute schon KI benutzt?" (Autocomplete zählt auch)', 'Kurze Runde – Finger hoch, nicht reden'],
-      ['Betonen: KI ist keine Zukunftsmusik – sie verändert bereits heute den Arbeitsalltag', '„Wer es früh lernt, hat einen echten Vorsprung – das ist der Grund warum wir hier sind"']
+      [
+        '<strong>Einstiegsfrage:</strong> „Wer hat heute schon KI benutzt? Auch Autocomplete oder Sprachdiktat zählt – Finger hoch."',
+        '„Gut. KI ist bereits überall – die Frage ist nur: nutzen wir sie bewusst oder nicht?"'
+      ],
+      [
+        '„Wer es früh lernt, sinnvoll damit umzugehen, hat einen echten Vorsprung – das ist der Grund, warum ihr heute hier seid."',
+        '<em>Nicht zu lang – max. 2 Minuten, dann weiter zu den Lernzielen</em>'
+      ]
     ]
   },
   // Slide 3 — Lernziele
   {
     time: '09:05',
     cols: [
-      ['Lernziele kurz vorlesen – nicht vertiefen, das kommt alles noch', '„Das sind Versprechen – haltet mich dran fest"'],
-      ['Betonen: Am Ende <strong>persönlicher Action-Plan</strong> – das ist das konkrete Ergebnis', 'Jetzt Fragen stellen erlaubt – auch während der Präsentation']
+      [
+        '„Ich möchte euch kurz zeigen, was ihr heute konkret mitnehmt – das sind keine leeren Versprechen, das sind die fünf Punkte, an denen ich mich messen lasse."',
+        'Lernziele kurz vorlesen – nicht kommentieren, das kommt alles noch'
+      ],
+      [
+        '„Am Ende des Tages hat jeder von euch einen persönlichen Action-Plan – eine konkrete Aufgabe, die er diese Woche mit KI angeht."',
+        '<em>Fragen jederzeit erlaubt – auch mitten in der Präsentation</em>'
+      ]
     ]
   },
   // Slide 4 — Agenda
   {
     time: '09:07',
     cols: [
-      ['Überblick geben ohne jeden Punkt zu erklären – Tempo halten', 'Markieren: <em>Block 3 (Prompt-Formel)</em> und <em>Block 6 (Workshop)</em> sind die Kerninhalte'],
-      ['„Wir passen das Tempo der Gruppe an – wenn ihr mehr Zeit braucht, nehmen wir sie uns"', 'Pause kommt um 10:25 – ca. 15 Minuten']
+      [
+        '„Hier seht ihr, wie der Tag aufgebaut ist. Ich erkläre nicht jeden Punkt – ihr seht den Überblick."',
+        '„Die wichtigsten Blöcke sind Block 3, die Prompt-Formel, und Block 6, der Workshop – da arbeitet ihr selbst."'
+      ],
+      [
+        '„Pause ist um 10:25 Uhr – 15 Minuten. Wir passen das Tempo der Gruppe an."',
+        '<em>Nicht zu lange auf dieser Folie – Überblick reicht, direkt weiter</em>'
+      ]
     ]
   },
   // Slide 5 — Barometer
   {
     time: '09:10',
     cols: [
-      ['<strong>Aktiv: Handzeichen einholen</strong> für jede Stufe', '„Keine falsche Antwort – ich will nur verstehen wo wir stehen"'],
-      ['Notiz machen: Wie viele Fortgeschrittene? → Tiefe des Workshops anpassen', '„Perfekt – das ist bewusst gemischt, die Erfahrenen helfen den Anfängern"']
+      [
+        '<strong>Aktiv: Handzeichen einholen</strong> – jede Stufe einzeln abfragen, kurz Pause lassen',
+        '„Keine falsche Antwort – ich will nur verstehen, wo wir stehen, damit ich das Tempo anpassen kann."'
+      ],
+      [
+        '„Perfekt. Die Mischung ist bewusst so – die Erfahreneren helfen den Einsteigern, und die Einsteiger stellen die Fragen, die sich die anderen nicht trauen."',
+        '<em>Ergebnis merken: Verhältnis Anfänger / Fortgeschrittene → Workshop-Tiefe anpassen</em>'
+      ]
     ]
   },
   // Slide 6 — Wow-Demo
   {
     time: '09:15',
     cols: [
-      ['<strong>LIVE DEMO</strong> – jetzt ChatGPT / Claude öffnen (Tab bereits offen haben!)', 'Demo-Idee: „Erstelle mir eine vollständige Meeting-Agenda für ein Kick-off mit 8 Personen – Thema: Einführung eines neuen CRM-Systems"'],
-      ['Ergebnis abwarten, laut vorlesen – dann Stille wirken lassen', '„Das eben: 45 Sekunden. Früher: 30–45 Minuten. Das ist keine Ausnahme."', 'Fragen aufnehmen, aber nicht zu lange – Tempo halten']
+      [
+        '<strong>LIVE DEMO – Tab bereits offen haben!</strong>',
+        'Prompt eingeben: <em>„Du bist mein Assistent. Erstelle eine vollständige Meeting-Agenda für ein Kick-off mit 8 Personen – Thema: Einführung eines neuen CRM-Systems. Füge Zeitblöcke, Ziele und Moderationshinweise hinzu."</em>',
+        'Ergebnis laut vorlesen – dann Stille. Wirken lassen.'
+      ],
+      [
+        '„Das eben: 40 Sekunden. Früher: 30 bis 45 Minuten. Das ist keine Ausnahme – das ist der neue Standard."',
+        '„Jetzt zeige ich euch, warum das Ergebnis so gut war. Es liegt nicht an der KI allein – es liegt am Prompt."',
+        '<em>Fragen kurz aufnehmen, aber Tempo halten</em>'
+      ]
     ]
   },
   // Slide 7 — Was KI gut kann
   {
     time: '09:25',
     cols: [
-      ['Schnell durch die 6 Felder – je 20 Sekunden max', 'Interaktion: „Wer von euch macht schon eines davon mit KI?"'],
-      ['Merksatz: <em>„KI ist am stärksten bei textlastigen, vorbereitenden Aufgaben"</em>', 'Übergang: „Jetzt das Gegenteil – was kann KI NICHT?"']
+      [
+        '„KI ist am stärksten bei Aufgaben, die textlastig, vorbereitend oder strukturierend sind – also genau da, wo viele von uns täglich Zeit verlieren."',
+        'Kurz durch die sechs Felder – je 20 Sekunden'
+      ],
+      [
+        '<strong>Interaktion:</strong> „Welches davon kommt in eurem Arbeitsalltag vor? Finger hoch."',
+        '„Super – dann wisst ihr schon, wo wir heute anfangen."',
+        '<em>Übergang: „Aber KI kann nicht alles – das ist mindestens genauso wichtig."</em>'
+      ]
     ]
   },
   // Slide 8 — Was KI nicht kann
   {
     time: '09:30',
     cols: [
-      ['<strong>WICHTIG:</strong> Nicht Angst machen – realistisch einordnen', '„KI halluziniert – das ist eine technische Tatsache, kein Bug"'],
-      ['Beispiel nennen: „ChatGPT hat mir mal eine Quelle erfunden, die es gar nicht gibt"', 'Merksatz: <em>„Der Mensch bleibt immer verantwortlich – KI liefert einen Entwurf"</em>']
+      [
+        '„Das hier ist keine Warnung – das ist Realismus. Wer KI versteht, weiß auch, wo sie versagt."',
+        '„KI halluziniert. Das bedeutet: sie erfindet manchmal Fakten, Quellen oder Namen – und klingt dabei völlig überzeugend."',
+        'Eigenes Beispiel: <em>„ChatGPT hat mir mal eine Studie zitiert, die es gar nicht gibt – Titel, Autor, Jahreszahl – alles erfunden."</em>'
+      ],
+      [
+        '„Deswegen gilt: KI liefert immer einen Entwurf. Den Entwurf prüfe ich – ich bleibe verantwortlich."',
+        '<em>Merksatz ansagen und kurz wiederholen lassen</em>'
+      ]
     ]
   },
   // Slide 9 — KI-Kompetenz
   {
     time: '09:33',
     cols: [
-      ['„Warum heißt das KI-Führerschein?" – Analogie: Autofahren lernt man auch, bevor man auf die Autobahn fährt', 'KI-Kompetenz = wissen wie man eingibt, prüft und entscheidet'],
-      ['Übergang zu Prompt-Engineering: „Der wichtigste Skill ist nicht welches Tool – sondern wie ihr es befehlt"']
+      [
+        '„Warum nennen wir das KI-Führerschein?"',
+        '„Autofahren lernt man auch – nicht weil Autos gefährlich sind, sondern weil man sie nur dann wirklich nutzen kann, wenn man verstanden hat, wie sie funktionieren."',
+        '„Genauso ist das mit KI: Der größte Hebel entsteht nicht durch das Tool – sondern durch die Art, wie man es benutzt."'
+      ],
+      [
+        '„Und das wichtigste Werkzeug dafür ist der Prompt."',
+        '<em>Übergang zur Prompt-Formel vorbereiten: „Dazu kommen wir jetzt – und das ist die wichtigste Folie des Tages."</em>'
+      ]
     ]
   },
   // Slide 10 — Prompt-Formel
   {
     time: '09:35',
     cols: [
-      ['<strong>DIE WICHTIGSTE FOLIE DES TAGES</strong> – explizit so sagen', 'Formel LANGSAM erklären: Rolle → Kontext → Ziel → Format → Qualität', 'Jedes Element mit einem Alltagsbeispiel erläutern'],
-      ['<strong>Interaktion:</strong> „Wer kann die 5 Elemente wiederholen?"', 'Merkhilfe: <em>„Stell dir vor du beaufträgst einen neuen Mitarbeiter – je genauer du erklärst, desto besser das Ergebnis"</em>']
+      [
+        '<strong>„Das ist die wichtigste Folie heute – explizit so sagen."</strong>',
+        '„Die Formel lautet: Rolle + Kontext + Ziel + Format + Qualitätskriterien."',
+        'Jedes Element einzeln erklären – langsam, mit Alltagsbeispiel:',
+        '<em>Rolle: „Du bist mein Assistent für Kundenkommunikation."</em>',
+        '<em>Kontext: „Ein Termin verschiebt sich um zwei Tage."</em>',
+        '<em>Ziel: „Ich möchte Vertrauen erhalten und Klarheit schaffen."</em>',
+        '<em>Format: „Kurze, professionelle E-Mail."</em>',
+        '<em>Qualität: „Freundlich, verbindlich, keine Floskeln."</em>'
+      ],
+      [
+        '<strong>Interaktion:</strong> „Wer kann die fünf Elemente wiederholen? Einfach laut sagen."',
+        '„Merkhilfe: Stellt euch vor, ihr beauftragt einen neuen Mitarbeiter. Je genauer ihr erklärt, was ihr wollt, desto besser das Ergebnis – bei Menschen und bei KI."',
+        '<em>Diese Folie nicht hetzen – sie ist das Fundament für alles danach</em>'
+      ]
     ]
   },
   // Slide 11 — Von vage zu wirksam
   {
     time: '09:50',
     cols: [
-      ['<strong>LIVE:</strong> Beide Prompts eintippen, Ergebnis live zeigen und vergleichen', '„Ihr seht den Unterschied sofort – das ist kein Zufall, das ist Methode"'],
-      ['Pause für Fragen – das ist ein guter Moment', 'Jetzt: „Traut euch das in Block 6 selbst auszuprobieren"']
+      [
+        '<strong>LIVE: Beide Prompts live eintippen und Ergebnis nebeneinander zeigen</strong>',
+        'Erst schwacher Prompt: „Schreib mir eine Mail." – Ergebnis vorlesen',
+        'Dann starker Prompt aus der Formel – Ergebnis vorlesen'
+      ],
+      [
+        '„Der Unterschied ist nicht die KI – der Unterschied seid ihr. Besserer Input, besserer Output."',
+        '„Jetzt habt ihr die Formel. In Block 6 werdet ihr sie selbst anwenden – an einer echten Aufgabe aus eurem Alltag."',
+        '<em>Fragen jetzt erlaubt – guter Moment für kurze Pause</em>'
+      ]
     ]
   },
   // Slide 12 — KI als mehr als Suche
   {
     time: '09:58',
     cols: [
-      ['„KI ist nicht Google 2.0 – es ist ein Denkpartner"', 'Analogie: <em>„Stellt euch einen Kollegen vor, der immer Zeit hat, nie müde ist, nie urteilt und alles schon gelesen hat"</em>'],
-      ['Kurzer Austausch: „Wofür würdet ihr so einen Kollegen einsetzen?"', 'Übergang: „Genau das schauen wir uns jetzt konkret an"']
+      [
+        '„KI ist nicht Google 2.0. Google sucht etwas, das schon existiert. KI denkt mit – es erstellt, strukturiert, hinterfragt."',
+        '„Stellt euch einen Kollegen vor, der immer Zeit hat, nie müde ist, nie urteilt und alles schon gelesen hat – so in etwa ist das."'
+      ],
+      [
+        '<strong>Kurze Runde:</strong> „Wofür würdet ihr so einen Kollegen einsetzen?"',
+        '<em>2–3 Antworten aufnehmen, kurz kommentieren, dann weiter</em>',
+        '<em>Übergang: „Genau das schauen wir uns jetzt an – konkrete Aufgaben, heute, in eurem Alltag."</em>'
+      ]
     ]
   },
   // Slide 13 — Konkrete Anwendungsfälle
   {
     time: '10:02',
     cols: [
-      ['Kurze Runde: „Was davon kommt bei euch vor?" – Finger hoch', 'Live-Beispiel zeigen wenn Zeit: E-Mail-Entwurf oder Zusammenfassung'],
-      ['Nicht zu lange – Block 4 kommt noch mit Hands-on', 'Merken: Was hat die Gruppe rausgesucht? → im Workshop darauf eingehen']
+      [
+        '<strong>Interaktion:</strong> „Was davon kommt bei euch regelmäßig vor? Finger hoch."',
+        'Die genannten Bereiche kurz aufgreifen und mit einem Satz kommentieren'
+      ],
+      [
+        '„Das sind keine Ausnahmen – das ist Alltag. KI kann heute schon dabei helfen, ohne dass ihr eine einzige Zeile Code schreiben müsst."',
+        '<em>Live-Beispiel zeigen wenn Zeit: E-Mail-Entwurf oder Zusammenfassung – sonst weiter zu Block 4</em>'
+      ]
     ]
   },
   // Slide 14 — Mobil / Voice / Bilder
   {
     time: '10:05',
     cols: [
-      ['<strong>HANDS-ON:</strong> „Jetzt Handy raus – wer hat noch kein KI-Tool drauf?"', 'ChatGPT / Gemini / Claude installieren lassen – 3 Minuten'],
-      ['<strong>Voice-Modus live zeigen</strong> – in Mikrofon sprechen, Ergebnis vorlesen', 'Optional: Kurzes Bild generieren lassen (DALL-E oder Gemini)', '„Das läuft auf jedem Handy – kostenlos, sofort"']
+      [
+        '<strong>HANDS-ON – Handy raus!</strong>',
+        '„Wer hat noch kein KI-Tool auf dem Handy? Jetzt installieren: ChatGPT, Gemini oder Claude – alle kostenlos, alle sofort nutzbar."',
+        '3 Minuten Zeit lassen – rum gehen und helfen'
+      ],
+      [
+        '<strong>Voice-Modus live zeigen:</strong> Mikrofon antippen, frei sprechen, Ergebnis vorlesen lassen',
+        '„Das läuft auf jedem Smartphone – unterwegs, zwischen Meetings, im Auto. Ihr braucht keinen PC."',
+        '<em>Optional: kurzes Bild generieren lassen – DALL-E oder Gemini</em>'
+      ]
     ]
   },
   // Slide 15 — Selbst prüfen
   {
     time: '10:18',
     cols: [
-      ['„Goldene Regel: Immer mit gesundem Menschenverstand prüfen"', 'Eigenes Beispiel: Wann hast du KI-Output blind übernommen und es war falsch?'],
-      ['Kurze Checkliste durchgehen', '<strong>Pause ankündigen:</strong> „Wir machen gleich 15 Minuten – danach der wichtigste Block des Tages"']
+      [
+        '„Goldene Regel: KI liefert immer einen Entwurf. Den prüfe ich – ich schicke ihn nicht blind raus."',
+        'Checkliste kurz durchgehen – je einen Satz pro Punkt',
+        'Eigenes Beispiel: Wann habe ich KI-Output übernommen und es war nicht ganz richtig?'
+      ],
+      [
+        '„Wer KI so nutzt – mit Methode und mit Prüfschritt – der spart Zeit und erhöht Qualität gleichzeitig."',
+        '<strong>Pause ankündigen:</strong> „Wir machen jetzt 15 Minuten Pause – danach kommt der wichtigste Block: ihr arbeitet selbst."',
+        '<em>Pause: 10:25 – 10:40 Uhr</em>'
+      ]
     ]
   },
   // Slide 16 — Praxiswerkstatt
   {
     time: '10:40',
     cols: [
-      ['<strong>WORKSHOP START</strong> – „Jetzt seid ihr dran"', 'Aufgabe erklären: Jeder denkt an eine echte Aufgabe aus dem eigenen Arbeitsalltag', '35 Minuten – ihr arbeitet, ich gehe rum und helfe'],
-      ['Ziel: Jeder verlässt mit einem fertigen Prompt oder Ergebnis', 'Bei Blockaden helfen: „Was nervt dich wöchentlich am meisten? Fang damit an"', '<strong>Aktiv durch die Runde gehen – nicht vorne stehen</strong>']
+      [
+        '<strong>WORKSHOP START – Jetzt seid ihr dran.</strong>',
+        '„Die Aufgabe: Denkt an eine echte Aufgabe aus eurem Arbeitsalltag – etwas, das euch wöchentlich Zeit kostet oder nervt. Schreibt einen Prompt dafür – mit der Formel von vorhin."',
+        '„Ich gehe rum und helfe. 35 Minuten. Ihr verlasst heute mit einem fertigen Ergebnis."'
+      ],
+      [
+        '<em>Aktiv durch die Runde gehen – nicht vorne stehen</em>',
+        'Bei Blockaden helfen: <em>„Was nervt dich wöchentlich am meisten? Fang damit an."</em>',
+        'Wer fertig ist: zweite Aufgabe oder Ergebnis verbessern lassen',
+        '<em>Letzte 5 Minuten: 2–3 Ergebnisse kurz vorstellen lassen</em>'
+      ]
     ]
   },
   // Slide 17 — Tools & Modelle
   {
     time: '11:15',
     cols: [
-      ['Überblick-Slide – nicht zu tief gehen, 5 Minuten max', '„Nicht der Name des Tools entscheidet – sondern die Aufgabe"'],
-      ['Frage: „Welche Tools habt ihr bereits im Einsatz?" – kurze Runde', 'Details im Handout – jetzt weiter zur Integration']
+      [
+        '„Jetzt ein kurzer Überblick über die wichtigsten Tools – nicht weil der Name entscheidet, sondern damit ihr wisst, was wofür geeignet ist."',
+        'Kurz durch die sechs Felder – je einen Satz'
+      ],
+      [
+        '<strong>Kurze Runde:</strong> „Welche Tools habt ihr bereits im Einsatz?"',
+        '„Das Wichtigste: Probiert aus. Kein Tool ist für alles gleich gut – und das Beste ist das, das ihr wirklich nutzt."',
+        '<em>Details stehen im Handout – nicht zu tief gehen, max. 4 Minuten</em>'
+      ]
     ]
   },
   // Slide 18 — KI in der Arbeitsumgebung
   {
     time: '11:20',
     cols: [
-      ['„Das Beste: KI kommt zu euch – in eure gewohnten Tools"', 'Copilot / Google Workspace kurz zeigen wenn verfügbar'],
-      ['„Fragt eure IT, was bereits lizenziert ist – oft schon vorhanden"', 'Nicht jedes Tool einzeln erklären – Beispiele nennen']
+      [
+        '„Das Beste daran: KI kommt zu euch – nicht ihr zur KI. Sie ist bereits in den Tools, die ihr täglich nutzt."',
+        '„Outlook Copilot, Google Docs AI, Excel Copilot – das sind keine Zukunftspläne, das ist heute verfügbar."'
+      ],
+      [
+        '„Fragt eure IT-Abteilung, was bereits lizenziert ist. Oft ist da mehr vorhanden, als die meisten wissen."',
+        '<em>Kurzes Beispiel zeigen wenn verfügbar: Copilot in Word oder Gmail Hilfe</em>'
+      ]
     ]
   },
   // Slide 19 — Drei Reifestufen
   {
     time: '11:25',
     cols: [
-      ['„Wir reden jetzt über das nächste Level – Workflows und Agenten"', 'Stufen klar erklären: Assistent → Workflow → Agent'],
-      ['„Heute sind die meisten von euch auf Stufe 01 – das ist der richtige Start"', 'Merksatz: <em>„Stufe 02 und 03 kommen natürlich – wenn man Stufe 01 beherrscht"</em>']
+      [
+        '„KI entwickelt sich in drei Stufen – und die meisten von euch starten heute auf Stufe 1. Das ist genau richtig."',
+        '<strong>Stufe 1 – Assistent:</strong> „Ich frage, KI antwortet. Einmalig, manuell."',
+        '<strong>Stufe 2 – Workflow:</strong> „Mehrere Schritte, die immer gleich ablaufen – KI übernimmt den Ablauf."',
+        '<strong>Stufe 3 – Agent:</strong> „KI arbeitet selbstständig auf ein Ziel hin – mit meiner Freigabe."'
+      ],
+      [
+        '„Stufe 2 und 3 kommen automatisch – wenn man Stufe 1 wirklich beherrscht."',
+        '<em>Übergang: „Ich zeige euch kurz, was ein Agent genau bedeutet – denn das klingt nach Science-Fiction, ist es aber nicht."</em>'
+      ]
     ]
   },
   // Slide 20 — Was ist ein Agent
   {
     time: '11:28',
     cols: [
-      ['„Agent klingt nach Science-Fiction – ist es aber nicht"', 'Beispiel: <em>„Morgendlicher Briefing-Agent: fasst Emails zusammen, listet Termine, erstellt To-do-Liste – automatisch"</em>'],
-      ['Betonen: <strong>Immer mit menschlicher Freigabe</strong> – KI entscheidet nicht alleine', 'Übergang: „Wann lohnt sich das eigentlich?"']
+      [
+        '„Ein KI-Agent ist keine autonome Maschine – es ist KI mit einem klaren Ziel, die selbstständig mehrere Schritte durchführt und dabei auf externe Systeme zugreift."',
+        'Beispiel: <em>„Jeden Morgen fasst ein Agent automatisch meine E-Mails zusammen, listet offene To-dos auf und bereitet meinen Kalender vor – bevor ich ins Büro komme."</em>'
+      ],
+      [
+        '„Wichtig: Der Agent entscheidet nicht alleine. Er bereitet vor – ich gebe frei. Der Mensch bleibt immer im Loop."',
+        '<em>Übergang: „Wann lohnt sich so etwas? Dafür gibt es eine einfache Checkliste."</em>'
+      ]
     ]
   },
   // Slide 21 — Wann lohnt sich Agentic AI
   {
     time: '11:32',
     cols: [
-      ['Checkliste gemeinsam durchgehen', '<strong>Interaktion:</strong> „Welche Aufgabe aus deinem Alltag erfüllt 3 oder mehr Kriterien?"'],
-      ['Kurze Runde – 2–3 Antworten einholen', 'Übergang: „Ich zeige euch 3 echte Beispiele"']
+      [
+        '„Schaut euch die sechs Kriterien an – und denkt dabei an eine konkrete Aufgabe aus eurem Alltag."',
+        '<strong>Interaktion:</strong> „Wer hat eine Aufgabe, die drei oder mehr Kriterien erfüllt? Kurz nennen."'
+      ],
+      [
+        '2–3 Antworten aufnehmen – kurz einordnen ob geeignet oder nicht und warum',
+        '„Wenn eine Aufgabe diese Kriterien erfüllt, lohnt es sich, über einen Workflow oder Agenten nachzudenken – und genau dafür gibt es das nächste Werkzeug."',
+        '<em>Übergang zu Praxisbeispielen</em>'
+      ]
     ]
   },
   // Slide 22 — Praxisbeispiele
   {
     time: '11:36',
     cols: [
-      ['3 Beispiele kurz erläutern – je 1 Minute', 'Meeting-Follow-up ist das eingängigste Beispiel – damit anfangen'],
-      ['Frage: „Welches davon klingt für euch relevant?"', 'Übergang: <em>„Das ist das Tool, das dabei hilft, die richtige Aufgabe zu finden"</em>']
+      [
+        '„Ich zeige euch drei echte Beispiele – nicht aus der Theorie, sondern aus der Praxis."',
+        '<strong>Meeting-Follow-up:</strong> „Aus einer Aufnahme entstehen automatisch Zusammenfassung, To-dos und Follow-up-Mail – in unter zwei Minuten."',
+        '<strong>Vertriebs-Workflow:</strong> „Kundeninfo rein, Angebotsentwurf raus – mit Lücken-Eskalation."'
+      ],
+      [
+        '<strong>Backoffice-Agent:</strong> „Unterlagen prüfen, Abweichungen melden, Sonderfälle eskalieren – automatisch."',
+        '<strong>Kurze Runde:</strong> „Welches davon klingt für euren Alltag am relevantesten?"',
+        '<em>Antworten kurz einordnen – dann zu KI-Canvas</em>'
+      ]
     ]
   },
   // Slide 23 — KI-Canvas
   {
     time: '11:38',
     cols: [
-      ['Canvas als strukturiertes Werkzeug erklären – 7 Felder, 2 Minuten', '„Das könnt ihr bei jedem neuen KI-Projekt nutzen – von der Idee zum Einsatz"'],
-      ['Handout erwähnen falls vorhanden', 'Übergang: „Jetzt kommen kurz die rechtlichen Grundlagen – wichtig, aber praxisnah"']
+      [
+        '„Das KI-Canvas ist ein strukturiertes Werkzeug – sieben Felder, die euch helfen, von einer vagen Idee zu einem konkreten KI-Einsatz zu kommen."',
+        'Felder kurz durchgehen: Aufgabe → Ergebnis → Assistent → Workflow → Agent → Freigaben → Erfolgskriterium'
+      ],
+      [
+        '„Nehmt das mit – als Denkrahmen für euer nächstes KI-Projekt."',
+        '<em>Handout erwähnen falls vorhanden</em>',
+        '<em>Übergang: „Jetzt kurz zu den rechtlichen Grundlagen – praxisnah, kein Jura-Vortrag."</em>'
+      ]
     ]
   },
   // Slide 24 — EU AI Act / Recht
   {
     time: '11:40',
     cols: [
-      ['„Kein Jura-Vortrag – nur was ihr wirklich wissen müsst"', 'Die 4 Karten kurz erklären – je 30 Sekunden'],
-      ['Betonen: <strong>5 Goldene Regeln</strong> – die mitnehmen', 'Fragen zu Recht jetzt oder nach dem Seminar – Kontakt steht auf der letzten Folie']
+      [
+        '„Ich will euch nicht mit Paragraphen langweilen – aber es gibt drei Dinge, die ihr wirklich wissen müsst."',
+        '<strong>Verboten:</strong> „Social Scoring, manipulative KI, Gesichtserkennung in der Öffentlichkeit – das betrifft euch im Alltag nicht, aber ihr solltet es kennen."',
+        '<strong>Hochrisiko:</strong> „KI in Personalentscheidungen oder Kreditvergabe – da gelten besondere Regeln."'
+      ],
+      [
+        '<strong>Die fünf goldenen Regeln:</strong> Keine sensiblen Daten eingeben · Ergebnisse prüfen · KI kennzeichnen · DSGVO beachten · Mensch bleibt verantwortlich',
+        '„Diese fünf Regeln – die reichen für den Anfang. Den Rest klärt ihr mit eurer Rechtsabteilung oder IT."',
+        '<em>Fragen zu Recht: gerne jetzt oder per E-Mail danach</em>'
+      ]
     ]
   },
   // Slide 25 — Transferplan
   {
     time: '11:55',
     cols: [
-      ['<strong>„Die gefährlichste Phase ist morgen früh – wenn der Alltag beginnt"</strong>', 'Jetzt 3 Minuten: Jeder schreibt eine konkrete Aufgabe auf, die er diese Woche mit KI angeht'],
-      ['Wer mag: teilt seinen Plan mit der Gruppe', '„Wer schreibt, tut. Wer denkt, vergisst."', '<strong>Nicht überspringen – das ist das wichtigste Ergebnis des Tages</strong>']
+      [
+        '<strong>„Die gefährlichste Phase ist morgen früh – wenn der Alltag beginnt und der heutige Impuls verblasst."</strong>',
+        '„Deswegen nehmen wir uns jetzt drei Minuten: Jeder schreibt eine konkrete Aufgabe auf, die er diese Woche mit KI angeht. Nicht irgendwann – diese Woche."',
+        '<em>Stille lassen – wirklich schreiben lassen</em>'
+      ],
+      [
+        '<strong>Kurze Runde:</strong> „Wer möchte seinen Plan kurz teilen?"',
+        '2–3 Antworten aufnehmen – positiv kommentieren',
+        '„Wer schreibt, tut. Wer nur denkt, vergisst."',
+        '<em>Das ist das wichtigste Ergebnis des Tages – nicht überspringen</em>'
+      ]
     ]
   },
   // Slide 26 — Abschluss
   {
     time: '12:00',
     cols: [
-      ['Abschluss-Runde: „Was nehmt ihr heute am meisten mit?" – kurze Antworten', 'Zitat vorlesen – Stille wirken lassen'],
-      ['Kontaktdaten zeigen – „Ich bin erreichbar, wenn ihr Fragen habt"', 'Feedback-Runde / Evaluation wenn vorhanden', '„Danke – jetzt ran an die Prompts"']
+      [
+        '<strong>Abschluss-Runde:</strong> „Was nehmt ihr heute am meisten mit? Ein Satz, reihum."',
+        'Zitat vorlesen – Pause wirken lassen',
+        '„Nicht die KI allein macht den Unterschied – sondern die Art, wie wir sie nutzen."'
+      ],
+      [
+        'Kontaktdaten nennen: „Ich bin erreichbar, wenn ihr Fragen habt – per Mail oder LinkedIn."',
+        '„Feedback-Karten ausfüllen wenn vorhanden."',
+        '„Danke für den Tag – jetzt ran an die Prompts."',
+        '<em>Nach dem Seminar: Nachfass-Mail mit Links und Handout vorbereiten</em>'
+      ]
     ]
   }
 ];
