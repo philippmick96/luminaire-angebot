@@ -1180,6 +1180,20 @@
 </div><!-- end h-sticky -->
 </div><!-- end h-presentation -->
 
+<!-- TRAINER MODE -->
+<div id="trainer-panel" aria-hidden="true">
+  <div id="trainer-panel-inner">
+    <div id="trainer-header">
+      <span id="trainer-slide-label">Folie 01 / 26</span>
+      <span id="trainer-time-label"></span>
+      <span id="trainer-toggle-hint"><kbd>N</kbd> schließen · <kbd>Esc</kbd> schließen</span>
+    </div>
+    <div id="trainer-notes-container">
+      <!-- notes injected by JS -->
+    </div>
+  </div>
+</div>
+<div id="trainer-badge">TRAINER</div>
 
 <script>
 const TOTAL = 26;
@@ -1588,22 +1602,6 @@ trainerObserver.observe(document.getElementById('slide-num'), { childList: true 
 // Init trainer
 updateTrainerPanel(0);
 </script>
-
-<!-- TRAINER MODE -->
-<div id="trainer-panel" aria-hidden="true">
-  <div id="trainer-panel-inner">
-    <div id="trainer-header">
-      <span id="trainer-slide-label">Folie 01 / 26</span>
-      <span id="trainer-time-label"></span>
-      <span id="trainer-toggle-hint"><kbd>N</kbd> schließen · <kbd>Esc</kbd> schließen</span>
-    </div>
-    <div id="trainer-notes-container">
-      <!-- notes injected by JS -->
-    </div>
-  </div>
-</div>
-
-<div id="trainer-badge">TRAINER</div>
 
 </body>
 </html>
