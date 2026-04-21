@@ -40,14 +40,57 @@
     }
     .nav-logo { font-size: 18px; font-weight: 800; color: #f5f5f7; text-decoration: none; letter-spacing: -0.03em; }
     .nav-logo span { color: #818cf8; }
-    .nav-center { display: flex; gap: 0; }
-    .nav-btn {
-      background: none; border: none; color: rgba(255,255,255,0.48);
-      font-size: 12.5px; font-weight: 500; font-family: inherit;
-      padding: 6px 15px; border-radius: 20px; cursor: none;
-      transition: color 0.2s, background 0.2s; letter-spacing: -0.01em;
+    /* ── SLIDE DROPDOWN ── */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.72); font-size: 12.5px; font-weight: 500; font-family: inherit;
+      padding: 6px 14px 6px 16px; border-radius: 8px; cursor: none;
+      transition: background 0.2s, border-color 0.2s, color 0.2s; letter-spacing: -0.01em;
+      white-space: nowrap;
     }
-    .nav-btn:hover { color: #f5f5f7; background: rgba(255,255,255,0.08); }
+    .nav-dropdown-btn:hover, .nav-dropdown-btn.open {
+      background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.18); color: #f0f0f5;
+    }
+    .nav-dropdown-arrow {
+      width: 14px; height: 14px; display: flex; align-items: center; justify-content: center;
+      opacity: 0.5; transition: transform 0.22s;
+    }
+    .nav-dropdown-btn.open .nav-dropdown-arrow { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: rgba(8,8,18,0.98); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; overflow: hidden; z-index: 2000;
+      min-width: 280px; max-height: 70vh; overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(99,102,241,0.12);
+      opacity: 0; transform: translateY(-6px) scale(0.98);
+      pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease;
+      scrollbar-width: thin; scrollbar-color: rgba(99,102,241,0.4) transparent;
+    }
+    .nav-dropdown-menu.open {
+      opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+    }
+    .nav-dd-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 9px 16px; cursor: none;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.15s;
+    }
+    .nav-dd-item:last-child { border-bottom: none; }
+    .nav-dd-item:hover { background: rgba(99,102,241,0.12); }
+    .nav-dd-item.active { background: rgba(99,102,241,0.16); }
+    .nav-dd-num {
+      font-size: 9.5px; font-weight: 700; color: #6366f1;
+      letter-spacing: 0.08em; min-width: 24px;
+    }
+    .nav-dd-title { font-size: 13px; color: rgba(255,255,255,0.75); letter-spacing: -0.01em; }
+    .nav-dd-item.active .nav-dd-title { color: #f0f0f5; font-weight: 500; }
+    .nav-dd-section {
+      padding: 6px 16px 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.2);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
     .nav-back {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.28);
@@ -507,13 +550,47 @@
 
 <nav id="nav">
   <a href="/" class="nav-logo">lumin<span>AI</span>re</a>
-  <div class="nav-center">
-    <button class="nav-btn" data-slide="0">Start</button>
-    <button class="nav-btn" data-slide="3">Agenda</button>
-    <button class="nav-btn" data-slide="9">Prompts</button>
-    <button class="nav-btn" data-slide="12">Use-Cases</button>
-    <button class="nav-btn" data-slide="15">Recht</button>
-    <button class="nav-btn" data-slide="25">Abschluss</button>
+  <div class="nav-dropdown" id="nav-dropdown">
+    <button class="nav-dropdown-btn" id="nav-dd-btn" onclick="toggleDropdown()">
+      <span id="nav-dd-label">Folie 01 / 26</span>
+      <span class="nav-dropdown-arrow">
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </button>
+    <div class="nav-dropdown-menu" id="nav-dd-menu">
+      <div class="nav-dd-section">Einführung</div>
+      <div class="nav-dd-item" data-slide="0"><span class="nav-dd-num">01</span><span class="nav-dd-title">KI im Arbeitsalltag</span></div>
+      <div class="nav-dd-item" data-slide="1"><span class="nav-dd-num">02</span><span class="nav-dd-title">Warum wir über KI sprechen</span></div>
+      <div class="nav-dd-item" data-slide="2"><span class="nav-dd-num">03</span><span class="nav-dd-title">Was Sie heute mitnehmen</span></div>
+      <div class="nav-dd-item" data-slide="3"><span class="nav-dd-num">04</span><span class="nav-dd-title">Agenda</span></div>
+      <div class="nav-dd-item" data-slide="4"><span class="nav-dd-num">05</span><span class="nav-dd-title">KI-Barometer</span></div>
+      <div class="nav-dd-section">Grundlagen</div>
+      <div class="nav-dd-item" data-slide="5"><span class="nav-dd-num">06</span><span class="nav-dd-title">Wow-Demo</span></div>
+      <div class="nav-dd-item" data-slide="6"><span class="nav-dd-num">07</span><span class="nav-dd-title">Was KI gut kann</span></div>
+      <div class="nav-dd-item" data-slide="7"><span class="nav-dd-num">08</span><span class="nav-dd-title">Was KI nicht kann</span></div>
+      <div class="nav-dd-item" data-slide="8"><span class="nav-dd-num">09</span><span class="nav-dd-title">Warum KI-Kompetenz wichtig ist</span></div>
+      <div class="nav-dd-section">Prompt Engineering</div>
+      <div class="nav-dd-item" data-slide="9"><span class="nav-dd-num">10</span><span class="nav-dd-title">Die Prompt-Formel</span></div>
+      <div class="nav-dd-item" data-slide="10"><span class="nav-dd-num">11</span><span class="nav-dd-title">Von vage zu wirksam</span></div>
+      <div class="nav-dd-item" data-slide="11"><span class="nav-dd-num">12</span><span class="nav-dd-title">KI als Denkpartner</span></div>
+      <div class="nav-dd-section">Praxis</div>
+      <div class="nav-dd-item" data-slide="12"><span class="nav-dd-num">13</span><span class="nav-dd-title">Konkrete Anwendungsfälle</span></div>
+      <div class="nav-dd-item" data-slide="13"><span class="nav-dd-num">14</span><span class="nav-dd-title">Mobil, Voice & Bilder</span></div>
+      <div class="nav-dd-item" data-slide="14"><span class="nav-dd-num">15</span><span class="nav-dd-title">Ergebnisse selbst prüfen</span></div>
+      <div class="nav-dd-item" data-slide="15"><span class="nav-dd-num">16</span><span class="nav-dd-title">Praxiswerkstatt</span></div>
+      <div class="nav-dd-section">Tools & Agenten</div>
+      <div class="nav-dd-item" data-slide="16"><span class="nav-dd-num">17</span><span class="nav-dd-title">Das richtige Tool für jede Aufgabe</span></div>
+      <div class="nav-dd-item" data-slide="17"><span class="nav-dd-num">18</span><span class="nav-dd-title">KI in der Arbeitsumgebung</span></div>
+      <div class="nav-dd-item" data-slide="18"><span class="nav-dd-num">19</span><span class="nav-dd-title">Vom Assistenten zum Agenten</span></div>
+      <div class="nav-dd-item" data-slide="19"><span class="nav-dd-num">20</span><span class="nav-dd-title">Was ein KI-Agent wirklich ist</span></div>
+      <div class="nav-dd-item" data-slide="20"><span class="nav-dd-num">21</span><span class="nav-dd-title">Wann lohnt sich Agentic AI?</span></div>
+      <div class="nav-dd-item" data-slide="21"><span class="nav-dd-num">22</span><span class="nav-dd-title">Praxisbeispiele Agenten</span></div>
+      <div class="nav-dd-item" data-slide="22"><span class="nav-dd-num">23</span><span class="nav-dd-title">KI-Canvas</span></div>
+      <div class="nav-dd-section">Abschluss</div>
+      <div class="nav-dd-item" data-slide="23"><span class="nav-dd-num">24</span><span class="nav-dd-title">Rechtlicher Rahmen & EU AI Act</span></div>
+      <div class="nav-dd-item" data-slide="24"><span class="nav-dd-num">25</span><span class="nav-dd-title">Transferplan</span></div>
+      <div class="nav-dd-item" data-slide="25"><span class="nav-dd-num">26</span><span class="nav-dd-title">Abschluss</span></div>
+    </div>
   </div>
   <a href="/" class="nav-back">← Zurück</a>
 </nav>
@@ -1210,6 +1287,12 @@ function updateUI() {
   hFill.style.width         = (prog * 100) + '%';
   scrollFill.style.width    = (prog * 100) + '%';
   nav.classList.add('solid');
+  /* sync dropdown label + active item */
+  const label = document.getElementById('nav-dd-label');
+  if (label) label.textContent = 'Folie ' + String(currentIdx + 1).padStart(2, '0') + ' / 26';
+  document.querySelectorAll('.nav-dd-item').forEach(item =>
+    item.classList.toggle('active', +item.dataset.slide === currentIdx)
+  );
 }
 
 /* ── KEYBOARD ── */
@@ -1246,10 +1329,36 @@ document.addEventListener('touchend', e => {
   }
 }, { passive: true });
 
-/* ── NAV BUTTONS ── */
-document.querySelectorAll('.nav-btn[data-slide]').forEach(btn =>
-  btn.addEventListener('click', () => goToSlide(+btn.dataset.slide))
+/* ── DROPDOWN NAV ── */
+function toggleDropdown() {
+  const btn  = document.getElementById('nav-dd-btn');
+  const menu = document.getElementById('nav-dd-menu');
+  if (!btn || !menu) return;
+  const open = menu.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  if (open) {
+    const active = menu.querySelector('.nav-dd-item.active');
+    if (active) active.scrollIntoView({ block: 'nearest' });
+  }
+}
+document.querySelectorAll('.nav-dd-item').forEach(item =>
+  item.addEventListener('click', () => {
+    goToSlide(+item.dataset.slide);
+    const menu = document.getElementById('nav-dd-menu');
+    const btn  = document.getElementById('nav-dd-btn');
+    if (menu) menu.classList.remove('open');
+    if (btn)  btn.classList.remove('open');
+  })
 );
+document.addEventListener('click', e => {
+  const dd = document.getElementById('nav-dropdown');
+  if (dd && !dd.contains(e.target)) {
+    const menu = document.getElementById('nav-dd-menu');
+    const btn  = document.getElementById('nav-dd-btn');
+    if (menu) menu.classList.remove('open');
+    if (btn)  btn.classList.remove('open');
+  }
+});
 
 /* ── CURSOR ── */
 (function() {
