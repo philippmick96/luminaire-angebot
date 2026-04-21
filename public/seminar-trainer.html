@@ -1359,6 +1359,8 @@ document.addEventListener('keydown', e => {
 let wheelTimer = null;
 let wheelAcc   = 0;
 window.addEventListener('wheel', e => {
+  const dd = document.getElementById('nav-dd-menu');
+  if (dd && dd.contains(e.target)) return;
   e.preventDefault();
   wheelAcc += e.deltaY + e.deltaX;
   clearTimeout(wheelTimer);
