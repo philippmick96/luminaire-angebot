@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KI-Führerschein Seminar · luminAIre</title>
+  <title>KI-Führerschein Seminar · luminAIre [TRAINER]</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
   <style>
@@ -497,6 +497,65 @@
       .closing-contacts { gap: 28px; }
       .h-key-hint { display: none; }
     }
+
+/* ── TRAINER MODE ── */
+#trainer-badge {
+  position: fixed; top: 64px; right: 20px; z-index: 5000;
+  background: rgba(99,102,241,0.9); color: #fff;
+  font-size: 9px; font-weight: 800; letter-spacing: 0.16em;
+  padding: 3px 10px; border-radius: 4px;
+  font-family: inherit;
+}
+#trainer-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 4000;
+  transform: translateY(100%);
+  transition: transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+#trainer-panel.open { transform: translateY(0); }
+#trainer-panel-inner {
+  background: rgba(4,4,12,0.97);
+  border-top: 1px solid rgba(99,102,241,0.4);
+  padding: 14px 48px 18px;
+}
+#trainer-header {
+  display: flex; align-items: center; gap: 24px; margin-bottom: 10px;
+}
+#trainer-slide-label {
+  font-size: 10px; font-weight: 700; color: #818cf8; letter-spacing: 0.08em; text-transform: uppercase;
+}
+#trainer-time-label {
+  font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 0.04em;
+}
+#trainer-toggle-hint {
+  font-size: 9px; color: rgba(255,255,255,0.2); margin-left: auto; letter-spacing: 0.04em;
+}
+#trainer-toggle-hint kbd {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 3px; padding: 1px 5px; font-size: 9px; font-family: inherit;
+}
+#trainer-notes-container {
+  display: flex; gap: 32px; flex-wrap: nowrap;
+}
+.trainer-note-col {
+  flex: 1; min-width: 0;
+}
+.trainer-note-col ul {
+  list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px;
+}
+.trainer-note-col li {
+  font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.45; letter-spacing: -0.01em;
+  padding-left: 14px; position: relative;
+}
+.trainer-note-col li::before {
+  content: '→'; position: absolute; left: 0;
+  color: #6366f1; font-size: 10px; top: 1px;
+}
+.trainer-note-col li strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+.trainer-note-col li em { color: rgba(129,140,248,0.85); font-style: normal; }
+@media (max-width: 768px) {
+  #trainer-panel-inner { padding: 12px 20px 16px; }
+  #trainer-notes-container { flex-direction: column; gap: 10px; }
+}
   </style>
 </head>
 <body>
@@ -1114,6 +1173,9 @@
   <div class="h-key-hint">
     <span class="key-badge">↑↓</span> oder <span class="key-badge">←→</span> navigieren
   </div>
+  <div class="h-key-hint" style="bottom:48px">
+    <span class="key-badge">N</span> Moderationshinweise
+  </div>
 
 </div><!-- end h-sticky -->
 </div><!-- end h-presentation -->
@@ -1275,6 +1337,273 @@ activateSlide(0);
 updateUI();
 scrollHint.classList.remove('hidden');
 nav.classList.add('solid');
+/* ── TRAINER MODE ── */
+const TRAINER_NOTES = [
+  // Slide 1 — Hero
+  {
+    time: '09:00',
+    cols: [
+      ['<strong>Begrüßung & Vorstellung</strong> – Name, luminAIre, wer du bist (kurz: 1 Min)', 'Sag wo die Toiletten sind, wann Pause ist', 'Handy darf bleiben – wer mitmacht lernt mehr'],
+      ['„Heute kein Theorievortrag – ihr geht mit etwas raus, das ihr morgen früh anwenden könnt"', '<strong>Ziel setzen:</strong> Jeder verlässt mit einem konkreten Anwendungsfall aus dem eigenen Alltag']
+    ]
+  },
+  // Slide 2 — Warum
+  {
+    time: '09:02',
+    cols: [
+      ['<strong>Einstieg-Frage:</strong> „Wer hat heute schon KI benutzt?" (Autocomplete zählt auch)', 'Kurze Runde – Finger hoch, nicht reden'],
+      ['Betonen: KI ist keine Zukunftsmusik – sie verändert bereits heute den Arbeitsalltag', '„Wer es früh lernt, hat einen echten Vorsprung – das ist der Grund warum wir hier sind"']
+    ]
+  },
+  // Slide 3 — Lernziele
+  {
+    time: '09:05',
+    cols: [
+      ['Lernziele kurz vorlesen – nicht vertiefen, das kommt alles noch', '„Das sind Versprechen – haltet mich dran fest"'],
+      ['Betonen: Am Ende <strong>persönlicher Action-Plan</strong> – das ist das konkrete Ergebnis', 'Jetzt Fragen stellen erlaubt – auch während der Präsentation']
+    ]
+  },
+  // Slide 4 — Agenda
+  {
+    time: '09:07',
+    cols: [
+      ['Überblick geben ohne jeden Punkt zu erklären – Tempo halten', 'Markieren: <em>Block 3 (Prompt-Formel)</em> und <em>Block 6 (Workshop)</em> sind die Kerninhalte'],
+      ['„Wir passen das Tempo der Gruppe an – wenn ihr mehr Zeit braucht, nehmen wir sie uns"', 'Pause kommt um 10:25 – ca. 15 Minuten']
+    ]
+  },
+  // Slide 5 — Barometer
+  {
+    time: '09:10',
+    cols: [
+      ['<strong>Aktiv: Handzeichen einholen</strong> für jede Stufe', '„Keine falsche Antwort – ich will nur verstehen wo wir stehen"'],
+      ['Notiz machen: Wie viele Fortgeschrittene? → Tiefe des Workshops anpassen', '„Perfekt – das ist bewusst gemischt, die Erfahrenen helfen den Anfängern"']
+    ]
+  },
+  // Slide 6 — Wow-Demo
+  {
+    time: '09:15',
+    cols: [
+      ['<strong>LIVE DEMO</strong> – jetzt ChatGPT / Claude öffnen (Tab bereits offen haben!)', 'Demo-Idee: „Erstelle mir eine vollständige Meeting-Agenda für ein Kick-off mit 8 Personen – Thema: Einführung eines neuen CRM-Systems"'],
+      ['Ergebnis abwarten, laut vorlesen – dann Stille wirken lassen', '„Das eben: 45 Sekunden. Früher: 30–45 Minuten. Das ist keine Ausnahme."', 'Fragen aufnehmen, aber nicht zu lange – Tempo halten']
+    ]
+  },
+  // Slide 7 — Was KI gut kann
+  {
+    time: '09:25',
+    cols: [
+      ['Schnell durch die 6 Felder – je 20 Sekunden max', 'Interaktion: „Wer von euch macht schon eines davon mit KI?"'],
+      ['Merksatz: <em>„KI ist am stärksten bei textlastigen, vorbereitenden Aufgaben"</em>', 'Übergang: „Jetzt das Gegenteil – was kann KI NICHT?"']
+    ]
+  },
+  // Slide 8 — Was KI nicht kann
+  {
+    time: '09:30',
+    cols: [
+      ['<strong>WICHTIG:</strong> Nicht Angst machen – realistisch einordnen', '„KI halluziniert – das ist eine technische Tatsache, kein Bug"'],
+      ['Beispiel nennen: „ChatGPT hat mir mal eine Quelle erfunden, die es gar nicht gibt"', 'Merksatz: <em>„Der Mensch bleibt immer verantwortlich – KI liefert einen Entwurf"</em>']
+    ]
+  },
+  // Slide 9 — KI-Kompetenz
+  {
+    time: '09:33',
+    cols: [
+      ['„Warum heißt das KI-Führerschein?" – Analogie: Autofahren lernt man auch, bevor man auf die Autobahn fährt', 'KI-Kompetenz = wissen wie man eingibt, prüft und entscheidet'],
+      ['Übergang zu Prompt-Engineering: „Der wichtigste Skill ist nicht welches Tool – sondern wie ihr es befehlt"']
+    ]
+  },
+  // Slide 10 — Prompt-Formel
+  {
+    time: '09:35',
+    cols: [
+      ['<strong>DIE WICHTIGSTE FOLIE DES TAGES</strong> – explizit so sagen', 'Formel LANGSAM erklären: Rolle → Kontext → Ziel → Format → Qualität', 'Jedes Element mit einem Alltagsbeispiel erläutern'],
+      ['<strong>Interaktion:</strong> „Wer kann die 5 Elemente wiederholen?"', 'Merkhilfe: <em>„Stell dir vor du beaufträgst einen neuen Mitarbeiter – je genauer du erklärst, desto besser das Ergebnis"</em>']
+    ]
+  },
+  // Slide 11 — Von vage zu wirksam
+  {
+    time: '09:50',
+    cols: [
+      ['<strong>LIVE:</strong> Beide Prompts eintippen, Ergebnis live zeigen und vergleichen', '„Ihr seht den Unterschied sofort – das ist kein Zufall, das ist Methode"'],
+      ['Pause für Fragen – das ist ein guter Moment', 'Jetzt: „Traut euch das in Block 6 selbst auszuprobieren"']
+    ]
+  },
+  // Slide 12 — KI als mehr als Suche
+  {
+    time: '09:58',
+    cols: [
+      ['„KI ist nicht Google 2.0 – es ist ein Denkpartner"', 'Analogie: <em>„Stellt euch einen Kollegen vor, der immer Zeit hat, nie müde ist, nie urteilt und alles schon gelesen hat"</em>'],
+      ['Kurzer Austausch: „Wofür würdet ihr so einen Kollegen einsetzen?"', 'Übergang: „Genau das schauen wir uns jetzt konkret an"']
+    ]
+  },
+  // Slide 13 — Konkrete Anwendungsfälle
+  {
+    time: '10:02',
+    cols: [
+      ['Kurze Runde: „Was davon kommt bei euch vor?" – Finger hoch', 'Live-Beispiel zeigen wenn Zeit: E-Mail-Entwurf oder Zusammenfassung'],
+      ['Nicht zu lange – Block 4 kommt noch mit Hands-on', 'Merken: Was hat die Gruppe rausgesucht? → im Workshop darauf eingehen']
+    ]
+  },
+  // Slide 14 — Mobil / Voice / Bilder
+  {
+    time: '10:05',
+    cols: [
+      ['<strong>HANDS-ON:</strong> „Jetzt Handy raus – wer hat noch kein KI-Tool drauf?"', 'ChatGPT / Gemini / Claude installieren lassen – 3 Minuten'],
+      ['<strong>Voice-Modus live zeigen</strong> – in Mikrofon sprechen, Ergebnis vorlesen', 'Optional: Kurzes Bild generieren lassen (DALL-E oder Gemini)', '„Das läuft auf jedem Handy – kostenlos, sofort"']
+    ]
+  },
+  // Slide 15 — Selbst prüfen
+  {
+    time: '10:18',
+    cols: [
+      ['„Goldene Regel: Immer mit gesundem Menschenverstand prüfen"', 'Eigenes Beispiel: Wann hast du KI-Output blind übernommen und es war falsch?'],
+      ['Kurze Checkliste durchgehen', '<strong>Pause ankündigen:</strong> „Wir machen gleich 15 Minuten – danach der wichtigste Block des Tages"']
+    ]
+  },
+  // Slide 16 — Praxiswerkstatt
+  {
+    time: '10:40',
+    cols: [
+      ['<strong>WORKSHOP START</strong> – „Jetzt seid ihr dran"', 'Aufgabe erklären: Jeder denkt an eine echte Aufgabe aus dem eigenen Arbeitsalltag', '35 Minuten – ihr arbeitet, ich gehe rum und helfe'],
+      ['Ziel: Jeder verlässt mit einem fertigen Prompt oder Ergebnis', 'Bei Blockaden helfen: „Was nervt dich wöchentlich am meisten? Fang damit an"', '<strong>Aktiv durch die Runde gehen – nicht vorne stehen</strong>']
+    ]
+  },
+  // Slide 17 — Tools & Modelle
+  {
+    time: '11:15',
+    cols: [
+      ['Überblick-Slide – nicht zu tief gehen, 5 Minuten max', '„Nicht der Name des Tools entscheidet – sondern die Aufgabe"'],
+      ['Frage: „Welche Tools habt ihr bereits im Einsatz?" – kurze Runde', 'Details im Handout – jetzt weiter zur Integration']
+    ]
+  },
+  // Slide 18 — KI in der Arbeitsumgebung
+  {
+    time: '11:20',
+    cols: [
+      ['„Das Beste: KI kommt zu euch – in eure gewohnten Tools"', 'Copilot / Google Workspace kurz zeigen wenn verfügbar'],
+      ['„Fragt eure IT, was bereits lizenziert ist – oft schon vorhanden"', 'Nicht jedes Tool einzeln erklären – Beispiele nennen']
+    ]
+  },
+  // Slide 19 — Drei Reifestufen
+  {
+    time: '11:25',
+    cols: [
+      ['„Wir reden jetzt über das nächste Level – Workflows und Agenten"', 'Stufen klar erklären: Assistent → Workflow → Agent'],
+      ['„Heute sind die meisten von euch auf Stufe 01 – das ist der richtige Start"', 'Merksatz: <em>„Stufe 02 und 03 kommen natürlich – wenn man Stufe 01 beherrscht"</em>']
+    ]
+  },
+  // Slide 20 — Was ist ein Agent
+  {
+    time: '11:28',
+    cols: [
+      ['„Agent klingt nach Science-Fiction – ist es aber nicht"', 'Beispiel: <em>„Morgendlicher Briefing-Agent: fasst Emails zusammen, listet Termine, erstellt To-do-Liste – automatisch"</em>'],
+      ['Betonen: <strong>Immer mit menschlicher Freigabe</strong> – KI entscheidet nicht alleine', 'Übergang: „Wann lohnt sich das eigentlich?"']
+    ]
+  },
+  // Slide 21 — Wann lohnt sich Agentic AI
+  {
+    time: '11:32',
+    cols: [
+      ['Checkliste gemeinsam durchgehen', '<strong>Interaktion:</strong> „Welche Aufgabe aus deinem Alltag erfüllt 3 oder mehr Kriterien?"'],
+      ['Kurze Runde – 2–3 Antworten einholen', 'Übergang: „Ich zeige euch 3 echte Beispiele"']
+    ]
+  },
+  // Slide 22 — Praxisbeispiele
+  {
+    time: '11:36',
+    cols: [
+      ['3 Beispiele kurz erläutern – je 1 Minute', 'Meeting-Follow-up ist das eingängigste Beispiel – damit anfangen'],
+      ['Frage: „Welches davon klingt für euch relevant?"', 'Übergang: <em>„Das ist das Tool, das dabei hilft, die richtige Aufgabe zu finden"</em>']
+    ]
+  },
+  // Slide 23 — KI-Canvas
+  {
+    time: '11:38',
+    cols: [
+      ['Canvas als strukturiertes Werkzeug erklären – 7 Felder, 2 Minuten', '„Das könnt ihr bei jedem neuen KI-Projekt nutzen – von der Idee zum Einsatz"'],
+      ['Handout erwähnen falls vorhanden', 'Übergang: „Jetzt kommen kurz die rechtlichen Grundlagen – wichtig, aber praxisnah"']
+    ]
+  },
+  // Slide 24 — EU AI Act / Recht
+  {
+    time: '11:40',
+    cols: [
+      ['„Kein Jura-Vortrag – nur was ihr wirklich wissen müsst"', 'Die 4 Karten kurz erklären – je 30 Sekunden'],
+      ['Betonen: <strong>5 Goldene Regeln</strong> – die mitnehmen', 'Fragen zu Recht jetzt oder nach dem Seminar – Kontakt steht auf der letzten Folie']
+    ]
+  },
+  // Slide 25 — Transferplan
+  {
+    time: '11:55',
+    cols: [
+      ['<strong>„Die gefährlichste Phase ist morgen früh – wenn der Alltag beginnt"</strong>', 'Jetzt 3 Minuten: Jeder schreibt eine konkrete Aufgabe auf, die er diese Woche mit KI angeht'],
+      ['Wer mag: teilt seinen Plan mit der Gruppe', '„Wer schreibt, tut. Wer denkt, vergisst."', '<strong>Nicht überspringen – das ist das wichtigste Ergebnis des Tages</strong>']
+    ]
+  },
+  // Slide 26 — Abschluss
+  {
+    time: '12:00',
+    cols: [
+      ['Abschluss-Runde: „Was nehmt ihr heute am meisten mit?" – kurze Antworten', 'Zitat vorlesen – Stille wirken lassen'],
+      ['Kontaktdaten zeigen – „Ich bin erreichbar, wenn ihr Fragen habt"', 'Feedback-Runde / Evaluation wenn vorhanden', '„Danke – jetzt ran an die Prompts"']
+    ]
+  }
+];
+
+const trainerPanel   = document.getElementById('trainer-panel');
+const trainerNotes   = document.getElementById('trainer-notes-container');
+const trainerSlideEl = document.getElementById('trainer-slide-label');
+const trainerTimeEl  = document.getElementById('trainer-time-label');
+let notesOpen = false;
+
+function updateTrainerPanel(idx) {
+  const note = TRAINER_NOTES[idx];
+  if (!note) return;
+  trainerSlideEl.textContent = `Folie ${String(idx + 1).padStart(2,'0')} / 26`;
+  trainerTimeEl.textContent  = note.time ? `ca. ${note.time} Uhr` : '';
+  trainerNotes.innerHTML = note.cols.map(col =>
+    `<div class="trainer-note-col"><ul>${col.map(item => `<li>${item}</li>`).join('')}</ul></div>`
+  ).join('');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'n' || e.key === 'N') {
+    notesOpen = !notesOpen;
+    trainerPanel.classList.toggle('open', notesOpen);
+    if (notesOpen) updateTrainerPanel(currentIdx);
+  }
+  if (e.key === 'Escape' && notesOpen) {
+    notesOpen = false;
+    trainerPanel.classList.remove('open');
+  }
+});
+
+// Update notes when slide changes (if panel is open)
+const _origGoToSlide = goToSlide;
+// Patch: after goToSlide resolves, update trainer panel
+const trainerObserver = new MutationObserver(() => {
+  if (notesOpen) updateTrainerPanel(currentIdx);
+});
+trainerObserver.observe(document.getElementById('slide-num'), { childList: true });
+
+// Init trainer
+updateTrainerPanel(0);
 </script>
+
+<!-- TRAINER MODE -->
+<div id="trainer-panel" aria-hidden="true">
+  <div id="trainer-panel-inner">
+    <div id="trainer-header">
+      <span id="trainer-slide-label">Folie 01 / 26</span>
+      <span id="trainer-time-label"></span>
+      <span id="trainer-toggle-hint"><kbd>N</kbd> schließen · <kbd>Esc</kbd> schließen</span>
+    </div>
+    <div id="trainer-notes-container">
+      <!-- notes injected by JS -->
+    </div>
+  </div>
+</div>
+
+<div id="trainer-badge">TRAINER</div>
+
 </body>
 </html>
