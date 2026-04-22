@@ -97,7 +97,7 @@
       width: 100vw; height: 100vh; flex-shrink: 0;
       position: relative; display: flex;
       align-items: center; justify-content: center;
-      overflow: hidden; contain: layout style paint;
+      overflow-y: auto; contain: layout style paint;
     }
 
     /* ── SLIDE BACKGROUNDS — CSS only, no images ── */
@@ -1344,6 +1344,8 @@ function goToSlide(idx) {
 
   /* Move the track — CSS transition handles the animation */
   track.style.transform = `translateX(${-idx * 100}vw)`;
+  /* Reset vertical scroll on the target slide */
+  if (slides[idx]) slides[idx].scrollTop = 0;
 
   /* Active / inactive slide styling — opacity is GPU-composited, no repaint */
   slides.forEach((s, i) => {
@@ -1406,6 +1408,14 @@ let wheelAcc   = 0;
 window.addEventListener('wheel', e => {
   const dd = document.getElementById('nav-dd-menu');
   if (dd && dd.contains(e.target)) return;
+  /* Allow scrolling within a slide that overflows */
+  const slide = e.target.closest('.h-slide');
+  if (slide && slide.scrollHeight > slide.clientHeight) {
+    const goingDown = (e.deltaY + e.deltaX) > 0;
+    const atBottom  = slide.scrollHeight - slide.scrollTop <= slide.clientHeight + 2;
+    const atTop     = slide.scrollTop <= 0;
+    if ((goingDown && !atBottom) || (!goingDown && !atTop)) return;
+  }
   e.preventDefault();
   wheelAcc += e.deltaY + e.deltaX;
   clearTimeout(wheelTimer);
