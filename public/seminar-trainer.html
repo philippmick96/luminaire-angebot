@@ -1921,9 +1921,23 @@ function updateTrainerPanel(idx) {
 const trainerObserver = new MutationObserver(() => updateTrainerPanel(currentIdx));
 trainerObserver.observe(document.getElementById('slide-num'), { childList: true });
 
-// Init trainer — open immediately
-trainerPanel.classList.add('open');
 updateTrainerPanel(0);
+
+// Show panel on hover near bottom edge
+const HOVER_ZONE = 80; // px from bottom to trigger
+let panelHovered = false;
+
+document.addEventListener('mousemove', e => {
+  const nearBottom = e.clientY >= window.innerHeight - HOVER_ZONE;
+  if (nearBottom || panelHovered) {
+    trainerPanel.classList.add('open');
+  } else {
+    trainerPanel.classList.remove('open');
+  }
+});
+
+trainerPanel.addEventListener('mouseenter', () => { panelHovered = true;  trainerPanel.classList.add('open'); });
+trainerPanel.addEventListener('mouseleave', () => { panelHovered = false; trainerPanel.classList.remove('open'); });
 </script>
 
 </body>
