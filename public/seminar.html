@@ -112,9 +112,8 @@
     .h-slide {
       width: 100vw; height: 100vh; flex-shrink: 0;
       position: relative; display: flex;
-      align-items: center; justify-content: center;
-      overflow-y: auto;
-      overflow: hidden; contain: layout style paint;
+      align-items: flex-start; justify-content: center;
+      overflow-y: auto; overflow-x: hidden; contain: layout style paint;
     }
 
     /* ── SLIDE BACKGROUNDS — CSS only, no images ── */
@@ -175,6 +174,7 @@
       width: 100%; max-width: 1020px;
       padding: 90px 56px 72px;
       text-align: center;
+      margin: auto;
     }
     .s-content.left { text-align: left; }
     .s-content.wide { max-width: 1180px; }
