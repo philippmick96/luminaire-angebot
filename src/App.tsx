@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer'
-import type { QuoteData, LineItem, CardData } from './types'
+import type { QuoteData, LineItem, CardData, BankDetails } from './types'
 import { LuminairePDF } from './components/PDFTemplate'
 import { BusinessCardPDF } from './components/BusinessCardPDF'
 import { BusinessCardFront, BusinessCardBack } from './components/BusinessCardPreview'
@@ -10,10 +10,11 @@ type View = 'landing' | 'tool'
 
 // ── Helpers ────────────────────────────────────────────────────
 
-function generateQuoteNumber(): string {
+function generateQuoteNumber(type: 'angebot' | 'rechnung' = 'angebot'): string {
   const year = new Date().getFullYear()
   const num  = String(Math.floor(Math.random() * 900) + 100)
-  return `LUM-${year}-${num}`
+  const prefix = type === 'rechnung' ? 'RE' : 'AN'
+  return `LUM-${prefix}-${year}-${num}`
 }
 
 function toInput(d: Date): string {
@@ -60,7 +61,8 @@ const validUntil = new Date(today)
 validUntil.setDate(validUntil.getDate() + 30)
 
 const DEFAULT: QuoteData = {
-  quoteNumber: generateQuoteNumber(),
+  docType: 'angebot',
+  quoteNumber: generateQuoteNumber('angebot'),
   date: toInput(today),
   validUntil: toInput(validUntil),
   customer: {
@@ -86,6 +88,12 @@ const DEFAULT: QuoteData = {
   notes:
     'Das Angebot ist 30 Tage gültig.\nZahlungsziel: 14 Tage nach Rechnungsstellung.',
   vatRate: 19,
+  bankDetails: {
+    accountHolder: 'Luminaire',
+    iban: '',
+    bic: '',
+    bank: '',
+  },
 }
 
 // ── Component ──────────────────────────────────────────────────
@@ -127,6 +135,24 @@ export default function App() {
     setData(prev => ({ ...prev, customer: { ...prev.customer, [field]: value } }))
   }
 
+  function setBank(field: keyof BankDetails, value: string) {
+    setData(prev => ({ ...prev, bankDetails: { ...prev.bankDetails, [field]: value } }))
+  }
+
+  function switchDocType(type: 'angebot' | 'rechnung') {
+    const dueDate = new Date(today)
+    dueDate.setDate(dueDate.getDate() + (type === 'rechnung' ? 14 : 30))
+    setData(prev => ({
+      ...prev,
+      docType: type,
+      quoteNumber: generateQuoteNumber(type),
+      validUntil: toInput(dueDate),
+      notes: type === 'rechnung'
+        ? 'Bitte überweisen Sie den Rechnungsbetrag innerhalb von 14 Tagen ohne Abzug.'
+        : 'Das Angebot ist 30 Tage gültig.\nZahlungsziel: 14 Tage nach Rechnungsstellung.',
+    }))
+  }
+
   function setItem(id: string, field: keyof LineItem, value: string | number) {
     setData(prev => ({
       ...prev,
@@ -157,7 +183,8 @@ export default function App() {
   const vat   = net * (data.vatRate / 100)
   const gross = net + vat
 
-  const fileName = `Angebot_${data.quoteNumber}_${
+  const docLabel = data.docType === 'rechnung' ? 'Rechnung' : 'Angebot'
+  const fileName = `${docLabel}_${data.quoteNumber}_${
     (data.customer.company || data.customer.name || 'Kunde').replace(/[^\w\s-]/g, '').trim()
   }.pdf`
 
@@ -368,12 +395,31 @@ export default function App() {
         {/* ── FORM PANEL ─────────────────────────────── */}
         <div className="form-panel">
 
-          {/* Angebotsdaten */}
+          {/* Dokumenttyp */}
           <div className="form-section">
-            <h3>Angebot</h3>
+            <h3>Dokumenttyp</h3>
+            <div className="doc-type-toggle">
+              <button
+                className={`doc-type-btn${data.docType === 'angebot' ? ' active' : ''}`}
+                onClick={() => switchDocType('angebot')}
+              >
+                Angebot
+              </button>
+              <button
+                className={`doc-type-btn${data.docType === 'rechnung' ? ' active' : ''}`}
+                onClick={() => switchDocType('rechnung')}
+              >
+                Rechnung
+              </button>
+            </div>
+          </div>
+
+          {/* Dokument­daten */}
+          <div className="form-section">
+            <h3>{docLabel}</h3>
             <div className="form-row">
               <div className="form-group">
-                <label>Angebotsnummer</label>
+                <label>{docLabel}snummer</label>
                 <input
                   value={data.quoteNumber}
                   onChange={e => set('quoteNumber', e.target.value)}
@@ -401,7 +447,7 @@ export default function App() {
                 />
               </div>
               <div className="form-group">
-                <label>Gültig bis</label>
+                <label>{data.docType === 'rechnung' ? 'Fällig am' : 'Gültig bis'}</label>
                 <input
                   type="date"
                   value={data.validUntil}
@@ -603,6 +649,47 @@ export default function App() {
             </div>
           </div>
 
+          {/* Bankverbindung (nur Rechnung) */}
+          {data.docType === 'rechnung' && (
+            <div className="form-section">
+              <h3>Bankverbindung</h3>
+              <div className="form-group">
+                <label>Kontoinhaber</label>
+                <input
+                  value={data.bankDetails.accountHolder}
+                  onChange={e => setBank('accountHolder', e.target.value)}
+                  placeholder="Luminaire"
+                />
+              </div>
+              <div className="form-group">
+                <label>IBAN</label>
+                <input
+                  value={data.bankDetails.iban}
+                  onChange={e => setBank('iban', e.target.value)}
+                  placeholder="DE00 0000 0000 0000 0000 00"
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>BIC</label>
+                  <input
+                    value={data.bankDetails.bic}
+                    onChange={e => setBank('bic', e.target.value)}
+                    placeholder="BELADEBEXXX"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Bank</label>
+                  <input
+                    value={data.bankDetails.bank}
+                    onChange={e => setBank('bank', e.target.value)}
+                    placeholder="Sparkasse Saarbrücken"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Download */}
           <div className="form-section">
             <PDFDownloadLink
@@ -610,7 +697,7 @@ export default function App() {
               fileName={fileName}
               className="btn btn-primary download-btn"
             >
-              ↓ PDF herunterladen
+              ↓ {docLabel} herunterladen
             </PDFDownloadLink>
           </div>
 

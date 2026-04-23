@@ -145,6 +145,17 @@ function makeStyles(C: typeof DARK) {
     signatureLine:  { borderTopWidth: 1, borderTopColor: C.border, borderStyle: 'solid' as const, marginBottom: 3 },
     signatureHint:  { fontFamily: P, fontWeight: 400 as const, fontSize: 7, color: C.light },
 
+    bankBox: {
+      backgroundColor: C.purpleDim, borderWidth: 1, borderColor: C.border,
+      borderStyle: 'solid' as const, borderRadius: 6, padding: 14, marginBottom: 20,
+    },
+    bankLabel: { fontFamily: P, fontWeight: 600 as const, fontSize: 7, color: C.purple, letterSpacing: 1.5, marginBottom: 8 },
+    bankRow:   { flexDirection: 'row' as const, gap: 20 },
+    bankCol:   { flex: 1 },
+    bankItem:  { fontFamily: P, fontWeight: 400 as const, fontSize: 8.5, color: C.body, marginBottom: 4 },
+    bankKey:   { fontFamily: P, fontWeight: 600 as const, fontSize: 8.5, color: C.muted },
+    bankVal:   { fontFamily: P, fontWeight: 400 as const, fontSize: 8.5, color: C.body },
+
     footerAccent: { position: 'absolute' as const, bottom: 44, left: 0, right: 0, height: 2, backgroundColor: C.purple },
     footer: {
       position: 'absolute' as const, bottom: 0, left: 0, right: 0,
@@ -176,9 +187,10 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
   const net   = data.items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0)
   const vat   = net * (data.vatRate / 100)
   const gross = net + vat
+  const isInvoice = data.docType === 'rechnung'
 
   return (
-    <Document title={`Angebot ${data.quoteNumber}`} author="Luminaire">
+    <Document title={`${isInvoice ? 'Rechnung' : 'Angebot'} ${data.quoteNumber}`} author="Luminaire">
       <Page size="A4" style={s.page}>
 
         {/* ── HEADER ─────────────────────────────────── */}
@@ -193,9 +205,9 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
             <Text style={s.logoTagline}>Das Teuerste an KI ist, sie nicht zu nutzen.</Text>
           </View>
           <View style={s.headerRight}>
-            <Text style={s.docTitle}>ANGEBOT</Text>
+            <Text style={s.docTitle}>{isInvoice ? 'RECHNUNG' : 'ANGEBOT'}</Text>
             <View style={s.docMetaRow}>
-              <Text style={s.docMetaLabel}>Angebotsnr.</Text>
+              <Text style={s.docMetaLabel}>{isInvoice ? 'Rechnungsnr.' : 'Angebotsnr.'}</Text>
               <Text style={s.docMetaValue}>{data.quoteNumber}</Text>
             </View>
             <View style={s.docMetaRow}>
@@ -203,7 +215,7 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
               <Text style={s.docMetaValue}>{fmtDate(data.date)}</Text>
             </View>
             <View style={s.docMetaRow}>
-              <Text style={s.docMetaLabel}>Gültig bis</Text>
+              <Text style={s.docMetaLabel}>{isInvoice ? 'Fällig am' : 'Gültig bis'}</Text>
               <Text style={s.docMetaValue}>{fmtDate(data.validUntil)}</Text>
             </View>
           </View>
@@ -292,18 +304,46 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
             </View>
           ) : null}
 
-          <View style={s.signatureRow}>
-            <View style={s.signatureBox}>
-              <Text style={s.signatureLabel}>Datum &amp; Ort</Text>
-              <View style={s.signatureLine} />
-              <Text style={s.signatureHint}>Datum, Ort</Text>
+          {isInvoice ? (
+            <View style={s.bankBox}>
+              <Text style={s.bankLabel}>BANKVERBINDUNG</Text>
+              <View style={s.bankRow}>
+                <View style={s.bankCol}>
+                  <Text style={s.bankItem}>
+                    <Text style={s.bankKey}>Kontoinhaber: </Text>
+                    <Text style={s.bankVal}>{data.bankDetails?.accountHolder || 'Luminaire'}</Text>
+                  </Text>
+                  <Text style={s.bankItem}>
+                    <Text style={s.bankKey}>IBAN: </Text>
+                    <Text style={s.bankVal}>{data.bankDetails?.iban || '–'}</Text>
+                  </Text>
+                </View>
+                <View style={s.bankCol}>
+                  <Text style={s.bankItem}>
+                    <Text style={s.bankKey}>BIC: </Text>
+                    <Text style={s.bankVal}>{data.bankDetails?.bic || '–'}</Text>
+                  </Text>
+                  <Text style={s.bankItem}>
+                    <Text style={s.bankKey}>Bank: </Text>
+                    <Text style={s.bankVal}>{data.bankDetails?.bank || '–'}</Text>
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={s.signatureBox}>
-              <Text style={s.signatureLabel}>Auftragsbestätigung (Unterschrift &amp; Stempel)</Text>
-              <View style={s.signatureLine} />
-              <Text style={s.signatureHint}>Unterschrift, Firmenstempel</Text>
+          ) : (
+            <View style={s.signatureRow}>
+              <View style={s.signatureBox}>
+                <Text style={s.signatureLabel}>Datum &amp; Ort</Text>
+                <View style={s.signatureLine} />
+                <Text style={s.signatureHint}>Datum, Ort</Text>
+              </View>
+              <View style={s.signatureBox}>
+                <Text style={s.signatureLabel}>Auftragsbestätigung (Unterschrift &amp; Stempel)</Text>
+                <View style={s.signatureLine} />
+                <Text style={s.signatureHint}>Unterschrift, Firmenstempel</Text>
+              </View>
             </View>
-          </View>
+          )}
 
         </View>
 

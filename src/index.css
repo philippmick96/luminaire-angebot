@@ -470,6 +470,41 @@ input[type="number"] {
   background: rgba(248, 113, 113, 0.1);
 }
 
+/* ── DOC TYPE TOGGLE ─────────────────────────────────────── */
+
+.doc-type-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.doc-type-btn {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s;
+  letter-spacing: 0.4px;
+}
+
+.doc-type-btn:hover {
+  border-color: var(--purple);
+  color: var(--purple-light);
+  background: var(--purple-dim);
+}
+
+.doc-type-btn.active {
+  background: var(--purple);
+  border-color: var(--purple);
+  color: #ffffff;
+  box-shadow: 0 3px 12px rgba(124, 58, 237, 0.35);
+}
+
 /* ── ADD ITEM ROW ────────────────────────────────────────── */
 
 .add-item-row {

@@ -18,7 +18,15 @@ export interface LineItem {
   unitPrice: number
 }
 
+export interface BankDetails {
+  accountHolder: string
+  iban: string
+  bic: string
+  bank: string
+}
+
 export interface QuoteData {
+  docType: 'angebot' | 'rechnung'
   quoteNumber: string
   date: string
   validUntil: string
@@ -26,6 +34,7 @@ export interface QuoteData {
   items: LineItem[]
   notes: string
   vatRate: number
+  bankDetails: BankDetails
 }
 
 export type CardTheme = 'sweep' | 'pearl' | 'frost' | 'aurora'
