@@ -903,3 +903,121 @@ input[type="number"] {
     gap: 24px;
   }
 }
+
+/* ── PASSWORD GATE ───────────────────────────────────────── */
+
+.pg-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0a0a14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.pg-card {
+  background: #120b1e;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  box-shadow: 0 24px 80px rgba(124, 58, 237, 0.2);
+}
+
+.pg-logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.pg-logo span {
+  color: #a78bfa;
+}
+
+.pg-sub {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: #64748b;
+  margin-bottom: 32px;
+}
+
+.pg-hint {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+}
+
+.pg-input {
+  width: 100%;
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+
+.pg-input:focus {
+  border-color: #7c3aed;
+  background: rgba(124, 58, 237, 0.12);
+}
+
+.pg-input.pg-error {
+  border-color: #f87171;
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.pg-error-msg {
+  font-size: 12px;
+  color: #f87171;
+  margin-bottom: 8px;
+  align-self: flex-start;
+}
+
+.pg-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px 0;
+  background: #7c3aed;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
+}
+
+.pg-btn:hover {
+  background: #8b5cf6;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(139, 92, 246, 0.45);
+}
+
+@keyframes pg-shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(5px); }
+}
+
+.pg-shake {
+  animation: pg-shake 0.45s ease;
+}
