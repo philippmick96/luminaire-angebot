@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { PDFViewer, pdf } from '@react-pdf/renderer'
-import type { QuoteData, LineItem, CardData, BankDetails } from './types'
+import type { QuoteData, LineItem, BankDetails } from './types'
 import { LuminairePDF } from './components/PDFTemplate'
-import { BusinessCardPDF } from './components/BusinessCardPDF'
-import { BusinessCardFront, BusinessCardBack } from './components/BusinessCardPreview'
 import Landing from './components/Landing'
 
 type View = 'landing' | 'tool'
-type Tab  = 'angebot' | 'visitenkarte' | 'verlauf'
+type Tab  = 'angebot' | 'verlauf'
 
 interface SavedInvoice {
   savedAt: string
@@ -113,30 +111,14 @@ const DEFAULT: QuoteData = {
   },
 }
 
-// ── Component ──────────────────────────────────────────────────
-
-const DEFAULT_CARD: CardData = {
-  name:         '',
-  title:        'KI-Trainer & Berater',
-  email:        'info@luminaire.training',
-  phone:        '+49 179 1327191',
-  website:      'www.luminaire.training',
-  address:      'Kaiserstraße 26a, 66111 Saarbrücken',
-  tagline:      'Das Teuerste an KI ist, sie nicht zu nutzen.',
-  theme:        'sweep',
-  nameFontSize: 24,
-  infoFontSize: 8,
-}
-
 export default function App() {
   const [view, setView]       = useState<View>('landing')
   const [tab, setTab]         = useState<Tab>('angebot')
   const [data, setData]       = useState<QuoteData>(DEFAULT)
-  const [card, setCard]       = useState<CardData>(DEFAULT_CARD)
   const [lightMode, setLight] = useState(false)
   const [saved, setSaved]     = useState<SavedInvoice[]>(loadSaved)
 
-  function navigate(target: Tab) {
+  function navigate(target: 'angebot') {
     setTab(target)
     setView('tool')
   }
@@ -245,12 +227,6 @@ export default function App() {
             Angebot
           </button>
           <button
-            className={`tab-btn${tab === 'visitenkarte' ? ' active' : ''}`}
-            onClick={() => setTab('visitenkarte')}
-          >
-            Visitenkarte
-          </button>
-          <button
             className={`tab-btn${tab === 'verlauf' ? ' active' : ''}`}
             onClick={() => setTab('verlauf')}
           >
@@ -267,183 +243,6 @@ export default function App() {
       </header>
 
       <div className="main-content">
-
-        {tab === 'visitenkarte' && (
-          <>
-            {/* ── CARD FORM ────────────────────────────── */}
-            <div className="form-panel">
-              <div className="form-section">
-                <h3>Person</h3>
-                <div className="form-group">
-                  <label>Name</label>
-                  <input
-                    value={card.name}
-                    onChange={e => setCard(c => ({ ...c, name: e.target.value }))}
-                    placeholder="Max Mustermann"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Titel / Position</label>
-                  <input
-                    value={card.title}
-                    onChange={e => setCard(c => ({ ...c, title: e.target.value }))}
-                    placeholder="KI-Trainer & Berater"
-                  />
-                </div>
-              </div>
-
-              <div className="form-section">
-                <h3>Kontakt</h3>
-                <div className="form-group">
-                  <label>Telefon</label>
-                  <input
-                    value={card.phone}
-                    onChange={e => setCard(c => ({ ...c, phone: e.target.value }))}
-                    placeholder="+49 179 1327191"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>E-Mail</label>
-                  <input
-                    type="email"
-                    value={card.email}
-                    onChange={e => setCard(c => ({ ...c, email: e.target.value }))}
-                    placeholder="info@luminaire.training"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Website</label>
-                  <input
-                    value={card.website}
-                    onChange={e => setCard(c => ({ ...c, website: e.target.value }))}
-                    placeholder="www.luminaire.training"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Adresse</label>
-                  <input
-                    value={card.address}
-                    onChange={e => setCard(c => ({ ...c, address: e.target.value }))}
-                    placeholder="Kaiserstraße 26a, 66111 Saarbrücken"
-                  />
-                </div>
-              </div>
-
-              <div className="form-section">
-                <h3>Design</h3>
-                <div className="form-group">
-                  <label>Farbvariante</label>
-                  <div style={{ display: 'flex', gap: 8, marginTop: 2 }}>
-                    {(['sweep', 'pearl', 'frost', 'aurora'] as const).map(t => (
-                      <button
-                        key={t}
-                        onClick={() => setCard(c => ({ ...c, theme: t }))}
-                        style={{
-                          flex: 1, padding: '6px 0', borderRadius: 8, border: '1px solid',
-                          fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
-                          transition: 'all 0.15s',
-                          background: card.theme === t
-                            ? (t === 'sweep' ? '#7c3aed' : t === 'pearl' ? '#ffffff' : t === 'frost' ? '#ede9fe' : 'linear-gradient(135deg,#ec4899,#a855f7,#f97316)')
-                            : 'rgba(20,15,35,0.8)',
-                          color: card.theme === t
-                            ? (t === 'sweep' || t === 'aurora' ? '#ffffff' : '#2e1065')
-                            : '#94a3b8',
-                          borderColor: card.theme === t
-                            ? (t === 'sweep' ? '#7c3aed' : t === 'aurora' ? '#a855f7' : '#a78bfa')
-                            : 'rgba(124,58,237,0.22)',
-                        }}
-                      >
-                        {t === 'sweep' ? 'Dunkel' : t === 'pearl' ? 'Weiß' : t === 'frost' ? 'Lavendel' : 'Aurora'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>Schriftgröße Name</span>
-                    <span style={{ color: '#a78bfa', fontWeight: 600 }}>{card.nameFontSize}px</span>
-                  </label>
-                  <input
-                    type="range"
-                    min={14}
-                    max={38}
-                    step={1}
-                    value={card.nameFontSize}
-                    onChange={e => setCard(c => ({ ...c, nameFontSize: Number(e.target.value) }))}
-                    style={{ width: '100%', accentColor: '#7c3aed', cursor: 'pointer' }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>Schriftgröße Infos</span>
-                    <span style={{ color: '#a78bfa', fontWeight: 600 }}>{card.infoFontSize}px</span>
-                  </label>
-                  <input
-                    type="range"
-                    min={6}
-                    max={14}
-                    step={0.5}
-                    value={card.infoFontSize}
-                    onChange={e => setCard(c => ({ ...c, infoFontSize: Number(e.target.value) }))}
-                    style={{ width: '100%', accentColor: '#7c3aed', cursor: 'pointer' }}
-                  />
-                </div>
-              </div>
-
-              <div className="form-section">
-                <h3>Rückseite</h3>
-                <div className="form-group">
-                  <label>Tagline</label>
-                  <textarea
-                    value={card.tagline}
-                    onChange={e => setCard(c => ({ ...c, tagline: e.target.value }))}
-                    rows={2}
-                  />
-                </div>
-              </div>
-
-              <div className="form-section">
-                <button
-                  className="btn btn-primary download-btn"
-                  onClick={async () => {
-                    const blob = await pdf(<BusinessCardPDF data={card} />).toBlob()
-                    const url  = URL.createObjectURL(blob)
-                    const a    = document.createElement('a')
-                    a.href = url
-                    a.download = `Visitenkarte_${(card.name || 'Luminaire').replace(/\s+/g, '_')}.pdf`
-                    a.click()
-                    URL.revokeObjectURL(url)
-                  }}
-                >
-                  ↓ Visitenkarte herunterladen
-                </button>
-              </div>
-            </div>
-
-            {/* ── CARD PREVIEW + DESIGN GALLERY ────────── */}
-            <div className="preview-panel card-preview-panel">
-              <div className="preview-toolbar">
-                <span>Visitenkarte – Vorder- & Rückseite (85 × 55 mm)</span>
-                <span className="quote-num">Europäisches Format</span>
-              </div>
-
-              {/* Large preview */}
-              <div className="card-large-preview">
-                <div className="card-preview-pair">
-                  <div className="card-preview-item">
-                    <div className="card-preview-label">Vorderseite</div>
-                    <BusinessCardFront data={card} scale={0.95} />
-                  </div>
-                  <div className="card-preview-item">
-                    <div className="card-preview-label">Rückseite</div>
-                    <BusinessCardBack data={card} scale={0.95} />
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </>
-        )}
 
         {tab === 'angebot' && (
         <>

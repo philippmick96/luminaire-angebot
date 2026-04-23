@@ -832,15 +832,30 @@ input[type="number"] {
   /* ── Tool header ── */
   .app-header {
     padding: 0 12px;
-    gap: 8px;
-    height: 48px;
+    gap: 6px;
+    height: auto;
+    min-height: 52px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
-  .logo-text { font-size: 15px; }
-  .back-btn  { padding: 3px 8px; font-size: 11px; margin-right: 0; }
-  .tab-btn   { padding: 4px 10px; font-size: 11px; }
-  .tab-nav   { margin-left: 2px; }
+  .logo-text   { font-size: 15px; order: 0; }
+  .back-btn    { padding: 4px 10px; font-size: 11px; margin-right: 0; order: 1; }
+  .mode-toggle { order: 2; margin-left: 0; }
+  .tab-nav     {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    margin-left: 0;
+    gap: 4px;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 5px 12px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
 
-  /* ── Tool main layout: stack vertically ── */
+  /* ── Tool main layout ── */
   .main-content {
     flex-direction: column;
     overflow-y: auto;
@@ -850,48 +865,55 @@ input[type="number"] {
   .form-panel {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
     overflow-y: visible;
     max-height: none;
     padding: 16px 14px;
   }
 
-  /* Angebot: hide live-preview on mobile (not readable) */
-  .preview-panel:not(.card-preview-panel) {
-    display: none;
+  .form-section { padding: 14px; }
+  .form-section h3 { font-size: 12px; }
+
+  .form-group label { font-size: 11px; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 15px; /* prevent iOS zoom */
+    padding: 9px 11px;
   }
 
-  /* Card preview: compact */
-  .card-preview-panel {
-    height: auto;
-    flex: none;
-  }
+  .form-row { flex-direction: column; gap: 0; }
+  .form-row.three-col { flex-direction: row; gap: 8px; }
+  .form-row.three-col .form-group { flex: 1; }
 
-  .card-large-preview {
-    padding: 20px 12px;
-    overflow-x: auto;
-  }
+  .doc-type-toggle { gap: 6px; }
+  .doc-type-btn { font-size: 13px; padding: 10px 0; }
 
-  .card-preview-pair {
-    gap: 12px;
-    flex-direction: column;
-    align-items: center;
-  }
+  .item-card { padding: 12px; }
+
+  .totals-preview { padding: 12px; }
+  .totals-row-preview { font-size: 11px; }
+  .totals-row-preview.grand { font-size: 13px; }
+
+  /* Hide PDF preview on mobile */
+  .preview-panel { display: none; }
+
+  /* Verlauf */
+  .verlauf-panel { padding: 20px 14px; }
+  .verlauf-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .verlauf-card-actions { width: 100%; justify-content: flex-end; }
+  .verlauf-meta { flex-wrap: wrap; gap: 8px; }
 
   /* ── Landing: nav links ── */
-  .landing-nav-links {
-    display: none;
-  }
+  .landing-nav-links { display: none; }
 
   /* ── Landing: hero visuals ── */
-  .landing-hero-visuals {
-    display: none;
-  }
+  .landing-hero-visuals { display: none; }
 
   /* ── Landing: feature sections ── */
   .landing-feature-grid {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: 32px;
   }
 
   .landing-feature-grid-reverse > *:first-child { order: 2; }
@@ -902,6 +924,9 @@ input[type="number"] {
     grid-template-columns: 1fr;
     gap: 24px;
   }
+
+  /* ── Password gate ── */
+  .pg-card { padding: 36px 24px; }
 }
 
 /* ── PASSWORD GATE ───────────────────────────────────────── */
