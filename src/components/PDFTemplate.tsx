@@ -231,7 +231,11 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
             <View style={s.addressBox}>
               <Text style={s.addressLabel}>VON</Text>
               <Text style={s.addressName}>Luminaire</Text>
-              <Text style={s.addressLine}>Saarbrücken, Saarland</Text>
+              {isInvoice && (
+                <Text style={s.addressCompany}>Philipp Mick (Einzelunternehmen)</Text>
+              )}
+              <Text style={s.addressLine}>Kaiserstraße 26a</Text>
+              <Text style={s.addressLine}>66111 Saarbrücken</Text>
               <Text style={s.addressContact}>info@luminaire.training</Text>
               <Text style={s.addressContact}>+49 179 1327191</Text>
               <Text style={s.addressContact}>www.luminaire.training</Text>
