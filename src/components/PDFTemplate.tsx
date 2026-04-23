@@ -231,19 +231,10 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
             <View style={s.addressBox}>
               <Text style={s.addressLabel}>VON</Text>
               <Text style={s.addressName}>Luminaire</Text>
-              {isInvoice && (
-                <Text style={s.addressCompany}>Philipp Mick (Einzelunternehmen)</Text>
-              )}
-              <Text style={s.addressLine}>Kaiserstraße 26a</Text>
-              <Text style={s.addressLine}>66111 Saarbrücken</Text>
+              {isInvoice && <Text style={s.addressCompany}>Philipp Mick</Text>}
+              <Text style={s.addressLine}>Kaiserstraße 26a · 66111 Saarbrücken</Text>
               <Text style={s.addressContact}>info@luminaire.training</Text>
               <Text style={s.addressContact}>+49 179 1327191</Text>
-              <Text style={s.addressContact}>www.luminaire.training</Text>
-              {isInvoice && (
-                <Text style={[s.addressContact, { marginTop: 6 }]}>
-                  Steuernummer: 040/249/04194
-                </Text>
-              )}
             </View>
             <View style={s.addressBoxRight}>
               <Text style={s.addressLabel}>AN</Text>
@@ -370,7 +361,10 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
             </Text>
           </View>
           <View style={s.footerRight}>
-            <Text style={s.footerAddress}>Saarbrücken, Saarland, Deutschland</Text>
+            <Text style={s.footerAddress}>Kaiserstraße 26a · 66111 Saarbrücken</Text>
+            {isInvoice && (
+              <Text style={s.footerAddress}>St.-Nr.: 040/249/04194</Text>
+            )}
             <Text
               style={s.footerPage}
               render={({ pageNumber, totalPages }) => `Seite ${pageNumber} von ${totalPages}`}
