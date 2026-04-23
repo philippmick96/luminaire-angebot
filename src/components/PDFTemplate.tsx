@@ -235,6 +235,11 @@ export function LuminairePDF({ data, lightMode = false }: { data: QuoteData; lig
               <Text style={s.addressContact}>info@luminaire.training</Text>
               <Text style={s.addressContact}>+49 179 1327191</Text>
               <Text style={s.addressContact}>www.luminaire.training</Text>
+              {isInvoice && (
+                <Text style={[s.addressContact, { marginTop: 6 }]}>
+                  Steuernummer: 040/249/04194
+                </Text>
+              )}
             </View>
             <View style={s.addressBoxRight}>
               <Text style={s.addressLabel}>AN</Text>

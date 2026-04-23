@@ -89,10 +89,10 @@ const DEFAULT: QuoteData = {
     'Das Angebot ist 30 Tage gültig.\nZahlungsziel: 14 Tage nach Rechnungsstellung.',
   vatRate: 19,
   bankDetails: {
-    accountHolder: 'Luminaire',
-    iban: '',
-    bic: '',
-    bank: '',
+    accountHolder: 'Philipp Mick',
+    iban: 'DE40 5919 0000 0219 2070 18',
+    bic: 'SABADE5SXXX',
+    bank: 'Bank 1 Saar',
   },
 }
 
