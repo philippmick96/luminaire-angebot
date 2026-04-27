@@ -1,4 +1,4 @@
-type Page = 'dashboard' | 'produkte' | 'wissen' | 'angebot' | 'ziele' | 'verlauf'
+type Page = 'dashboard' | 'produkte' | 'wissen' | 'kurse' | 'angebot' | 'ziele' | 'verlauf'
 
 interface SidebarProps {
   page: Page
@@ -12,6 +12,7 @@ const NAV_ITEMS: { id: Page; icon: string; label: string }[] = [
   { id: 'dashboard', icon: '⬡', label: 'Dashboard' },
   { id: 'produkte',  icon: '◈', label: 'Produkte' },
   { id: 'wissen',    icon: '◉', label: 'Wissensbasis' },
+  { id: 'kurse',     icon: '▶', label: 'Kurse' },
   { id: 'angebot',   icon: '◻', label: 'Angebot / Rechnung' },
   { id: 'ziele',     icon: '◎', label: 'Jahresplan' },
   { id: 'verlauf',   icon: '▤', label: 'Verlauf' },

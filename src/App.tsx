@@ -6,9 +6,10 @@ import Sidebar from './components/Sidebar'
 import Dashboard from './components/Dashboard'
 import Produkte from './components/Produkte'
 import Wissen from './components/Wissen'
+import Kurse from './components/Kurse'
 import Ziele from './components/Ziele'
 
-type Page = 'dashboard' | 'produkte' | 'wissen' | 'angebot' | 'ziele' | 'verlauf'
+type Page = 'dashboard' | 'produkte' | 'wissen' | 'kurse' | 'angebot' | 'ziele' | 'verlauf'
 
 interface SavedInvoice {
   savedAt: string
@@ -229,6 +230,8 @@ export default function App() {
         )}
 
         {page === 'wissen' && <Wissen />}
+
+        {page === 'kurse' && <Kurse />}
 
         {page === 'ziele' && <Ziele saved={saved} />}
 
