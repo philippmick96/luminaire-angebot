@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { PDFViewer, pdf } from '@react-pdf/renderer'
 import type { QuoteData, LineItem, BankDetails } from './types'
 import { LuminairePDF } from './components/PDFTemplate'
-import Landing from './components/Landing'
+import Sidebar from './components/Sidebar'
+import Dashboard from './components/Dashboard'
+import Produkte from './components/Produkte'
+import Wissen from './components/Wissen'
 import Ziele from './components/Ziele'
 
-type View = 'landing' | 'tool'
-type Tab  = 'angebot' | 'verlauf' | 'ziele'
+type Page = 'dashboard' | 'produkte' | 'wissen' | 'angebot' | 'ziele' | 'verlauf'
 
 interface SavedInvoice {
   savedAt: string
@@ -24,11 +26,9 @@ function persistSaved(list: SavedInvoice[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
 }
 
-// ── Helpers ────────────────────────────────────────────────────
-
 function generateQuoteNumber(type: 'angebot' | 'rechnung' = 'angebot'): string {
-  const year = new Date().getFullYear()
-  const num  = String(Math.floor(Math.random() * 900) + 100)
+  const year   = new Date().getFullYear()
+  const num    = String(Math.floor(Math.random() * 900) + 100)
   const prefix = type === 'rechnung' ? 'RE' : 'AN'
   return `LUM-${prefix}-${year}-${num}`
 }
@@ -41,36 +41,38 @@ function fmtCurrency(n: number): string {
   return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n)
 }
 
-// ── Product catalog ────────────────────────────────────────────
-
 const CATALOG = [
   {
     description: 'KI-Führerschein',
-    details: 'Zertifizierter Präsenzkurs (3 Stunden) · EU AI Act konform · Datenschutz & Ethik',
+    details: 'Zertifizierter Präsenzkurs (~3 Stunden) · EU AI Act konform · Datenschutz & Ethik · mit Zertifikat',
     unit: 'Teilnehmer',
-    unitPrice: 149,
+    unitPrice: 299,
   },
   {
-    description: 'KI Einstieg',
-    details: 'Einführungskurs ChatGPT-Basics (90 Min) · Sichere KI-Nutzung im Berufsalltag',
+    description: 'KI im Arbeitsalltag – Unternehmervortrag',
+    details: 'Premium-Seminar für Unternehmer · KI-Canvas, Prompt-Formel, Agentenbau · max. 12 TN · nur Präsenz',
     unit: 'Teilnehmer',
-    unitPrice: 149,
+    unitPrice: 399,
   },
   {
-    description: 'KI Fortgeschrittene',
-    details: 'Ganztages-Workshop · Deep Learning, KI-Sicherheit, Automatisierung & Prozessoptimierung',
-    unit: 'Teilnehmer',
-    unitPrice: 499,
+    description: 'Branchenlösung – KI-Analyse',
+    details: 'Ist-Analyse + Potenzial-Report + Handlungsempfehlung · individuelle Beratung',
+    unit: 'Projekt',
+    unitPrice: 1500,
   },
   {
-    description: 'Branchenlösung (individuell)',
-    details: 'Maßgeschneidertes KI-Training für Ihre Branche · Individuelle Inhalte & Praxisbeispiele',
-    unit: 'Stunde',
-    unitPrice: 199,
+    description: 'Branchenlösung – KI-Start',
+    details: '1 Use-Case implementiert + Team-Training · Individuelle KI-Integration',
+    unit: 'Projekt',
+    unitPrice: 4900,
+  },
+  {
+    description: 'Branchenlösung – KI-Transformation',
+    details: '3 Use-Cases + vollständige Implementierung + 3 Monate Support',
+    unit: 'Projekt',
+    unitPrice: 9900,
   },
 ]
-
-// ── Default state ──────────────────────────────────────────────
 
 const today = new Date()
 const validUntil = new Date(today)
@@ -101,8 +103,7 @@ const DEFAULT: QuoteData = {
       unitPrice: CATALOG[0].unitPrice,
     },
   ],
-  notes:
-    'Das Angebot ist 30 Tage gültig.\nZahlungsziel: 14 Tage nach Rechnungsstellung.',
+  notes: 'Das Angebot ist 30 Tage gültig.\nZahlungsziel: 14 Tage nach Rechnungsstellung.',
   vatRate: 19,
   bankDetails: {
     accountHolder: 'Philipp Mick',
@@ -113,20 +114,10 @@ const DEFAULT: QuoteData = {
 }
 
 export default function App() {
-  const [view, setView]       = useState<View>('landing')
-  const [tab, setTab]         = useState<Tab>('angebot')
+  const [page, setPage]       = useState<Page>('dashboard')
   const [data, setData]       = useState<QuoteData>(DEFAULT)
   const [lightMode, setLight] = useState(false)
   const [saved, setSaved]     = useState<SavedInvoice[]>(loadSaved)
-
-  function navigate(target: 'angebot') {
-    setTab(target)
-    setView('tool')
-  }
-
-  if (view === 'landing') {
-    return <Landing onNavigate={navigate} />
-  }
 
   function set<K extends keyof QuoteData>(key: K, value: QuoteData[K]) {
     setData(prev => ({ ...prev, [key]: value }))
@@ -214,373 +205,355 @@ export default function App() {
   }.pdf`
 
   return (
-    <div className={`app${lightMode ? ' light' : ''}`}>
+    <div className={`app-layout${lightMode ? ' light' : ''}`}>
 
-      {/* ── HEADER ─────────────────────────────────── */}
-      <header className="app-header">
-        <button className="back-btn" onClick={() => setView('landing')}>← Start</button>
-        <div className="logo-text">lumin<span>AI</span>re</div>
-        <nav className="tab-nav">
-          <button
-            className={`tab-btn${tab === 'angebot' ? ' active' : ''}`}
-            onClick={() => setTab('angebot')}
-          >
-            Angebot
-          </button>
-          <button
-            className={`tab-btn${tab === 'verlauf' ? ' active' : ''}`}
-            onClick={() => setTab('verlauf')}
-          >
-            Verlauf {saved.length > 0 && <span className="tab-badge">{saved.length}</span>}
-          </button>
-          <button
-            className={`tab-btn${tab === 'ziele' ? ' active' : ''}`}
-            onClick={() => setTab('ziele')}
-          >
-            Jahresplan
-          </button>
-        </nav>
-        <button
-          className="mode-toggle"
-          onClick={() => setLight(l => !l)}
-          title={lightMode ? 'Dunkelmodus' : 'Hellmodus'}
-        >
-          {lightMode ? '🌙' : '☀️'}
-        </button>
-      </header>
+      <Sidebar
+        page={page}
+        onNavigate={setPage}
+        savedCount={saved.length}
+        lightMode={lightMode}
+        onToggleLight={() => setLight(l => !l)}
+      />
 
-      <div className="main-content">
+      <main className="main-area">
 
-        {tab === 'angebot' && (
-        <>
-        {/* ── FORM PANEL ─────────────────────────────── */}
-        <div className="form-panel">
-
-          {/* Dokumenttyp */}
-          <div className="form-section">
-            <h3>Dokumenttyp</h3>
-            <div className="doc-type-toggle">
-              <button
-                className={`doc-type-btn${data.docType === 'angebot' ? ' active' : ''}`}
-                onClick={() => switchDocType('angebot')}
-              >
-                Angebot
-              </button>
-              <button
-                className={`doc-type-btn${data.docType === 'rechnung' ? ' active' : ''}`}
-                onClick={() => switchDocType('rechnung')}
-              >
-                Rechnung
-              </button>
-            </div>
-          </div>
-
-          {/* Dokument­daten */}
-          <div className="form-section">
-            <h3>{docLabel}</h3>
-            <div className="form-row">
-              <div className="form-group">
-                <label>{docLabel}snummer</label>
-                <input
-                  value={data.quoteNumber}
-                  onChange={e => set('quoteNumber', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>MwSt.</label>
-                <select
-                  value={data.vatRate}
-                  onChange={e => set('vatRate', Number(e.target.value))}
-                >
-                  <option value={19}>19 %</option>
-                  <option value={7}>7 %</option>
-                  <option value={0}>0 % (steuerfrei)</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label>Datum</label>
-                <input
-                  type="date"
-                  value={data.date}
-                  onChange={e => set('date', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>{data.docType === 'rechnung' ? 'Fällig am' : 'Gültig bis'}</label>
-                <input
-                  type="date"
-                  value={data.validUntil}
-                  onChange={e => set('validUntil', e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Kundendaten */}
-          <div className="form-section">
-            <h3>Kunde</h3>
-            <div className="form-row">
-              <div className="form-group">
-                <label>Anrede</label>
-                <select
-                  value={data.customer.salutation}
-                  onChange={e => setCustomer('salutation', e.target.value)}
-                >
-                  <option>Herr</option>
-                  <option>Frau</option>
-                  <option>Divers</option>
-                  <option>Firma</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Name</label>
-                <input
-                  value={data.customer.name}
-                  onChange={e => setCustomer('name', e.target.value)}
-                  placeholder="Max Mustermann"
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label>Unternehmen</label>
-              <input
-                value={data.customer.company}
-                onChange={e => setCustomer('company', e.target.value)}
-                placeholder="Musterfirma GmbH"
-              />
-            </div>
-            <div className="form-group">
-              <label>Straße & Hausnummer</label>
-              <input
-                value={data.customer.street}
-                onChange={e => setCustomer('street', e.target.value)}
-                placeholder="Musterstraße 1"
-              />
-            </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label>PLZ</label>
-                <input
-                  value={data.customer.zip}
-                  onChange={e => setCustomer('zip', e.target.value)}
-                  placeholder="66111"
-                />
-              </div>
-              <div className="form-group">
-                <label>Ort</label>
-                <input
-                  value={data.customer.city}
-                  onChange={e => setCustomer('city', e.target.value)}
-                  placeholder="Saarbrücken"
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label>E-Mail</label>
-                <input
-                  type="email"
-                  value={data.customer.email}
-                  onChange={e => setCustomer('email', e.target.value)}
-                  placeholder="kontakt@firma.de"
-                />
-              </div>
-              <div className="form-group">
-                <label>Telefon</label>
-                <input
-                  type="tel"
-                  value={data.customer.phone}
-                  onChange={e => setCustomer('phone', e.target.value)}
-                  placeholder="+49 ..."
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Leistungen */}
-          <div className="form-section">
-            <h3>Leistungen</h3>
-
-            {data.items.map((item, idx) => (
-              <div key={item.id} className="item-card">
-                <div className="item-header">
-                  <span className="item-pos">Position {idx + 1}</span>
-                  <button
-                    className="btn-danger"
-                    onClick={() => removeItem(item.id)}
-                    title="Position entfernen"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="form-group">
-                  <label>Bezeichnung</label>
-                  <input
-                    value={item.description}
-                    onChange={e => setItem(item.id, 'description', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Details / Beschreibung</label>
-                  <textarea
-                    value={item.details}
-                    onChange={e => setItem(item.id, 'details', e.target.value)}
-                    rows={2}
-                  />
-                </div>
-                <div className="form-row three-col">
-                  <div className="form-group">
-                    <label>Menge</label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={e => setItem(item.id, 'quantity', Number(e.target.value))}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Einheit</label>
-                    <input
-                      value={item.unit}
-                      onChange={e => setItem(item.id, 'unit', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Nettopreis (€)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={item.unitPrice}
-                      onChange={e => setItem(item.id, 'unitPrice', Number(e.target.value))}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            <div className="add-item-row">
-              <button className="btn btn-ghost" onClick={() => addItem()}>
-                + Leere Position
-              </button>
-              <select
-                className="catalog-select"
-                defaultValue=""
-                onChange={e => {
-                  if (e.target.value !== '') {
-                    addItem(Number(e.target.value))
-                    e.currentTarget.value = ''
-                  }
-                }}
-              >
-                <option value="" disabled>+ Aus Katalog...</option>
-                {CATALOG.map((p, i) => (
-                  <option key={i} value={i}>{p.description}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="totals-preview">
-              <div className="totals-row-preview">
-                <span>Nettobetrag</span>
-                <span>{fmtCurrency(net)}</span>
-              </div>
-              <div className="totals-row-preview">
-                <span>MwSt. {data.vatRate} %</span>
-                <span>{fmtCurrency(vat)}</span>
-              </div>
-              <div className="totals-row-preview grand">
-                <span>Gesamtbetrag</span>
-                <span>{fmtCurrency(gross)}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Hinweise */}
-          <div className="form-section">
-            <h3>Hinweise & Bedingungen</h3>
-            <div className="form-group">
-              <textarea
-                value={data.notes}
-                onChange={e => set('notes', e.target.value)}
-                rows={4}
-              />
-            </div>
-          </div>
-
-          {/* Bankverbindung (nur Rechnung) */}
-          {data.docType === 'rechnung' && (
-            <div className="form-section">
-              <h3>Bankverbindung</h3>
-              <div className="form-group">
-                <label>Kontoinhaber</label>
-                <input
-                  value={data.bankDetails.accountHolder}
-                  onChange={e => setBank('accountHolder', e.target.value)}
-                  placeholder="Luminaire"
-                />
-              </div>
-              <div className="form-group">
-                <label>IBAN</label>
-                <input
-                  value={data.bankDetails.iban}
-                  onChange={e => setBank('iban', e.target.value)}
-                  placeholder="DE00 0000 0000 0000 0000 00"
-                />
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>BIC</label>
-                  <input
-                    value={data.bankDetails.bic}
-                    onChange={e => setBank('bic', e.target.value)}
-                    placeholder="BELADEBEXXX"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Bank</label>
-                  <input
-                    value={data.bankDetails.bank}
-                    onChange={e => setBank('bank', e.target.value)}
-                    placeholder="Sparkasse Saarbrücken"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Download */}
-          <div className="form-section">
-            <button
-              className="btn btn-primary download-btn"
-              onClick={() => downloadPDF(data, fileName)}
-            >
-              ↓ {docLabel} herunterladen
-            </button>
-          </div>
-
-        </div>
-
-        {/* ── PREVIEW PANEL ──────────────────────────── */}
-        <div className="preview-panel">
-          <div className="preview-toolbar">
-            <span>Live-Vorschau</span>
-            <span className="quote-num">{data.quoteNumber}</span>
-          </div>
-          <div className="pdf-wrapper">
-            <PDFViewer width="100%" height="100%" showToolbar={false}>
-              <LuminairePDF data={data} lightMode={lightMode} />
-            </PDFViewer>
-          </div>
-        </div>
-        </>
+        {page === 'dashboard' && (
+          <Dashboard
+            saved={saved}
+            onNavigate={p => setPage(p)}
+          />
         )}
 
-        {tab === 'ziele' && <Ziele saved={saved} />}
+        {page === 'produkte' && (
+          <Produkte onCreateAngebot={() => setPage('angebot')} />
+        )}
 
-        {tab === 'verlauf' && (
+        {page === 'wissen' && <Wissen />}
+
+        {page === 'ziele' && <Ziele saved={saved} />}
+
+        {page === 'angebot' && (
+          <div className="angebot-layout">
+
+            {/* ── FORM PANEL ─────────────────────────────── */}
+            <div className="form-panel">
+
+              <div className="form-section">
+                <h3>Dokumenttyp</h3>
+                <div className="doc-type-toggle">
+                  <button
+                    className={`doc-type-btn${data.docType === 'angebot' ? ' active' : ''}`}
+                    onClick={() => switchDocType('angebot')}
+                  >
+                    Angebot
+                  </button>
+                  <button
+                    className={`doc-type-btn${data.docType === 'rechnung' ? ' active' : ''}`}
+                    onClick={() => switchDocType('rechnung')}
+                  >
+                    Rechnung
+                  </button>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>{docLabel}</h3>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>{docLabel}snummer</label>
+                    <input
+                      value={data.quoteNumber}
+                      onChange={e => set('quoteNumber', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>MwSt.</label>
+                    <select
+                      value={data.vatRate}
+                      onChange={e => set('vatRate', Number(e.target.value))}
+                    >
+                      <option value={19}>19 %</option>
+                      <option value={7}>7 %</option>
+                      <option value={0}>0 % (steuerfrei)</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Datum</label>
+                    <input
+                      type="date"
+                      value={data.date}
+                      onChange={e => set('date', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>{data.docType === 'rechnung' ? 'Fällig am' : 'Gültig bis'}</label>
+                    <input
+                      type="date"
+                      value={data.validUntil}
+                      onChange={e => set('validUntil', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Kunde</h3>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Anrede</label>
+                    <select
+                      value={data.customer.salutation}
+                      onChange={e => setCustomer('salutation', e.target.value)}
+                    >
+                      <option>Herr</option>
+                      <option>Frau</option>
+                      <option>Divers</option>
+                      <option>Firma</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Name</label>
+                    <input
+                      value={data.customer.name}
+                      onChange={e => setCustomer('name', e.target.value)}
+                      placeholder="Max Mustermann"
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Unternehmen</label>
+                  <input
+                    value={data.customer.company}
+                    onChange={e => setCustomer('company', e.target.value)}
+                    placeholder="Musterfirma GmbH"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Straße & Hausnummer</label>
+                  <input
+                    value={data.customer.street}
+                    onChange={e => setCustomer('street', e.target.value)}
+                    placeholder="Musterstraße 1"
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>PLZ</label>
+                    <input
+                      value={data.customer.zip}
+                      onChange={e => setCustomer('zip', e.target.value)}
+                      placeholder="66111"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Ort</label>
+                    <input
+                      value={data.customer.city}
+                      onChange={e => setCustomer('city', e.target.value)}
+                      placeholder="Saarbrücken"
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>E-Mail</label>
+                    <input
+                      type="email"
+                      value={data.customer.email}
+                      onChange={e => setCustomer('email', e.target.value)}
+                      placeholder="kontakt@firma.de"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Telefon</label>
+                    <input
+                      type="tel"
+                      value={data.customer.phone}
+                      onChange={e => setCustomer('phone', e.target.value)}
+                      placeholder="+49 ..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Leistungen</h3>
+
+                {data.items.map((item, idx) => (
+                  <div key={item.id} className="item-card">
+                    <div className="item-header">
+                      <span className="item-pos">Position {idx + 1}</span>
+                      <button
+                        className="btn-danger"
+                        onClick={() => removeItem(item.id)}
+                        title="Position entfernen"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div className="form-group">
+                      <label>Bezeichnung</label>
+                      <input
+                        value={item.description}
+                        onChange={e => setItem(item.id, 'description', e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Details / Beschreibung</label>
+                      <textarea
+                        value={item.details}
+                        onChange={e => setItem(item.id, 'details', e.target.value)}
+                        rows={2}
+                      />
+                    </div>
+                    <div className="form-row three-col">
+                      <div className="form-group">
+                        <label>Menge</label>
+                        <input
+                          type="number"
+                          min="1"
+                          value={item.quantity}
+                          onChange={e => setItem(item.id, 'quantity', Number(e.target.value))}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Einheit</label>
+                        <input
+                          value={item.unit}
+                          onChange={e => setItem(item.id, 'unit', e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Nettopreis (€)</label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.unitPrice}
+                          onChange={e => setItem(item.id, 'unitPrice', Number(e.target.value))}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                <div className="add-item-row">
+                  <button className="btn btn-ghost" onClick={() => addItem()}>
+                    + Leere Position
+                  </button>
+                  <select
+                    className="catalog-select"
+                    defaultValue=""
+                    onChange={e => {
+                      if (e.target.value !== '') {
+                        addItem(Number(e.target.value))
+                        e.currentTarget.value = ''
+                      }
+                    }}
+                  >
+                    <option value="" disabled>+ Aus Katalog...</option>
+                    {CATALOG.map((p, i) => (
+                      <option key={i} value={i}>{p.description}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="totals-preview">
+                  <div className="totals-row-preview">
+                    <span>Nettobetrag</span>
+                    <span>{fmtCurrency(net)}</span>
+                  </div>
+                  <div className="totals-row-preview">
+                    <span>MwSt. {data.vatRate} %</span>
+                    <span>{fmtCurrency(vat)}</span>
+                  </div>
+                  <div className="totals-row-preview grand">
+                    <span>Gesamtbetrag</span>
+                    <span>{fmtCurrency(gross)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Hinweise & Bedingungen</h3>
+                <div className="form-group">
+                  <textarea
+                    value={data.notes}
+                    onChange={e => set('notes', e.target.value)}
+                    rows={4}
+                  />
+                </div>
+              </div>
+
+              {data.docType === 'rechnung' && (
+                <div className="form-section">
+                  <h3>Bankverbindung</h3>
+                  <div className="form-group">
+                    <label>Kontoinhaber</label>
+                    <input
+                      value={data.bankDetails.accountHolder}
+                      onChange={e => setBank('accountHolder', e.target.value)}
+                      placeholder="Luminaire"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>IBAN</label>
+                    <input
+                      value={data.bankDetails.iban}
+                      onChange={e => setBank('iban', e.target.value)}
+                      placeholder="DE00 0000 0000 0000 0000 00"
+                    />
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>BIC</label>
+                      <input
+                        value={data.bankDetails.bic}
+                        onChange={e => setBank('bic', e.target.value)}
+                        placeholder="BELADEBEXXX"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Bank</label>
+                      <input
+                        value={data.bankDetails.bank}
+                        onChange={e => setBank('bank', e.target.value)}
+                        placeholder="Sparkasse Saarbrücken"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="form-section">
+                <button
+                  className="btn btn-primary download-btn"
+                  onClick={() => downloadPDF(data, fileName)}
+                >
+                  ↓ {docLabel} herunterladen
+                </button>
+              </div>
+
+            </div>
+
+            {/* ── PREVIEW PANEL ──────────────────────────── */}
+            <div className="preview-panel">
+              <div className="preview-toolbar">
+                <span>Live-Vorschau</span>
+                <span className="quote-num">{data.quoteNumber}</span>
+              </div>
+              <div className="pdf-wrapper">
+                <PDFViewer width="100%" height="100%" showToolbar={false}>
+                  <LuminairePDF data={data} lightMode={lightMode} />
+                </PDFViewer>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {page === 'verlauf' && (
           <div className="verlauf-panel">
             <div className="verlauf-header">
               <h2>Gespeicherte Rechnungen</h2>
@@ -588,7 +561,7 @@ export default function App() {
             </div>
             {saved.length === 0 ? (
               <div className="verlauf-empty">
-                Noch keine Rechnungen erstellt. Wechsle zum Angebot-Tab, wähle „Rechnung" und lade die PDF herunter.
+                Noch keine Rechnungen erstellt. Wechsle zu Angebot / Rechnung, wähle „Rechnung" und lade die PDF herunter.
               </div>
             ) : (
               <div className="verlauf-list">
@@ -631,7 +604,7 @@ export default function App() {
           </div>
         )}
 
-      </div>
+      </main>
     </div>
   )
 }
