@@ -3,9 +3,10 @@ import { PDFViewer, pdf } from '@react-pdf/renderer'
 import type { QuoteData, LineItem, BankDetails } from './types'
 import { LuminairePDF } from './components/PDFTemplate'
 import Landing from './components/Landing'
+import Ziele from './components/Ziele'
 
 type View = 'landing' | 'tool'
-type Tab  = 'angebot' | 'verlauf'
+type Tab  = 'angebot' | 'verlauf' | 'ziele'
 
 interface SavedInvoice {
   savedAt: string
@@ -231,6 +232,12 @@ export default function App() {
             onClick={() => setTab('verlauf')}
           >
             Verlauf {saved.length > 0 && <span className="tab-badge">{saved.length}</span>}
+          </button>
+          <button
+            className={`tab-btn${tab === 'ziele' ? ' active' : ''}`}
+            onClick={() => setTab('ziele')}
+          >
+            Jahresplan
           </button>
         </nav>
         <button
@@ -570,6 +577,8 @@ export default function App() {
         </div>
         </>
         )}
+
+        {tab === 'ziele' && <Ziele saved={saved} />}
 
         {tab === 'verlauf' && (
           <div className="verlauf-panel">
